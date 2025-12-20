@@ -1,0 +1,76 @@
+:root {
+  --bg: #1b003a;
+  --card: #2a005a;
+  --text: #ffffff;
+  --accent: #9b6cff;
+}
+
+[data-theme="light"] {
+  --bg: #f4f4f4;
+  --card: #ffffff;
+  --text: #1b003a;
+  --accent: #5a2ea6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, sans-serif;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: var(--card);
+}
+
+.actions button {
+  margin-left: .5rem;
+  padding: .5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+}
+
+.container {
+  padding: 1rem;
+  max-width: 1100px;
+  margin: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: .75rem;
+  text-align: left;
+}
+
+thead {
+  background: var(--accent);
+  color: white;
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(255,255,255,0.05);
+}
+
+@media (max-width: 768px) {
+  table {
+    font-size: 13px;
+  }
+}
