@@ -1,5 +1,7 @@
 const API = "https://backend-pefa.onrender.com";
 
-document.getElementById("login").onclick = () => {
+const btn = document.getElementById("login");
+
+btn.addEventListener("click", () => {
   window.location.href = `${API}/auth/discord`;
-};
+});
