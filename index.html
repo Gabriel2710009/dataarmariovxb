@@ -1,6 +1,26 @@
-<button id="login">Login con Discord</button>
-<table id="tabla"></table>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Armario VxB</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
 
-<script src="js/auth.js"></script>
-<script src="js/api.js"></script>
-<script src="js/theme.js"></script>
+<body>
+  <header>
+    <h1>Armario VxB</h1>
+    <button id="login">Login con Discord</button>
+    <button onclick="toggleTheme()">🌗</button>
+  </header>
+
+  <main>
+    <table id="tabla-armas"></table>
+  </main>
+
+  <!-- JS SIEMPRE ABAJO -->
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/theme.js"></script>
+</body>
+</html>
