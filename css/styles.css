@@ -1,14 +1,8 @@
 :root {
-  --bg: #0e001f;
-  --card: #1b003a;
-  --text: #ffffff;
+  --primary: #1b003a;
   --accent: #7a3cff;
-}
-
-body.light {
-  --bg: #f2e9ff;
-  --card: #ffffff;
-  --text: #1b003a;
+  --bg-dark: #0b0018;
+  --text: #ffffff;
 }
 
 * {
@@ -18,54 +12,90 @@ body.light {
 
 body {
   margin: 0;
-  background: var(--bg);
+  background: var(--bg-dark);
   color: var(--text);
-  min-height: 100vh;
+  overflow: hidden;
 }
 
-header {
-  display: flex;
-  justify-content: space-between;
-  padding: 16px 24px;
-  background: var(--card);
-}
-
-main {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* ===== TABLA DE FONDO ===== */
+.table-bg {
+  position: absolute;
+  inset: 0;
   padding: 40px;
+  filter: blur(6px);
+  opacity: 0.4;
 }
 
-#loginBox, #content {
-  background: var(--card);
-  padding: 32px;
-  border-radius: 16px;
+table {
   width: 100%;
-  max-width: 420px;
-  text-align: center;
-  box-shadow: 0 0 40px rgba(0,0,0,.4);
+  border-collapse: collapse;
 }
 
-.loginBtn {
-  display: block;
-  margin-top: 24px;
+th, td {
   padding: 14px;
-  border-radius: 12px;
+  border-bottom: 1px solid #ffffff22;
+}
+
+th {
+  background: var(--primary);
+  text-align: left;
+}
+
+/* ===== OVERLAY ===== */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(27,0,58,.85),
+    rgba(0,0,0,.9)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== LOGIN CARD ===== */
+.login-card {
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(12px);
+  padding: 40px;
+  border-radius: 20px;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 0 60px #000;
+}
+
+.login-card h1 {
+  margin-bottom: 10px;
+}
+
+.login-card p {
+  opacity: .8;
+}
+
+/* ===== DISCORD BUTTON ===== */
+.discord-btn {
+  display: block;
+  margin-top: 30px;
+  padding: 16px;
   background: var(--accent);
   color: white;
+  border-radius: 14px;
   text-decoration: none;
   font-weight: bold;
+  transition: transform .15s, box-shadow .15s;
 }
 
-.alert {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #b30000;
-  color: white;
-  padding: 14px 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 20px black;
+.discord-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(122,60,255,.5);
+}
+
+.note {
+  display: block;
+  margin-top: 18px;
+  font-size: 12px;
+  opacity: .6;
 }
