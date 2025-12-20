@@ -1,7 +1,10 @@
-import { initAuth } from "./auth/auth.js";
-import { checkAuth } from "./security/guard.js";
-import { initTheme } from "./theme/theme.js";
+const params = new URLSearchParams(window.location.search);
 
-initTheme();
-initAuth();
-checkAuth();
+if (params.get("error") === "denied") {
+  alert("⛔ Acceso denegado\nNo eres Armero ni Alto Rango");
+}
+
+if (params.get("login") === "ok") {
+  // después acá se desbloquea la tabla real
+  console.log("Login OK");
+}
