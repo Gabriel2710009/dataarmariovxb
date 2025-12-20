@@ -1,76 +1,71 @@
 :root {
-  --bg: #1b003a;
-  --card: #2a005a;
+  --bg: #0e001f;
+  --card: #1b003a;
   --text: #ffffff;
-  --accent: #9b6cff;
+  --accent: #7a3cff;
 }
 
-[data-theme="light"] {
-  --bg: #f4f4f4;
+body.light {
+  --bg: #f2e9ff;
   --card: #ffffff;
   --text: #1b003a;
-  --accent: #5a2ea6;
 }
 
 * {
   box-sizing: border-box;
+  font-family: system-ui, sans-serif;
 }
 
 body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: system-ui, sans-serif;
+  min-height: 100vh;
 }
 
-.topbar {
+header {
   display: flex;
   justify-content: space-between;
+  padding: 16px 24px;
+  background: var(--card);
+}
+
+main {
+  display: flex;
+  justify-content: center;
   align-items: center;
-  padding: 1rem;
+  padding: 40px;
+}
+
+#loginBox, #content {
   background: var(--card);
-}
-
-.actions button {
-  margin-left: .5rem;
-  padding: .5rem 1rem;
-  border: none;
-  border-radius: 8px;
-  background: var(--accent);
-  color: white;
-  cursor: pointer;
-}
-
-.container {
-  padding: 1rem;
-  max-width: 1100px;
-  margin: auto;
-}
-
-table {
+  padding: 32px;
+  border-radius: 16px;
   width: 100%;
-  border-collapse: collapse;
-  background: var(--card);
+  max-width: 420px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(0,0,0,.4);
+}
+
+.loginBtn {
+  display: block;
+  margin-top: 24px;
+  padding: 14px;
   border-radius: 12px;
-  overflow: hidden;
-}
-
-th, td {
-  padding: .75rem;
-  text-align: left;
-}
-
-thead {
   background: var(--accent);
   color: white;
+  text-decoration: none;
+  font-weight: bold;
 }
 
-tbody tr:nth-child(even) {
-  background: rgba(255,255,255,0.05);
-}
-
-@media (max-width: 768px) {
-  table {
-    font-size: 13px;
-  }
+.alert {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #b30000;
+  color: white;
+  padding: 14px 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px black;
 }
