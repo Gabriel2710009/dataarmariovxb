@@ -1,7 +1,7 @@
 async function cargarArmas() {
   try {
     const res = await fetch(
-      "https://backend-pefa.onrender.com/api/registro_armas",
+      `${CONFIG.API_URL}/api/registro_armas`,
       {
         credentials: "include"
       }
@@ -14,7 +14,6 @@ async function cargarArmas() {
 
     const data = await res.json();
     
-    // Si hay datos, renderizar tabla real
     if (data && data.length > 0) {
       renderTabla(data);
     }
