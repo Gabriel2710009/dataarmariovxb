@@ -1,26 +1,542 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Armario VxB</title>
-  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1b003a 0%, #4a0080 50%, #1b003a 100%);
+      min-height: 100vh;
+      color: #ffffff;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Animación de fondo */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(75, 0, 130, 0.1) 0%, transparent 50%);
+      animation: pulse 8s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 30px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      font-size: 2rem;
+      background: linear-gradient(135deg, #ffffff, #b19cd9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50px;
+      display: none;
+    }
+
+    .user-info.active {
+      display: flex;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #8a2be2, #4b0082);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .theme-toggle {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1);
+    }
+
+    /* Login Overlay */
+    .login-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .login-overlay.hidden {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .login-box {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 30px;
+      padding: 60px 50px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      animation: slideUp 0.5s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .login-box h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #ffffff, #b19cd9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .login-box p {
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 40px;
+      font-size: 1.1rem;
+    }
+
+    .discord-btn {
+      background: linear-gradient(135deg, #5865F2, #7289DA);
+      color: white;
+      border: none;
+      padding: 18px 50px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border-radius: 50px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 15px;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(88, 101, 242, 0.4);
+    }
+
+    .discord-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(88, 101, 242, 0.6);
+    }
+
+    .discord-btn:active {
+      transform: translateY(-1px);
+    }
+
+    .discord-icon {
+      width: 30px;
+      height: 30px;
+    }
+
+    /* Tabla */
+    .table-container {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      filter: blur(8px);
+      pointer-events: none;
+      transition: all 0.5s ease;
+    }
+
+    .table-container.unlocked {
+      filter: blur(0);
+      pointer-events: all;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    th {
+      padding: 15px;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    td {
+      padding: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    tbody tr {
+      transition: background 0.3s ease;
+    }
+
+    tbody tr:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .status-disponible {
+      background: rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .status-asignado {
+      background: rgba(234, 179, 8, 0.2);
+      color: #facc15;
+      border: 1px solid rgba(234, 179, 8, 0.3);
+    }
+
+    .status-mantenimiento {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 50px;
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #8a2be2;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Light theme */
+    body[data-theme="light"] {
+      background: linear-gradient(135deg, #f0e6ff 0%, #e6d5ff 50%, #f0e6ff 100%);
+      color: #1b003a;
+    }
+
+    body[data-theme="light"] header,
+    body[data-theme="light"] .table-container {
+      background: rgba(255, 255, 255, 0.8);
+      border-color: rgba(27, 0, 58, 0.1);
+    }
+
+    body[data-theme="light"] h1 {
+      background: linear-gradient(135deg, #1b003a, #4a0080);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    body[data-theme="light"] .login-box {
+      background: rgba(255, 255, 255, 0.95);
+      border-color: rgba(27, 0, 58, 0.1);
+    }
+
+    body[data-theme="light"] .login-box h2 {
+      background: linear-gradient(135deg, #1b003a, #4a0080);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    body[data-theme="light"] .login-box p {
+      color: rgba(27, 0, 58, 0.7);
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 1.5rem; }
+      .login-box { padding: 40px 30px; }
+      .login-box h2 { font-size: 2rem; }
+      table { font-size: 0.9rem; }
+      th, td { padding: 10px; }
+    }
+  </style>
 </head>
-
 <body>
-  <header>
-    <h1>Armario VxB</h1>
-    <button id="login">Login con Discord</button>
-    <button onclick="toggleTheme()">🌗</button>
-  </header>
+  <div class="container">
+    <header>
+      <h1>🔫 Armario VxB</h1>
+      <div style="display: flex; gap: 15px; align-items: center;">
+        <div class="user-info" id="userInfo">
+          <div class="user-avatar" id="userAvatar">?</div>
+          <span id="userName">Usuario</span>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()">🌗</button>
+      </div>
+    </header>
 
-  <main>
-    <table id="tabla-armas"></table>
-  </main>
+    <main>
+      <div class="table-container" id="tableContainer">
+        <table id="tabla-armas">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre del Arma</th>
+              <th>Tipo</th>
+              <th>Estado</th>
+              <th>Asignado a</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>#001</td>
+              <td>M4A1 Carbine</td>
+              <td>Rifle de Asalto</td>
+              <td><span class="status-badge status-disponible">Disponible</span></td>
+              <td>-</td>
+              <td>20/12/2025</td>
+            </tr>
+            <tr>
+              <td>#002</td>
+              <td>Glock 17</td>
+              <td>Pistola</td>
+              <td><span class="status-badge status-asignado">Asignado</span></td>
+              <td>Agente_007</td>
+              <td>18/12/2025</td>
+            </tr>
+            <tr>
+              <td>#003</td>
+              <td>AK-47</td>
+              <td>Rifle de Asalto</td>
+              <td><span class="status-badge status-disponible">Disponible</span></td>
+              <td>-</td>
+              <td>20/12/2025</td>
+            </tr>
+            <tr>
+              <td>#004</td>
+              <td>MP5</td>
+              <td>Subfusil</td>
+              <td><span class="status-badge status-mantenimiento">Mantenimiento</span></td>
+              <td>-</td>
+              <td>15/12/2025</td>
+            </tr>
+            <tr>
+              <td>#005</td>
+              <td>Desert Eagle</td>
+              <td>Pistola</td>
+              <td><span class="status-badge status-asignado">Asignado</span></td>
+              <td>Comando_Alpha</td>
+              <td>19/12/2025</td>
+            </tr>
+            <tr>
+              <td>#006</td>
+              <td>AWP</td>
+              <td>Rifle de Francotirador</td>
+              <td><span class="status-badge status-disponible">Disponible</span></td>
+              <td>-</td>
+              <td>20/12/2025</td>
+            </tr>
+            <tr>
+              <td>#007</td>
+              <td>Benelli M4</td>
+              <td>Escopeta</td>
+              <td><span class="status-badge status-disponible">Disponible</span></td>
+              <td>-</td>
+              <td>20/12/2025</td>
+            </tr>
+            <tr>
+              <td>#008</td>
+              <td>P90</td>
+              <td>Subfusil</td>
+              <td><span class="status-badge status-asignado">Asignado</span></td>
+              <td>Bravo_Team</td>
+              <td>17/12/2025</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
 
-  <!-- JS SIEMPRE ABAJO -->
-  <script src="js/auth.js"></script>
-  <script src="js/api.js"></script>
-  <script src="js/theme.js"></script>
+  <!-- Login Overlay -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-box">
+      <h2>🔐 Acceso Restringido</h2>
+      <p>Inicia sesión con Discord para acceder al armario</p>
+      <button class="discord-btn" id="loginBtn">
+        <svg class="discord-icon" viewBox="0 0 127.14 96.36" fill="currentColor">
+          <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
+        </svg>
+        Iniciar sesión con Discord
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const API = "https://backend-pefa.onrender.com";
+    
+    // Verificar parámetros de URL
+    const params = new URLSearchParams(window.location.search);
+    
+    if (params.get("error") === "denied") {
+      alert("⛔ Acceso denegado\nNo eres Armero ni Alto Rango");
+    }
+    
+    if (params.get("login") === "ok") {
+      // Usuario autenticado exitosamente
+      document.getElementById("loginOverlay").classList.add("hidden");
+      document.getElementById("tableContainer").classList.add("unlocked");
+      document.getElementById("userInfo").classList.add("active");
+      
+      // Simular carga de usuario (reemplaza con datos reales de tu API)
+      const username = params.get("username") || "Usuario";
+      document.getElementById("userName").textContent = username;
+      document.getElementById("userAvatar").textContent = username.charAt(0).toUpperCase();
+      
+      // Cargar datos reales
+      cargarArmas();
+    }
+    
+    // Login con Discord
+    document.getElementById("loginBtn").addEventListener("click", () => {
+      window.location.href = `${API}/auth/discord`;
+    });
+    
+    // Toggle theme
+    function toggleTheme() {
+      const theme = document.body.dataset.theme === "light" ? "dark" : "light";
+      document.body.dataset.theme = theme;
+    }
+    
+    // Cargar armas desde la API
+    async function cargarArmas() {
+      try {
+        const res = await fetch(`${API}/api/registro_armas`, {
+          credentials: "include"
+        });
+        
+        if (!res.ok) {
+          console.log("No autorizado");
+          return;
+        }
+        
+        const data = await res.json();
+        
+        if (data && data.length > 0) {
+          renderTabla(data);
+        }
+      } catch (error) {
+        console.error("Error al cargar armas:", error);
+      }
+    }
+    
+    // Renderizar tabla con datos reales
+    function renderTabla(armas) {
+      const tbody = document.querySelector("#tabla-armas tbody");
+      tbody.innerHTML = "";
+      
+      armas.forEach(arma => {
+        const tr = document.createElement("tr");
+        
+        let statusClass = "status-disponible";
+        let statusText = "Disponible";
+        
+        if (arma.estado === "asignado") {
+          statusClass = "status-asignado";
+          statusText = "Asignado";
+        } else if (arma.estado === "mantenimiento") {
+          statusClass = "status-mantenimiento";
+          statusText = "Mantenimiento";
+        }
+        
+        tr.innerHTML = `
+          <td>${arma.id}</td>
+          <td>${arma.nombre}</td>
+          <td>${arma.tipo}</td>
+          <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+          <td>${arma.asignado_a || "-"}</td>
+          <td>${new Date(arma.fecha).toLocaleDateString()}</td>
+        `;
+        
+        tbody.appendChild(tr);
+      });
+    }
+  </script>
 </body>
 </html>
