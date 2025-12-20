@@ -1,101 +1,18 @@
 :root {
-  --primary: #1b003a;
-  --accent: #7a3cff;
-  --bg-dark: #0b0018;
+  --bg: #1b003a;
   --text: #ffffff;
+  --card: #2a005a;
 }
 
-* {
-  box-sizing: border-box;
-  font-family: system-ui, sans-serif;
+[data-theme="light"] {
+  --bg: #f5f5f5;
+  --text: #1b003a;
+  --card: #ffffff;
 }
 
 body {
-  margin: 0;
-  background: var(--bg-dark);
+  background: var(--bg);
   color: var(--text);
-  overflow: hidden;
-}
-
-/* ===== TABLA DE FONDO ===== */
-.table-bg {
-  position: absolute;
-  inset: 0;
-  padding: 40px;
-  filter: blur(6px);
-  opacity: 0.4;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 14px;
-  border-bottom: 1px solid #ffffff22;
-}
-
-th {
-  background: var(--primary);
-  text-align: left;
-}
-
-/* ===== OVERLAY ===== */
-.overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(27,0,58,.85),
-    rgba(0,0,0,.9)
-  );
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* ===== LOGIN CARD ===== */
-.login-card {
-  background: rgba(0,0,0,.55);
-  backdrop-filter: blur(12px);
-  padding: 40px;
-  border-radius: 20px;
-  max-width: 420px;
-  width: 90%;
-  text-align: center;
-  box-shadow: 0 0 60px #000;
-}
-
-.login-card h1 {
-  margin-bottom: 10px;
-}
-
-.login-card p {
-  opacity: .8;
-}
-
-/* ===== DISCORD BUTTON ===== */
-.discord-btn {
-  display: block;
-  margin-top: 30px;
-  padding: 16px;
-  background: var(--accent);
-  color: white;
-  border-radius: 14px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: transform .15s, box-shadow .15s;
-}
-
-.discord-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(122,60,255,.5);
-}
-
-.note {
-  display: block;
-  margin-top: 18px;
-  font-size: 12px;
-  opacity: .6;
+  margin: 0;
+  font-family: system-ui, sans-serif;
 }
