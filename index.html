@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Armas</title>
+
+  <!-- DataTables -->
+  <link rel="stylesheet"
+    href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+
+  <!-- Estilo pro -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 14px;
+      color: #94a3b8;
+      margin-bottom: 20px;
+    }
+
+    table.dataTable {
+      background: #020617;
+      color: #e5e7eb;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    table.dataTable thead {
+      background: #020617;
+      color: #38bdf8;
+    }
+
+    table.dataTable tbody tr:hover {
+      background-color: #020617 !important;
+    }
+
+    .dataTables_wrapper {
+      background: #020617;
+      padding: 15px;
+      border-radius: 12px;
+    }
+
+    .footer {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 12px;
+      color: #64748b;
+    }
+  </style>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+
+<h1>📋 Registro de Armas</h1>
+<div class="subtitle">Vista pública · Solo lectura · Actualización automática</div>
+
+<table id="tabla" class="display" style="width:100%">
+  <thead></thead>
+  <tbody></tbody>
+</table>
+
+<div class="footer">
+  Datos en tiempo real desde Supabase
+</div>
+
+<script>
+const URL = "https://qxwxfnbfxocrogxdwppw.supabase.co/rest/v1/registrso_armas";
+const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4d3hmbmJmeG9jcm9neGR3cHB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNTg2NTEsImV4cCI6MjA4MDczNDY1MX0.y5Yc3PY8fyqEOD2Qoq7Wwfk4NhK4XoLiFNrVbn26ZH4";
+
+let table;
+
+function cargarDatos() {
+  fetch(URL, {
+    headers: {
+      apikey: ANON_KEY,
+      Authorization: "Bearer " + ANON_KEY
+    }
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (!data.length) return;
+
+    const columns = Object.keys(data[0])
+      .filter(col => col !== "id") // 👈 ocultar columnas si querés
+      .map(col => ({ title: col.toUpperCase(), data: col }));
+
+    if (!table) {
+      table = $('#tabla').DataTable({
+        data,
+        columns,
+        pageLength: 10,
+        responsive: true,
+        language: {
+          search: "Buscar:",
+          lengthMenu: "Mostrar _MENU_ filas",
+          info: "Mostrando _START_ a _END_ de _TOTAL_",
+          paginate: {
+            next: "→",
+            previous: "←"
+          }
+        }
+      });
+    } else {
+      table.clear();
+      table.rows.add(data);
+      table.draw();
+    }
+  });
+}
+
+// Cargar al iniciar
+cargarDatos();
+
+// 🔄 Refresh automático cada 30 segundos
+setInterval(cargarDatos, 30000);
+</script>
+
+</body>
+</html>
