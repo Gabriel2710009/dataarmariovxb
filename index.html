@@ -2,39 +2,34 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Armario VxB</title>
 
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-  <header class="topbar">
-    <h1>Armario VxB</h1>
-
-    <div class="actions">
-      <button id="login">Login con Discord</button>
-      <button onclick="toggleTheme()">🌗</button>
-    </div>
+  <header>
+    <h1>🔐 Armario VxB</h1>
+    <button id="themeToggle">🌙</button>
   </header>
 
-  <main class="container">
-    <table id="tabla-armas">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Arma</th>
-          <th>Serie</th>
-          <th>Propietario</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+  <main id="app">
+    <div id="loginBox">
+      <h2>Acceso restringido</h2>
+      <p>Solo Armeros o Altos Rangos</p>
+
+      <a class="loginBtn" href="https://backend-pefa.onrender.com/auth/discord">
+        Login con Discord
+      </a>
+    </div>
+
+    <div id="content" hidden>
+      <h2>📦 Registro de armas</h2>
+      <p>Contenido visible solo para personal autorizado.</p>
+      <!-- acá después va la tabla -->
+    </div>
   </main>
 
-  <script src="js/auth.js"></script>
-  <script src="js/api.js"></script>
-  <script src="js/theme.js"></script>
-  <script src="js/security.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
