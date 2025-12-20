@@ -20,7 +20,6 @@
       overflow-x: hidden;
     }
 
-    /* Animación de fondo */
     body::before {
       content: '';
       position: fixed;
@@ -48,7 +47,6 @@
       z-index: 1;
     }
 
-    /* Header */
     header {
       display: flex;
       justify-content: space-between;
@@ -71,13 +69,12 @@
     }
 
     .user-info {
-      display: flex;
+      display: none;
       align-items: center;
       gap: 15px;
       padding: 10px 20px;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 50px;
-      display: none;
     }
 
     .user-info.active {
@@ -105,6 +102,7 @@
       cursor: pointer;
       font-size: 1.5rem;
       transition: all 0.3s ease;
+      color: #ffffff;
     }
 
     .theme-toggle:hover {
@@ -112,7 +110,6 @@
       transform: scale(1.1);
     }
 
-    /* Login Overlay */
     .login-overlay {
       position: fixed;
       top: 0;
@@ -198,7 +195,6 @@
       height: 30px;
     }
 
-    /* Tabla */
     .table-container {
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(10px);
@@ -271,29 +267,6 @@
       border: 1px solid rgba(239, 68, 68, 0.3);
     }
 
-    /* Loading */
-    .loading {
-      text-align: center;
-      padding: 50px;
-      font-size: 1.2rem;
-      color: rgba(255, 255, 255, 0.6);
-    }
-
-    .spinner {
-      width: 50px;
-      height: 50px;
-      border: 4px solid rgba(255, 255, 255, 0.1);
-      border-top-color: #8a2be2;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin: 20px auto;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* Light theme */
     body[data-theme="light"] {
       background: linear-gradient(135deg, #f0e6ff 0%, #e6d5ff 50%, #f0e6ff 100%);
       color: #1b003a;
@@ -326,6 +299,11 @@
 
     body[data-theme="light"] .login-box p {
       color: rgba(27, 0, 58, 0.7);
+    }
+
+    body[data-theme="light"] th,
+    body[data-theme="light"] td {
+      color: #1b003a;
     }
 
     @media (max-width: 768px) {
@@ -434,7 +412,6 @@
     </main>
   </div>
 
-  <!-- Login Overlay -->
   <div class="login-overlay" id="loginOverlay">
     <div class="login-box">
       <h2>🔐 Acceso Restringido</h2>
@@ -449,7 +426,8 @@
   </div>
 
   <script>
-    const API = "https://backend-pefa.onrender.com";
+    // ⚙️ CONFIGURACIÓN - URL de Railway
+    const API = "https://backend-production-ce31.up.railway.app";
     
     // Verificar parámetros de URL
     const params = new URLSearchParams(window.location.search);
@@ -459,17 +437,14 @@
     }
     
     if (params.get("login") === "ok") {
-      // Usuario autenticado exitosamente
       document.getElementById("loginOverlay").classList.add("hidden");
       document.getElementById("tableContainer").classList.add("unlocked");
       document.getElementById("userInfo").classList.add("active");
       
-      // Simular carga de usuario (reemplaza con datos reales de tu API)
       const username = params.get("username") || "Usuario";
       document.getElementById("userName").textContent = username;
       document.getElementById("userAvatar").textContent = username.charAt(0).toUpperCase();
       
-      // Cargar datos reales
       cargarArmas();
     }
     
