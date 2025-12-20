@@ -1,0 +1,7 @@
+import { initAuth } from "./auth/auth.js";
+import { checkAuth } from "./security/guard.js";
+import { initTheme } from "./theme/theme.js";
+
+initTheme();
+initAuth();
+checkAuth();
