@@ -1,51 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Armario VxB</title>
+<button id="login">Login con Discord</button>
+<table id="tabla"></table>
 
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <!-- Fondo con tabla -->
-  <section class="table-bg">
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Arma</th>
-          <th>Serie</th>
-          <th>Estado</th>
-          <th>Asignado</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>001</td><td>Pistola 9mm</td><td>AX93K</td><td>Activa</td><td>—</td></tr>
-        <tr><td>002</td><td>Escopeta</td><td>LP12Z</td><td>Depósito</td><td>—</td></tr>
-        <tr><td>003</td><td>SMG</td><td>KM442</td><td>Operativa</td><td>—</td></tr>
-        <tr><td>004</td><td>Rifle</td><td>ZX019</td><td>Mantenimiento</td><td>—</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- Overlay Login -->
-  <div class="overlay">
-    <div class="login-card">
-      <h1>🔐 Armario VxB</h1>
-      <p>Acceso exclusivo para Armeros y Altos Rangos</p>
-
-      <a
-        class="discord-btn"
-        href="https://backend-pefa.onrender.com/auth/discord"
-      >
-        Iniciar sesión con Discord
-      </a>
-
-      <span class="note">Sistema monitoreado • Acceso registrado</span>
-    </div>
-  </div>
-
-  <script type="module" src="main.js"></script>
-</body>
-</html>
+<script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script src="js/theme.js"></script>
