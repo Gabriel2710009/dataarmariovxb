@@ -29,15 +29,20 @@ function renderTabla(registros) {
   registros.forEach(r => {
     const tr = document.createElement("tr");
 
+    const tipoClass =
+      r.tipo?.toLowerCase() === "deposito"
+        ? "badge-deposito"
+        : "badge-retiro";
+
     tr.innerHTML = `
       <td>${r.id}</td>
-      <td>${r.tipo}</td>
+      <td><span class="badge ${tipoClass}">${r.tipo}</span></td>
       <td>${r.timestamp ? new Date(r.timestamp).toLocaleString() : "-"}</td>
       <td>${r.nombre ?? "-"}</td>
       <td>${r.steamid ?? "-"}</td>
       <td>${r.discord ?? "-"}</td>
       <td>${r.objeto ?? "-"}</td>
-      <td>${r.cantidad ?? "-"}</td>
+      <td>${r.cantidad ?? 1}</td>
       <td>${r.almacen ?? "-"}</td>
       <td>${r.en_operativo}</td>
       <td>${r.created_at ? new Date(r.created_at).toLocaleString() : "-"}</td>
@@ -52,3 +57,4 @@ function renderTabla(registros) {
     tbody.appendChild(tr);
   });
 }
+
