@@ -18,6 +18,7 @@
       color: #ffffff;
       position: relative;
       overflow-x: hidden;
+      transition: background 0.5s ease, color 0.5s ease;
     }
 
     body::before {
@@ -32,6 +33,7 @@
         radial-gradient(circle at 80% 80%, rgba(75, 0, 130, 0.1) 0%, transparent 50%);
       animation: pulse 8s ease-in-out infinite;
       pointer-events: none;
+      transition: opacity 0.5s ease;
     }
 
     @keyframes pulse {
@@ -58,6 +60,20 @@
       border-radius: 20px;
       margin-bottom: 30px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: all 0.5s ease;
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .header-logo {
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      object-fit: cover;
     }
 
     h1 {
@@ -66,6 +82,7 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      transition: all 0.5s ease;
     }
 
     .user-info {
@@ -76,6 +93,7 @@
       background: rgba(255, 255, 255, 0.1);
       border-radius: 50px;
       position: relative;
+      transition: all 0.3s ease;
     }
 
     .user-info.active {
@@ -99,6 +117,9 @@
     .user-name {
       font-weight: 600;
       font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
 
     .user-role {
@@ -231,6 +252,14 @@
       margin-bottom: 20px;
       flex-wrap: wrap;
       align-items: center;
+      justify-content: space-between;
+    }
+
+    .search-filter-group {
+      display: flex;
+      gap: 15px;
+      flex: 1;
+      flex-wrap: wrap;
     }
 
     .search-box {
@@ -242,6 +271,7 @@
       padding: 12px 25px;
       color: white;
       font-size: 1rem;
+      transition: all 0.3s ease;
     }
 
     .search-box::placeholder {
@@ -273,6 +303,64 @@
     .filter-btn.active {
       background: linear-gradient(135deg, #8a2be2, #4b0082);
       border-color: #8a2be2;
+    }
+
+    .per-page-selector {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 10px 20px;
+    }
+
+    .per-page-selector label {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .per-page-selector select {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .pagination button {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .pagination button:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .pagination button:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .pagination span {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
     }
 
     .translate-toggle {
@@ -316,7 +404,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 1200px;
+      min-width: 1000px;
     }
 
     thead {
@@ -369,41 +457,62 @@
       border: 1px solid rgba(239, 68, 68, 0.3);
     }
 
+    .cat-pistolas { color: #fbbf24 !important; }
+    .cat-arma_blanca { color: #f87171 !important; }
+    .cat-balas { color: #a78bfa !important; }
+    .cat-drogas { color: #34d399 !important; }
+    .cat-otros { color: #60a5fa !important; }
+
     body[data-theme="light"] {
-      background: linear-gradient(135deg, #f0e6ff 0%, #e6d5ff 50%, #f0e6ff 100%);
-      color: #1b003a;
+      background: linear-gradient(135deg, #e9d5ff 0%, #ddd6fe 50%, #e9d5ff 100%);
+      color: #581c87;
+    }
+
+    body[data-theme="light"]::before {
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(138, 43, 226, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(75, 0, 130, 0.05) 0%, transparent 50%);
     }
 
     body[data-theme="light"] header,
     body[data-theme="light"] .table-container,
     body[data-theme="light"] .search-box,
-    body[data-theme="light"] .filter-btn {
-      background: rgba(255, 255, 255, 0.8);
-      border-color: rgba(27, 0, 58, 0.1);
+    body[data-theme="light"] .filter-btn,
+    body[data-theme="light"] .per-page-selector {
+      background: rgba(139, 92, 246, 0.1);
+      border-color: rgba(109, 40, 217, 0.2);
     }
 
     body[data-theme="light"] h1 {
-      background: linear-gradient(135deg, #1b003a, #4a0080);
+      background: linear-gradient(135deg, #581c87, #7c3aed);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
-    body[data-theme="light"] .search-box {
-      color: #1b003a;
+    body[data-theme="light"] .search-box,
+    body[data-theme="light"] .filter-btn,
+    body[data-theme="light"] .per-page-selector select {
+      color: #581c87;
     }
 
     body[data-theme="light"] .search-box::placeholder {
-      color: rgba(27, 0, 58, 0.5);
-    }
-
-    body[data-theme="light"] .filter-btn {
-      color: #1b003a;
+      color: rgba(88, 28, 135, 0.5);
     }
 
     body[data-theme="light"] th,
     body[data-theme="light"] td {
-      color: #1b003a;
+      color: #581c87;
+    }
+
+    body[data-theme="light"] .pagination button {
+      background: rgba(139, 92, 246, 0.1);
+      color: #581c87;
+      border-color: rgba(109, 40, 217, 0.2);
+    }
+
+    body[data-theme="light"] .user-info {
+      background: rgba(139, 92, 246, 0.15);
     }
 
     @media (max-width: 768px) {
@@ -420,7 +529,10 @@
 <body>
   <div class="container">
     <header>
-      <h1>🔫 Armario VxB</h1>
+      <div class="header-title">
+        <img src="https://i.imgur.com/YourLogoHere.png" alt="VxB Logo" class="header-logo" onerror="this.style.display='none'">
+        <h1>🔫 Armario VxB</h1>
+      </div>
       <div style="display: flex; gap: 15px; align-items: center;">
         <div class="user-info" id="userInfo">
           <img class="user-avatar" id="userAvatar" src="" alt="Avatar">
@@ -436,40 +548,58 @@
 
     <main>
       <div class="controls">
-        <input type="text" class="search-box" id="searchBox" placeholder="🔍 Buscar arma...">
-        <div class="filter-buttons">
-          <button class="filter-btn active" data-filter="all">Todos</button>
-          <button class="filter-btn" data-filter="pistolas">Pistolas</button>
-          <button class="filter-btn" data-filter="arma_blanca">Arma Blanca</button>
-          <button class="filter-btn" data-filter="balas">Balas</button>
-          <button class="filter-btn" data-filter="drogas">Drogas</button>
-          <button class="filter-btn" data-filter="otros">Otros</button>
+        <div class="search-filter-group">
+          <input type="text" class="search-box" id="searchBox" placeholder="🔍 Buscar objeto...">
+          <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Todos</button>
+            <button class="filter-btn" data-filter="deposito">Depósitos</button>
+            <button class="filter-btn" data-filter="retiro">Retiros</button>
+            <button class="filter-btn" data-filter="pistolas">Pistolas</button>
+            <button class="filter-btn" data-filter="arma_blanca">Arma Blanca</button>
+            <button class="filter-btn" data-filter="balas">Balas</button>
+            <button class="filter-btn" data-filter="drogas">Drogas</button>
+            <button class="filter-btn" data-filter="otros">Otros</button>
+          </div>
         </div>
-        <button class="translate-toggle" id="translateBtn">🌐 Traducir</button>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <div class="per-page-selector">
+            <label>Ver:</label>
+            <select id="perPageSelect">
+              <option value="10">10</option>
+              <option value="50">50</option>
+              <option value="100" selected>100</option>
+              <option value="500">500</option>
+              <option value="1000">1000</option>
+              <option value="all">Todos</option>
+            </select>
+          </div>
+          <button class="translate-toggle" id="translateBtn">🌐 Traducir</button>
+        </div>
       </div>
 
       <div class="table-container" id="tableContainer">
-        <div class="table-wrapper">
-          <table id="tabla-armas">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Tipo</th>
-                <th>Fecha / Hora</th>
-                <th>Nombre</th>
-                <th>Steam ID</th>
-                <th>Discord</th>
-                <th>Objeto</th>
-                <th>Cantidad</th>
-                <th>Almacén</th>
-                <th>En operativo</th>
-                <th>Validado</th>
-                <th>Validado por</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
+        <table id="tabla-armas">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tipo</th>
+              <th>Fecha / Hora</th>
+              <th>Nombre</th>
+              <th>Objeto</th>
+              <th>Cantidad</th>
+              <th>Almacén</th>
+              <th>En operativo</th>
+              <th>Validado</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="pagination" id="pagination">
+        <button id="prevPage">Anterior</button>
+        <span id="pageInfo">Página 1</span>
+        <button id="nextPage">Siguiente</button>
       </div>
     </main>
   </div>
@@ -486,270 +616,330 @@
       </button>
     </div>
   </div>
+ <script>
+   // ========== COPIAR ESTO Y PEGARLO EN EL <script> DEL HTML ==========
 
-  <script>
-    const API = "https://backend-production-ce31.up.railway.app";
-    
-    const TRADUCCIONES = {
-      'WEAPON_PISTOL': '9MM', 'WEAPON_PISTOL_MK2': '9MM MK2', 'WEAPON_SNSPISTOL_MK2': 'Pistola SNS',
-      'WEAPON_DOUBLEACTION': 'Revolver', 'WEAPON_COMBATPISTOL': 'Glock', 'at_compensator': 'Compensador',
-      'at_flashlight': 'Linterna Pistola', 'at_suppressor_light': 'Silenciador Pistola',
-      'at_clip_extended_pistol': 'Cargador ext. Pistola', 'at_clip_extended_shotgun': 'Cargador ext. Escopeta',
-      'at_clip_extended_smg': 'Cargador ext. SMG', 'at_clip_drum_smg': 'Cargador tambor SMG',
-      'WEAPON_SWITCHBLADE': 'Navaja', 'WEAPON_KNIFE': 'Cuchillo', 'WEAPON_KNUCKLE': 'Puño Americano',
-      'WEAPON_BAT': 'Bate', 'ammo-9': 'Munición 9MM', 'ammo-38': 'Munición .38', 'ammo-50': 'Munición .50',
-      'ammo-rifle': 'Munición Rifle', 'ammo-45': 'Munición SNS', 'radio': 'Radio', 'chaleco': 'Chaleco Antibalas',
-      'oxygenmask': 'Máscara de Oxígeno', 'repairkit': 'Kit de Reparación', 'medikit': 'Botiquín',
-      'lockpick': 'Ganzúa', 'money': 'Dinero', 'black_money': 'Dinero Negro', 'bandage': 'Venda',
-      'defibrillator': 'Desfibrilador', 'phone': 'Teléfono', 'police_cad': 'Tablet Policía',
-      'boombox': 'Radio Música', 'bike': 'Bicicleta', 'sandwich': 'Sándwich', 'water': 'Agua',
-      'chocolate': 'Chocolate', 'roscon': 'Roscón', 'polvoron': 'Polvorón', 'turron': 'Turrón',
-      'coquito': 'Coquito', 'supervodka': 'Vodka', 'weed_amnesia': 'Hoja Amnesia',
-      'bag_amnesia': 'Amnesia Procesada', 'peyote': 'Peyote', 'coca_leaf': 'Hoja de Coca',
-      'cocaine': 'Cocaína', 'poppy_plant': 'Amapola', 'WEAPON_SNOWBALL': 'Nieve'
-    };
+const API = "https://backend-production-ce31.up.railway.app";
 
-    const CATEGORIAS = {
-      pistolas: ['WEAPON_PISTOL', 'WEAPON_PISTOL_MK2', 'WEAPON_SNSPISTOL_MK2', 'WEAPON_DOUBLEACTION',
-        'WEAPON_COMBATPISTOL', 'at_compensator', 'at_flashlight', 'at_suppressor_light',
-        'at_clip_extended_pistol', 'at_clip_extended_shotgun', 'at_clip_extended_smg', 'at_clip_drum_smg'],
-      arma_blanca: ['WEAPON_SWITCHBLADE', 'WEAPON_KNIFE', 'WEAPON_KNUCKLE', 'WEAPON_BAT'],
-      balas: ['ammo-9', 'ammo-38', 'ammo-50', 'ammo-rifle', 'ammo-45'],
-      drogas: ['weed_amnesia', 'bag_amnesia', 'peyote', 'coca_leaf', 'cocaine', 'poppy_plant', 'black_money'],
-      otros: ['money', 'radio', 'chaleco', 'oxygenmask', 'repairkit', 'medikit', 'lockpick', 'bandage',
-        'defibrillator', 'phone', 'police_cad', 'boombox', 'bike', 'sandwich', 'water', 'chocolate',
-        'roscon', 'polvoron', 'turron', 'coquito', 'supervodka', 'WEAPON_SNOWBALL']
-    };
+const TRADUCCIONES = {
+  'WEAPON_PISTOL': '9MM', 'WEAPON_PISTOL_MK2': '9MM MK2', 'WEAPON_SNSPISTOL_MK2': 'Pistola SNS',
+  'WEAPON_DOUBLEACTION': 'Revolver', 'WEAPON_COMBATPISTOL': 'Glock', 'at_compensator': 'Compensador',
+  'at_flashlight': 'Linterna Pistola', 'at_suppressor_light': 'Silenciador Pistola',
+  'at_clip_extended_pistol': 'Cargador ext. Pistola', 'at_clip_extended_shotgun': 'Cargador ext. Escopeta',
+  'at_clip_extended_smg': 'Cargador ext. SMG', 'at_clip_drum_smg': 'Cargador tambor SMG',
+  'WEAPON_SWITCHBLADE': 'Navaja', 'WEAPON_KNIFE': 'Cuchillo', 'WEAPON_KNUCKLE': 'Puño Americano',
+  'WEAPON_BAT': 'Bate', 'ammo-9': 'Munición 9MM', 'ammo-38': 'Munición .38', 'ammo-50': 'Munición .50',
+  'ammo-rifle': 'Munición Rifle', 'ammo-45': 'Munición SNS', 'radio': 'Radio', 'chaleco': 'Chaleco Antibalas',
+  'oxygenmask': 'Máscara de Oxígeno', 'repairkit': 'Kit de Reparación', 'medikit': 'Botiquín',
+  'lockpick': 'Ganzúa', 'money': 'Dinero', 'black_money': 'Dinero Negro', 'bandage': 'Venda',
+  'defibrillator': 'Desfibrilador', 'phone': 'Teléfono', 'police_cad': 'Tablet Policía',
+  'boombox': 'Radio Música', 'bike': 'Bicicleta', 'sandwich': 'Sándwich', 'water': 'Agua',
+  'chocolate': 'Chocolate', 'roscon': 'Roscón', 'polvoron': 'Polvorón', 'turron': 'Turrón',
+  'coquito': 'Coquito', 'supervodka': 'Vodka', 'weed_amnesia': 'Hoja Amnesia',
+  'bag_amnesia': 'Amnesia Procesada', 'peyote': 'Peyote', 'coca_leaf': 'Hoja de Coca',
+  'cocaine': 'Cocaína', 'poppy_plant': 'Amapola', 'WEAPON_SNOWBALL': 'Nieve'
+};
 
-    let armasData = [];
-    let translateEnabled = false;
-    let currentFilter = 'all';
+const ALMACENES = {
+  'job_stash_670': 'Armario Arriba',
+  'job_stash_486': 'Armario Soul',
+  'job_stash_485': 'Armario Demon',
+  'job_stash_271': 'Armario Altos'
+};
 
-    // ===== INICIALIZACIÓN =====
-    async function init() {
-      console.log("🚀 Iniciando aplicación...");
-      
-      // Limpiar URL parameters inmediatamente
-      const params = new URLSearchParams(window.location.search);
-      
-      if (params.has("login") || params.has("error") || params.has("debug_token")) {
-        console.log("🧹 Limpiando URL...");
-        
-        // Mostrar errores si los hay ANTES de limpiar
-        if (params.get("error") === "denied") {
-          alert("⛔ Acceso denegado\nNo eres Armero ni Alto Rango");
-        } else if (params.get("error") === "server") {
-          alert("❌ Error del servidor");
-        } else if (params.get("error") === "no_code") {
-          alert("❌ Error: código de Discord no recibido");
-        }
-        
-        // Limpiar URL INMEDIATAMENTE
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
-      
-      // Verificar sesión
-      await verificarSesion();
-    }
+const CATEGORIAS = {
+  pistolas: ['WEAPON_PISTOL', 'WEAPON_PISTOL_MK2', 'WEAPON_SNSPISTOL_MK2', 'WEAPON_DOUBLEACTION',
+    'WEAPON_COMBATPISTOL', 'at_compensator', 'at_flashlight', 'at_suppressor_light',
+    'at_clip_extended_pistol', 'at_clip_extended_shotgun', 'at_clip_extended_smg', 'at_clip_drum_smg'],
+  arma_blanca: ['WEAPON_SWITCHBLADE', 'WEAPON_KNIFE', 'WEAPON_KNUCKLE', 'WEAPON_BAT'],
+  balas: ['ammo-9', 'ammo-38', 'ammo-50', 'ammo-rifle', 'ammo-45'],
+  drogas: ['weed_amnesia', 'bag_amnesia', 'peyote', 'coca_leaf', 'cocaine', 'poppy_plant', 'black_money'],
+  otros: ['money', 'radio', 'chaleco', 'oxygenmask', 'repairkit', 'medikit', 'lockpick', 'bandage',
+    'defibrillator', 'phone', 'police_cad', 'boombox', 'bike', 'sandwich', 'water', 'chocolate',
+    'roscon', 'polvoron', 'turron', 'coquito', 'supervodka', 'WEAPON_SNOWBALL']
+};
 
-    // ===== VERIFICAR SESIÓN =====
-    async function verificarSesion() {
-      console.log("🔍 Verificando sesión...");
-      
-      try {
-        const res = await fetch(`${API}/auth/verify`, {
-          method: 'GET',
-          credentials: 'include', // CRÍTICO para enviar cookies
-          headers: {
-            'Accept': 'application/json'
-          }
-        });
-        
-        console.log("📡 Respuesta verify:", res.status);
-        
-        if (res.ok) {
-          const data = await res.json();
-          console.log("✅ Datos recibidos:", data);
-          
-          if (data.authenticated && data.user) {
-            mostrarUsuarioAutenticado(data.user);
-            await cargarArmas();
-            return;
-          }
-        }
-        
-        console.log("❌ No hay sesión válida");
-      } catch (error) {
-        console.error("❌ Error verificando sesión:", error);
-      }
-      
-      // Si llegamos aquí, mostrar login
-      mostrarLogin();
-    }
+let armasData = [];
+let filteredData = [];
+let translateEnabled = false;
+let currentFilter = 'all';
+let currentPage = 1;
+let itemsPerPage = 100;
 
-    // ===== MOSTRAR LOGIN =====
-    function mostrarLogin() {
-      console.log("🔐 Mostrando pantalla de login");
-      document.getElementById("loginOverlay").classList.remove("hidden");
-      document.getElementById("tableContainer").classList.remove("unlocked");
-    }
-
-    // ===== MOSTRAR USUARIO AUTENTICADO =====
-    function mostrarUsuarioAutenticado(user) {
-      console.log("👤 Mostrando usuario:", user);
-      
-      document.getElementById("loginOverlay").classList.add("hidden");
-      document.getElementById("tableContainer").classList.add("unlocked");
-      document.getElementById("userInfo").classList.add("active");
-      
-      document.getElementById("userName").textContent = user.username || "Usuario";
-      document.getElementById("userRole").textContent = user.roleName || "Usuario";
-      
-      const avatarUrl = user.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`;
-      document.getElementById("userAvatar").src = avatarUrl;
-    }
-
-    // ===== CARGAR ARMAS =====
-    async function cargarArmas() {
-      console.log("📦 Cargando datos...");
-      
-      try {
-        const res = await fetch(`${API}/api/registros_armas`, {
-          credentials: "include"
-        });
-
-        if (!res.ok) {
-          console.log("❌ No autorizado");
-          mostrarLogin();
-          return;
-        }
-
-        const data = await res.json();
-        console.log("✅ Datos cargados:", data.length, "registros");
-        
-        armasData = data;
-        renderTabla(data);
-      } catch (error) {
-        console.error("❌ Error al cargar armas:", error);
-      }
-    }
-
-    // ===== RENDERIZAR TABLA =====
-    function renderTabla(registros) {
-      const tbody = document.querySelector("#tabla-armas tbody");
-      tbody.innerHTML = "";
-      
-      registros.forEach(r => {
-        const tr = document.createElement("tr");
-        tr.dataset.item = r.objeto || "";
-        tr.dataset.categoria = getCategoriaItem(r.objeto || "");
-        
-        const nombreMostrar = translateEnabled && TRADUCCIONES[r.objeto] 
-          ? TRADUCCIONES[r.objeto] 
-          : r.objeto || "-";
-        
-        tr.innerHTML = `
-          <td>${r.id}</td>
-          <td>
-            <span class="status-badge ${r.tipo === "deposito" ? "status-deposito" : "status-retiro"}">
-              ${r.tipo || "-"}
-            </span>
-          </td>
-          <td>${r.timestamp ? new Date(r.timestamp).toLocaleString() : "-"}</td>
-          <td>${r.nombre || "-"}</td>
-          <td>${r.steamid || "-"}</td>
-          <td>${r.discord || "-"}</td>
-          <td>${nombreMostrar}</td>
-          <td>${r.cantidad || 0}</td>
-          <td>${r.almacen || "-"}</td>
-          <td>${r.en_operativo ? "Sí" : "No"}</td>
-          <td>${r.validado ? "Sí" : "No"}</td>
-          <td>${r.validado_por || "-"}</td>
-        `;
-        
-        tbody.appendChild(tr);
-      });
-    }
-
-    // ===== OBTENER CATEGORÍA =====
-    function getCategoriaItem(nombre) {
-      for (const [cat, items] of Object.entries(CATEGORIAS)) {
-        if (items.includes(nombre)) return cat;
-      }
-      return 'otros';
-    }
-
-    // ===== FILTRAR TABLA =====
-    function filtrarTabla() {
-      const searchTerm = document.getElementById("searchBox").value.toLowerCase();
-      const rows = document.querySelectorAll("#tabla-armas tbody tr");
-      
-      rows.forEach(row => {
-        const item = row.dataset.item.toLowerCase();
-        const categoria = row.dataset.categoria;
-        const itemText = row.textContent.toLowerCase();
-        
-        const matchSearch = itemText.includes(searchTerm) || item.includes(searchTerm);
-        const matchFilter = currentFilter === 'all' || categoria === currentFilter;
-        
-        if (matchSearch && matchFilter) {
-          row.classList.remove("hidden");
-        } else {
-          row.classList.add("hidden");
-        }
-      });
-    }
-
-    // ===== THEME TOGGLE =====
-    function toggleTheme() {
-      const theme = document.body.dataset.theme === "light" ? "dark" : "light";
-      document.body.dataset.theme = theme;
-    }
-
+async function init() {
+  console.log("🚀 Iniciando aplicación...");
   
-// ===== INICIAR APP =====
-    window.addEventListener('DOMContentLoaded', () => {
-      // ===== EVENT LISTENERS =====
-      document.getElementById("loginBtn").addEventListener("click", () => {
-        console.log("🔗 Redirigiendo a Discord OAuth...");
-        window.location.href = `${API}/auth/discord`;
-      });
+  const params = new URLSearchParams(window.location.search);
+  
+  if (params.has("login") || params.has("error") || params.has("debug_token")) {
+    console.log("🧹 Limpiando URL...");
+    
+    if (params.get("error") === "denied") {
+      alert("⛔ Acceso denegado\nNo eres Armero ni Alto Rango");
+    } else if (params.get("error") === "server") {
+      alert("❌ Error del servidor");
+    } else if (params.get("error") === "no_code") {
+      alert("❌ Error: código de Discord no recibido");
+    }
+    
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+  
+  await verificarSesion();
+}
 
-      document.getElementById("logoutBtn").addEventListener("click", async () => {
-        console.log("👋 Cerrando sesión...");
-        try {
-          await fetch(`${API}/auth/logout`, {
-            method: 'POST',
-            credentials: 'include'
-          });
-          window.location.reload();
-        } catch (error) {
-          console.error("Error al cerrar sesión:", error);
-          window.location.reload();
-        }
-      });
-
-      document.getElementById("translateBtn").addEventListener("click", () => {
-        translateEnabled = !translateEnabled;
-        document.getElementById("translateBtn").classList.toggle("active");
-        renderTabla(armasData);
-      });
-
-      document.querySelectorAll(".filter-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-          document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          
-          currentFilter = btn.dataset.filter;
-          filtrarTabla();
-        });
-      });
-
-      document.getElementById("searchBox").addEventListener("input", filtrarTabla);
-
-      // Llamar a init() AL FINAL
-      init();
+async function verificarSesion() {
+  console.log("🔍 Verificando sesión...");
+  
+  try {
+    const res = await fetch(`${API}/auth/verify`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json'
+      }
     });
+    
+    console.log("📡 Respuesta verify:", res.status);
+    
+    if (res.ok) {
+      const data = await res.json();
+      console.log("✅ Datos recibidos:", data);
+      
+      if (data.authenticated && data.user) {
+        mostrarUsuarioAutenticado(data.user);
+        await cargarArmas();
+        return;
+      }
+    }
+    
+    console.log("❌ No hay sesión válida");
+  } catch (error) {
+    console.error("❌ Error verificando sesión:", error);
+  }
+  
+  mostrarLogin();
+}
+
+function mostrarLogin() {
+  console.log("🔐 Mostrando pantalla de login");
+  document.getElementById("loginOverlay").classList.remove("hidden");
+  document.getElementById("tableContainer").classList.remove("unlocked");
+}
+
+function mostrarUsuarioAutenticado(user) {
+  console.log("👤 Mostrando usuario:", user);
+  
+  document.getElementById("loginOverlay").classList.add("hidden");
+  document.getElementById("tableContainer").classList.add("unlocked");
+  document.getElementById("userInfo").classList.add("active");
+  
+  let roleEmoji = "";
+  if (user.roleName === "Alto Rango") {
+    roleEmoji = "🔰";
+  } else if (user.roleName === "Armero") {
+    roleEmoji = "🔫";
+  }
+  
+  document.getElementById("userName").innerHTML = `${roleEmoji} ${user.username || "Usuario"}`;
+  document.getElementById("userRole").textContent = user.roleName || "Usuario";
+  
+  const avatarUrl = user.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`;
+  document.getElementById("userAvatar").src = avatarUrl;
+}
+
+async function cargarArmas() {
+  console.log("📦 Cargando datos...");
+  
+  try {
+    const res = await fetch(`${API}/api/registros_armas`, {
+      credentials: "include"
+    });
+
+    if (!res.ok) {
+      console.log("❌ No autorizado");
+      mostrarLogin();
+      return;
+    }
+
+    const data = await res.json();
+    console.log("✅ Datos cargados:", data.length, "registros");
+    
+    armasData = data;
+    filteredData = data;
+    currentPage = 1;
+    renderTabla();
+  } catch (error) {
+    console.error("❌ Error al cargar armas:", error);
+  }
+}
+
+function renderTabla() {
+  const tbody = document.querySelector("#tabla-armas tbody");
+  tbody.innerHTML = "";
+  
+  const startIndex = itemsPerPage === 'all' ? 0 : (currentPage - 1) * itemsPerPage;
+  const endIndex = itemsPerPage === 'all' ? filteredData.length : startIndex + itemsPerPage;
+  const paginatedData = filteredData.slice(startIndex, endIndex);
+  
+  paginatedData.forEach(r => {
+    const tr = document.createElement("tr");
+    tr.dataset.item = r.objeto || "";
+    tr.dataset.tipo = r.tipo || "";
+    tr.dataset.categoria = getCategoriaItem(r.objeto || "");
+    
+    const nombreMostrar = translateEnabled && TRADUCCIONES[r.objeto] 
+      ? TRADUCCIONES[r.objeto] 
+      : r.objeto || "-";
+    
+    const almacenMostrar = ALMACENES[r.almacen] || r.almacen || "-";
+    const categoria = getCategoriaItem(r.objeto || "");
+    
+    tr.innerHTML = `
+      <td>${r.id}</td>
+      <td>
+        <span class="status-badge ${r.tipo === "deposito" ? "status-deposito" : "status-retiro"}">
+          ${r.tipo || "-"}
+        </span>
+      </td>
+      <td>${r.timestamp ? new Date(r.timestamp).toLocaleString() : "-"}</td>
+      <td>${r.nombre || "-"}</td>
+      <td class="cat-${categoria}">${nombreMostrar}</td>
+      <td>${r.cantidad || 0}</td>
+      <td>${almacenMostrar}</td>
+      <td>${r.en_operativo ? "Sí" : "No"}</td>
+      <td>${r.validado ? "Sí" : "No"}</td>
+    `;
+    
+    tbody.appendChild(tr);
+  });
+  
+  updatePagination();
+}
+
+function getCategoriaItem(nombre) {
+  for (const [cat, items] of Object.entries(CATEGORIAS)) {
+    if (items.includes(nombre)) return cat;
+  }
+  return 'otros';
+}
+
+function filtrarTabla() {
+  const searchTerm = document.getElementById("searchBox").value.toLowerCase();
+  
+  filteredData = armasData.filter(row => {
+    const item = (row.objeto || "").toLowerCase();
+    const tipo = row.tipo || "";
+    const categoria = getCategoriaItem(row.objeto || "");
+    const itemTraducido = translateEnabled && TRADUCCIONES[row.objeto] 
+      ? TRADUCCIONES[row.objeto].toLowerCase() 
+      : "";
+    const allText = `${row.nombre || ""} ${item} ${itemTraducido} ${row.discord || ""} ${tipo}`.toLowerCase();
+    
+    const matchSearch = allText.includes(searchTerm);
+    
+    let matchFilter = false;
+    if (currentFilter === 'all') {
+      matchFilter = true;
+    } else if (currentFilter === 'deposito' || currentFilter === 'retiro') {
+      matchFilter = tipo === currentFilter;
+    } else {
+      matchFilter = categoria === currentFilter;
+    }
+    
+    return matchSearch && matchFilter;
+  });
+  
+  currentPage = 1;
+  renderTabla();
+}
+
+function updatePagination() {
+  const totalPages = itemsPerPage === 'all' ? 1 : Math.ceil(filteredData.length / itemsPerPage);
+  
+  document.getElementById("prevPage").disabled = currentPage === 1;
+  document.getElementById("nextPage").disabled = currentPage >= totalPages || itemsPerPage === 'all';
+  
+  if (itemsPerPage === 'all') {
+    document.getElementById("pageInfo").textContent = `Mostrando todos (${filteredData.length} registros)`;
+  } else {
+    document.getElementById("pageInfo").textContent = `Página ${currentPage} de ${totalPages} (${filteredData.length} registros)`;
+  }
+}
+
+function toggleTheme() {
+  const theme = document.body.dataset.theme === "light" ? "dark" : "light";
+  document.body.dataset.theme = theme;
+  localStorage.setItem('theme', theme);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById("loginBtn").addEventListener("click", () => {
+    console.log("🔗 Redirigiendo a Discord OAuth...");
+    window.location.href = `${API}/auth/discord`;
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+    console.log("👋 Cerrando sesión...");
+    try {
+      await fetch(`${API}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+      window.location.reload();
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+      window.location.reload();
+    }
+  });
+
+  document.getElementById("translateBtn").addEventListener("click", () => {
+    translateEnabled = !translateEnabled;
+    document.getElementById("translateBtn").classList.toggle("active");
+    renderTabla();
+  });
+
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      
+      currentFilter = btn.dataset.filter;
+      filtrarTabla();
+    });
+  });
+
+  document.getElementById("searchBox").addEventListener("input", filtrarTabla);
+
+  document.getElementById("perPageSelect").addEventListener("change", (e) => {
+    itemsPerPage = e.target.value === 'all' ? 'all' : parseInt(e.target.value);
+    currentPage = 1;
+    renderTabla();
+  });
+
+  document.getElementById("prevPage").addEventListener("click", () => {
+    if (currentPage > 1) {
+      currentPage--;
+      renderTabla();
+    }
+  });
+
+  document.getElementById("nextPage").addEventListener("click", () => {
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    if (currentPage < totalPages) {
+      currentPage++;
+      renderTabla();
+    }
+  });
+
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme) {
+    document.body.dataset.theme = savedTheme;
+  }
+
+  init();
+});
   </script>
 </body>
 </html>
+  <!-- VER PARTE 2 PARA EL JAVASCRIPT -->
