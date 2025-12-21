@@ -22,33 +22,33 @@ async function cargarArmas() {
   }
 }
 
-function renderTabla(armas) {
+function renderTabla(registros) {
   const tbody = document.querySelector("#tabla-armas tbody");
   tbody.innerHTML = "";
-  
-  armas.forEach(arma => {
+
+  registros.forEach(r => {
     const tr = document.createElement("tr");
-    
-    let statusClass = "status-disponible";
-    let statusText = "Disponible";
-    
-    if (arma.estado === "asignado") {
-      statusClass = "status-asignado";
-      statusText = "Asignado";
-    } else if (arma.estado === "mantenimiento") {
-      statusClass = "status-mantenimiento";
-      statusText = "Mantenimiento";
-    }
-    
+
     tr.innerHTML = `
-      <td>${arma.id}</td>
-      <td>${arma.nombre}</td>
-      <td>${arma.tipo}</td>
-      <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-      <td>${arma.asignado_a || "-"}</td>
-      <td>${new Date(arma.fecha).toLocaleDateString()}</td>
+      <td>${r.id}</td>
+      <td>${r.tipo}</td>
+      <td>${r.timestamp ? new Date(r.timestamp).toLocaleString() : "-"}</td>
+      <td>${r.nombre ?? "-"}</td>
+      <td>${r.steamid ?? "-"}</td>
+      <td>${r.discord ?? "-"}</td>
+      <td>${r.objeto ?? "-"}</td>
+      <td>${r.cantidad ?? "-"}</td>
+      <td>${r.almacen ?? "-"}</td>
+      <td>${r.en_operativo}</td>
+      <td>${r.created_at ? new Date(r.created_at).toLocaleString() : "-"}</td>
+      <td>${r.discord_id ?? "-"}</td>
+      <td>${r.validado}</td>
+      <td>${r.validado_por ?? "-"}</td>
+      <td>${r.fecha_validacion ? new Date(r.fecha_validacion).toLocaleString() : "-"}</td>
+      <td>${r.alerta_message_id ?? "-"}</td>
+      <td>${r.alerta_channel_id ?? "-"}</td>
     `;
-    
+
     tbody.appendChild(tr);
   });
 }
