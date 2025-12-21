@@ -29,32 +29,23 @@ function renderTabla(registros) {
   registros.forEach(r => {
     const tr = document.createElement("tr");
 
-    const tipoClass =
-      r.tipo?.toLowerCase() === "deposito"
-        ? "badge-deposito"
-        : "badge-retiro";
+    const movimientoClass =
+      r.tipo === "deposito" ? "status-deposito" : "status-retiro";
+
+    const movimientoText =
+      r.tipo === "deposito" ? "Depósito" : "Retiro";
 
     tr.innerHTML = `
-      <td>${r.id}</td>
-      <td><span class="badge ${tipoClass}">${r.tipo}</span></td>
-      <td>${r.timestamp ? new Date(r.timestamp).toLocaleString() : "-"}</td>
-      <td>${r.nombre ?? "-"}</td>
-      <td>${r.steamid ?? "-"}</td>
-      <td>${r.discord ?? "-"}</td>
       <td>${r.objeto ?? "-"}</td>
-      <td>${r.cantidad ?? 1}</td>
-      <td>${r.almacen ?? "-"}</td>
-      <td>${r.en_operativo}</td>
+      <td>${r.cantidad ?? 0}</td>
+      <td>
+        <span class="status-badge ${movimientoClass}">
+          ${movimientoText}
+        </span>
+      </td>
       <td>${r.created_at ? new Date(r.created_at).toLocaleString() : "-"}</td>
-      <td>${r.discord_id ?? "-"}</td>
-      <td>${r.validado}</td>
-      <td>${r.validado_por ?? "-"}</td>
-      <td>${r.fecha_validacion ? new Date(r.fecha_validacion).toLocaleString() : "-"}</td>
-      <td>${r.alerta_message_id ?? "-"}</td>
-      <td>${r.alerta_channel_id ?? "-"}</td>
     `;
 
     tbody.appendChild(tr);
   });
 }
-
