@@ -706,7 +706,11 @@
       document.body.dataset.theme = theme;
     }
 
-    // ===== EVENT LISTENERS =====
+  
+    // ===== INICIAR APP =====
+    window.addEventListener('DOMContentLoaded', init);
+
+      // ===== EVENT LISTENERS =====
     document.getElementById("loginBtn").addEventListener("click", () => {
       console.log("🔗 Redirigiendo a Discord OAuth...");
       window.location.href = `${API}/auth/discord`;
@@ -744,5 +748,6 @@
 
     document.getElementById("searchBox").addEventListener("input", filtrarTabla);
 
-    // ===== INICIAR APP =====
-    window.addEventListener('DOMContentLoaded', init);
+    // Llamar a init() después de registrar listeners
+  init();
+});
