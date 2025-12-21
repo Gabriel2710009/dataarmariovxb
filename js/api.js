@@ -1,7 +1,7 @@
 async function cargarArmas() {
   try {
     const res = await fetch(
-      `${CONFIG.API_URL}/api/registro_armas`,
+      `${CONFIG.API_URL}/api/registros_armas`,
       {
         credentials: "include"
       }
