@@ -312,3 +312,14 @@ body[data-theme="light"] td {
   table { font-size: 0.9rem; }
   th, td { padding: 10px; }
 }
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Evita que las columnas se rompan */
+table th,
+table td {
+  white-space: nowrap;
+}
