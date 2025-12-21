@@ -517,13 +517,22 @@
     let armasData = [];
     let translateEnabled = false;
     let currentFilter = 'all';
+    let sessionChecked = false; // ⬅️ PREVIENE LOOPS
 
     window.addEventListener('DOMContentLoaded', verificarSesion);
 
     async function verificarSesion() {
+      // ⬅️ SI YA VERIFICAMOS, NO VOLVEMOS A VERIFICAR
+      if (sessionChecked) return;
+      sessionChecked = true;
+
       const params = new URLSearchParams(window.location.search);
       
+      // Si viene de callback con login=ok
       if (params.get("login") === "ok") {
+        // ⬅️ LIMPIAR URL INMEDIATAMENTE para evitar loops
+        window.history.replaceState({}, document.title, window.location.pathname);
+        
         try {
           const res = await fetch(`${API}/auth/verify`, {
             credentials: 'include'
@@ -542,10 +551,18 @@
         }
       }
       
-      if (params.get("error") === "denied") {
-        alert("⛔ Acceso denegado\nNo eres Armero ni Alto Rango");
+      // Si hay error de Discord
+      if (params.get("error")) {
+        const errorType = params.get("error");
+        if (errorType === "denied") {
+          alert("⛔ Acceso denegado\nNo eres Armero ni Alto Rango");
+        } else {
+          alert("❌ Error en la autenticación");
+        }
+        window.history.replaceState({}, document.title, window.location.pathname);
       }
       
+      // Mostrar overlay de login
       document.getElementById("loginOverlay").classList.remove("hidden");
     }
 
@@ -569,7 +586,7 @@
           method: 'POST',
           credentials: 'include'
         });
-        window.location.reload();
+        window.location.href = '/';
       } catch (error) {
         console.error("Error al cerrar sesión:", error);
       }
@@ -588,7 +605,8 @@
 
         if (!res.ok) {
           console.log("No autorizado");
-          window.location.reload();
+          sessionChecked = false;
+          window.location.href = '/';
           return;
         }
 
