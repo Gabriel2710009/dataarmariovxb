@@ -75,6 +75,7 @@
       padding: 10px 20px;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 50px;
+      position: relative;
     }
 
     .user-info.active {
@@ -82,15 +83,48 @@
     }
 
     .user-avatar {
-      width: 40px;
-      height: 40px;
+      width: 45px;
+      height: 45px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #8a2be2, #4b0082);
+      border: 2px solid #8a2be2;
+      object-fit: cover;
+    }
+
+    .user-details {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 1.2rem;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .user-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .user-role {
+      font-size: 0.75rem;
+      color: #b19cd9;
+      background: rgba(138, 43, 226, 0.2);
+      padding: 2px 8px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+
+    .logout-btn {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.3s ease;
+      margin-left: 10px;
+    }
+
+    .logout-btn:hover {
+      background: rgba(239, 68, 68, 0.3);
+      transform: translateY(-2px);
     }
 
     .theme-toggle {
@@ -186,13 +220,79 @@
       box-shadow: 0 15px 40px rgba(88, 101, 242, 0.6);
     }
 
-    .discord-btn:active {
-      transform: translateY(-1px);
-    }
-
     .discord-icon {
       width: 30px;
       height: 30px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 250px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50px;
+      padding: 12px 25px;
+      color: white;
+      font-size: 1rem;
+    }
+
+    .search-box::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .filter-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    .filter-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .filter-btn.active {
+      background: linear-gradient(135deg, #8a2be2, #4b0082);
+      border-color: #8a2be2;
+    }
+
+    .translate-toggle {
+      background: rgba(34, 197, 94, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      color: #4ade80;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    .translate-toggle:hover {
+      background: rgba(34, 197, 94, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .translate-toggle.active {
+      background: rgba(34, 197, 94, 0.4);
     }
 
     .table-container {
@@ -241,6 +341,10 @@
       background: rgba(255, 255, 255, 0.05);
     }
 
+    tbody tr.hidden {
+      display: none;
+    }
+
     .status-badge {
       display: inline-block;
       padding: 5px 15px;
@@ -273,7 +377,9 @@
     }
 
     body[data-theme="light"] header,
-    body[data-theme="light"] .table-container {
+    body[data-theme="light"] .table-container,
+    body[data-theme="light"] .search-box,
+    body[data-theme="light"] .filter-btn {
       background: rgba(255, 255, 255, 0.8);
       border-color: rgba(27, 0, 58, 0.1);
     }
@@ -285,20 +391,16 @@
       background-clip: text;
     }
 
-    body[data-theme="light"] .login-box {
-      background: rgba(255, 255, 255, 0.95);
-      border-color: rgba(27, 0, 58, 0.1);
+    body[data-theme="light"] .search-box {
+      color: #1b003a;
     }
 
-    body[data-theme="light"] .login-box h2 {
-      background: linear-gradient(135deg, #1b003a, #4a0080);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    body[data-theme="light"] .search-box::placeholder {
+      color: rgba(27, 0, 58, 0.5);
     }
 
-    body[data-theme="light"] .login-box p {
-      color: rgba(27, 0, 58, 0.7);
+    body[data-theme="light"] .filter-btn {
+      color: #1b003a;
     }
 
     body[data-theme="light"] th,
@@ -312,6 +414,8 @@
       .login-box h2 { font-size: 2rem; }
       table { font-size: 0.9rem; }
       th, td { padding: 10px; }
+      .controls { flex-direction: column; }
+      .search-box { width: 100%; }
     }
   </style>
 </head>
@@ -321,92 +425,43 @@
       <h1>🔫 Armario VxB</h1>
       <div style="display: flex; gap: 15px; align-items: center;">
         <div class="user-info" id="userInfo">
-          <div class="user-avatar" id="userAvatar">?</div>
-          <span id="userName">Usuario</span>
+          <img class="user-avatar" id="userAvatar" src="" alt="Avatar">
+          <div class="user-details">
+            <span class="user-name" id="userName">Usuario</span>
+            <span class="user-role" id="userRole">Rol</span>
+          </div>
+          <button class="logout-btn" id="logoutBtn">Salir</button>
         </div>
         <button class="theme-toggle" onclick="toggleTheme()">🌗</button>
       </div>
     </header>
 
     <main>
+      <div class="controls">
+        <input type="text" class="search-box" id="searchBox" placeholder="🔍 Buscar arma...">
+        <div class="filter-buttons">
+          <button class="filter-btn active" data-filter="all">Todos</button>
+          <button class="filter-btn" data-filter="pistolas">Pistolas</button>
+          <button class="filter-btn" data-filter="arma_blanca">Arma Blanca</button>
+          <button class="filter-btn" data-filter="balas">Balas</button>
+          <button class="filter-btn" data-filter="drogas">Drogas</button>
+          <button class="filter-btn" data-filter="otros">Otros</button>
+        </div>
+        <button class="translate-toggle" id="translateBtn">🌐 Traducir</button>
+      </div>
+
       <div class="table-container" id="tableContainer">
         <table id="tabla-armas">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Nombre del Arma</th>
-              <th>Tipo</th>
+              <th>Item</th>
+              <th>Cantidad</th>
               <th>Estado</th>
               <th>Asignado a</th>
               <th>Fecha</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>#001</td>
-              <td>M4A1 Carbine</td>
-              <td>Rifle de Asalto</td>
-              <td><span class="status-badge status-disponible">Disponible</span></td>
-              <td>-</td>
-              <td>20/12/2025</td>
-            </tr>
-            <tr>
-              <td>#002</td>
-              <td>Glock 17</td>
-              <td>Pistola</td>
-              <td><span class="status-badge status-asignado">Asignado</span></td>
-              <td>Agente_007</td>
-              <td>18/12/2025</td>
-            </tr>
-            <tr>
-              <td>#003</td>
-              <td>AK-47</td>
-              <td>Rifle de Asalto</td>
-              <td><span class="status-badge status-disponible">Disponible</span></td>
-              <td>-</td>
-              <td>20/12/2025</td>
-            </tr>
-            <tr>
-              <td>#004</td>
-              <td>MP5</td>
-              <td>Subfusil</td>
-              <td><span class="status-badge status-mantenimiento">Mantenimiento</span></td>
-              <td>-</td>
-              <td>15/12/2025</td>
-            </tr>
-            <tr>
-              <td>#005</td>
-              <td>Desert Eagle</td>
-              <td>Pistola</td>
-              <td><span class="status-badge status-asignado">Asignado</span></td>
-              <td>Comando_Alpha</td>
-              <td>19/12/2025</td>
-            </tr>
-            <tr>
-              <td>#006</td>
-              <td>AWP</td>
-              <td>Rifle de Francotirador</td>
-              <td><span class="status-badge status-disponible">Disponible</span></td>
-              <td>-</td>
-              <td>20/12/2025</td>
-            </tr>
-            <tr>
-              <td>#007</td>
-              <td>Benelli M4</td>
-              <td>Escopeta</td>
-              <td><span class="status-badge status-disponible">Disponible</span></td>
-              <td>-</td>
-              <td>20/12/2025</td>
-            </tr>
-            <tr>
-              <td>#008</td>
-              <td>P90</td>
-              <td>Subfusil</td>
-              <td><span class="status-badge status-asignado">Asignado</span></td>
-              <td>Bravo_Team</td>
-              <td>17/12/2025</td>
-            </tr>
-          </tbody>
+          <tbody></tbody>
         </table>
       </div>
     </main>
@@ -426,68 +481,133 @@
   </div>
 
   <script>
-    // ⚙️ CONFIGURACIÓN - URL de Railway
     const API = "https://backend-production-ce31.up.railway.app";
     
-    // Verificar parámetros de URL
-    const params = new URLSearchParams(window.location.search);
-    
-    if (params.get("error") === "denied") {
-      alert("⛔ Acceso denegado\nNo eres Armero ni Alto Rango");
+    const TRADUCCIONES = {
+      'WEAPON_PISTOL': '9MM', 'WEAPON_PISTOL_MK2': '9MM MK2', 'WEAPON_SNSPISTOL_MK2': 'Pistola SNS',
+      'WEAPON_DOUBLEACTION': 'Revolver', 'WEAPON_COMBATPISTOL': 'Glock', 'at_compensator': 'Compensador',
+      'at_flashlight': 'Linterna Pistola', 'at_suppressor_light': 'Silenciador Pistola',
+      'at_clip_extended_pistol': 'Cargador ext. Pistola', 'at_clip_extended_shotgun': 'Cargador ext. Escopeta',
+      'at_clip_extended_smg': 'Cargador ext. SMG', 'at_clip_drum_smg': 'Cargador tambor SMG',
+      'WEAPON_SWITCHBLADE': 'Navaja', 'WEAPON_KNIFE': 'Cuchillo', 'WEAPON_KNUCKLE': 'Puño Americano',
+      'WEAPON_BAT': 'Bate', 'ammo-9': 'Munición 9MM', 'ammo-38': 'Munición .38', 'ammo-50': 'Munición .50',
+      'ammo-rifle': 'Munición Rifle', 'ammo-45': 'Munición SNS', 'radio': 'Radio', 'chaleco': 'Chaleco Antibalas',
+      'oxygenmask': 'Máscara de Oxígeno', 'repairkit': 'Kit de Reparación', 'medikit': 'Botiquín',
+      'lockpick': 'Ganzúa', 'money': 'Dinero', 'black_money': 'Dinero Negro', 'bandage': 'Venda',
+      'defibrillator': 'Desfibrilador', 'phone': 'Teléfono', 'police_cad': 'Tablet Policía',
+      'boombox': 'Radio Música', 'bike': 'Bicicleta', 'sandwich': 'Sándwich', 'water': 'Agua',
+      'chocolate': 'Chocolate', 'roscon': 'Roscón', 'polvoron': 'Polvorón', 'turron': 'Turrón',
+      'coquito': 'Coquito', 'supervodka': 'Vodka', 'weed_amnesia': 'Hoja Amnesia',
+      'bag_amnesia': 'Amnesia Procesada', 'peyote': 'Peyote', 'coca_leaf': 'Hoja de Coca',
+      'cocaine': 'Cocaína', 'poppy_plant': 'Amapola', 'WEAPON_SNOWBALL': 'Nieve'
+    };
+
+    const CATEGORIAS = {
+      pistolas: ['WEAPON_PISTOL', 'WEAPON_PISTOL_MK2', 'WEAPON_SNSPISTOL_MK2', 'WEAPON_DOUBLEACTION',
+        'WEAPON_COMBATPISTOL', 'at_compensator', 'at_flashlight', 'at_suppressor_light',
+        'at_clip_extended_pistol', 'at_clip_extended_shotgun', 'at_clip_extended_smg', 'at_clip_drum_smg'],
+      arma_blanca: ['WEAPON_SWITCHBLADE', 'WEAPON_KNIFE', 'WEAPON_KNUCKLE', 'WEAPON_BAT'],
+      balas: ['ammo-9', 'ammo-38', 'ammo-50', 'ammo-rifle', 'ammo-45'],
+      drogas: ['weed_amnesia', 'bag_amnesia', 'peyote', 'coca_leaf', 'cocaine', 'poppy_plant', 'black_money'],
+      otros: ['money', 'radio', 'chaleco', 'oxygenmask', 'repairkit', 'medikit', 'lockpick', 'bandage',
+        'defibrillator', 'phone', 'police_cad', 'boombox', 'bike', 'sandwich', 'water', 'chocolate',
+        'roscon', 'polvoron', 'turron', 'coquito', 'supervodka', 'WEAPON_SNOWBALL']
+    };
+
+    let armasData = [];
+    let translateEnabled = false;
+    let currentFilter = 'all';
+
+    window.addEventListener('DOMContentLoaded', verificarSesion);
+
+    async function verificarSesion() {
+      const params = new URLSearchParams(window.location.search);
+      
+      if (params.get("login") === "ok") {
+        try {
+          const res = await fetch(`${API}/auth/verify`, {
+            credentials: 'include'
+          });
+          
+          if (res.ok) {
+            const data = await res.json();
+            if (data.authenticated) {
+              mostrarUsuarioAutenticado(data.user);
+              cargarArmas();
+              return;
+            }
+          }
+        } catch (error) {
+          console.error("Error verificando sesión:", error);
+        }
+      }
+      
+      if (params.get("error") === "denied") {
+        alert("⛔ Acceso denegado\nNo eres Armero ni Alto Rango");
+      }
+      
+      document.getElementById("loginOverlay").classList.remove("hidden");
     }
-    
-    if (params.get("login") === "ok") {
+
+    function mostrarUsuarioAutenticado(user) {
       document.getElementById("loginOverlay").classList.add("hidden");
       document.getElementById("tableContainer").classList.add("unlocked");
       document.getElementById("userInfo").classList.add("active");
       
-      const username = params.get("username") || "Usuario";
-      document.getElementById("userName").textContent = username;
-      document.getElementById("userAvatar").textContent = username.charAt(0).toUpperCase();
-      
-      cargarArmas();
+      document.getElementById("userName").textContent = user.username;
+      document.getElementById("userRole").textContent = user.roleName || "Usuario";
+      document.getElementById("userAvatar").src = user.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`;
     }
-    
-    // Login con Discord
+
     document.getElementById("loginBtn").addEventListener("click", () => {
       window.location.href = `${API}/auth/discord`;
     });
-    
-    // Toggle theme
+
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      try {
+        await fetch(`${API}/auth/logout`, {
+          method: 'POST',
+          credentials: 'include'
+        });
+        window.location.reload();
+      } catch (error) {
+        console.error("Error al cerrar sesión:", error);
+      }
+    });
+
     function toggleTheme() {
       const theme = document.body.dataset.theme === "light" ? "dark" : "light";
       document.body.dataset.theme = theme;
     }
-    
-    // Cargar armas desde la API
+
     async function cargarArmas() {
       try {
         const res = await fetch(`${API}/api/registro_armas`, {
           credentials: "include"
         });
-        
+
         if (!res.ok) {
           console.log("No autorizado");
+          window.location.reload();
           return;
         }
-        
+
         const data = await res.json();
-        
-        if (data && data.length > 0) {
-          renderTabla(data);
-        }
+        armasData = data;
+        renderTabla(data);
       } catch (error) {
         console.error("Error al cargar armas:", error);
       }
     }
-    
-    // Renderizar tabla con datos reales
+
     function renderTabla(armas) {
       const tbody = document.querySelector("#tabla-armas tbody");
       tbody.innerHTML = "";
       
       armas.forEach(arma => {
         const tr = document.createElement("tr");
+        tr.dataset.item = arma.nombre;
+        tr.dataset.categoria = getCategoriaItem(arma.nombre);
         
         let statusClass = "status-disponible";
         let statusText = "Disponible";
@@ -499,17 +619,65 @@
           statusClass = "status-mantenimiento";
           statusText = "Mantenimiento";
         }
+
+        const nombreMostrar = translateEnabled ? (TRADUCCIONES[arma.nombre] || arma.nombre) : arma.nombre;
         
         tr.innerHTML = `
-          <td>${arma.id}</td>
-          <td>${arma.nombre}</td>
-          <td>${arma.tipo}</td>
+          <td>${nombreMostrar}</td>
+          <td>${arma.cantidad || 1}</td>
           <td><span class="status-badge ${statusClass}">${statusText}</span></td>
           <td>${arma.asignado_a || "-"}</td>
           <td>${new Date(arma.fecha).toLocaleDateString()}</td>
         `;
         
         tbody.appendChild(tr);
+      });
+    }
+
+    function getCategoriaItem(nombre) {
+      for (const [cat, items] of Object.entries(CATEGORIAS)) {
+        if (items.includes(nombre)) return cat;
+      }
+      return 'otros';
+    }
+
+    document.getElementById("translateBtn").addEventListener("click", () => {
+      translateEnabled = !translateEnabled;
+      document.getElementById("translateBtn").classList.toggle("active");
+      renderTabla(armasData);
+    });
+
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        
+        currentFilter = btn.dataset.filter;
+        filtrarTabla();
+      });
+    });
+
+    document.getElementById("searchBox").addEventListener("input", (e) => {
+      filtrarTabla();
+    });
+
+    function filtrarTabla() {
+      const searchTerm = document.getElementById("searchBox").value.toLowerCase();
+      const rows = document.querySelectorAll("#tabla-armas tbody tr");
+      
+      rows.forEach(row => {
+        const item = row.dataset.item.toLowerCase();
+        const categoria = row.dataset.categoria;
+        const itemText = row.querySelector("td:first-child").textContent.toLowerCase();
+        
+        const matchSearch = itemText.includes(searchTerm) || item.includes(searchTerm);
+        const matchFilter = currentFilter === 'all' || categoria === currentFilter;
+        
+        if (matchSearch && matchFilter) {
+          row.classList.remove("hidden");
+        } else {
+          row.classList.add("hidden");
+        }
       });
     }
   </script>
