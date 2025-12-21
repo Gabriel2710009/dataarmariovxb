@@ -707,46 +707,49 @@
     }
 
   
-   // ===== INICIAR APP =====
-window.addEventListener('DOMContentLoaded', () => {
-  // ===== EVENT LISTENERS =====
-  document.getElementById("loginBtn").addEventListener("click", () => {
-    console.log("🔗 Redirigiendo a Discord OAuth...");
-    window.location.href = `${API}/auth/discord`;
-  });
-
-  document.getElementById("logoutBtn").addEventListener("click", async () => {
-    console.log("👋 Cerrando sesión...");
-    try {
-      await fetch(`${API}/auth/logout`, {
-        method: 'POST',
-        credentials: 'include'
+// ===== INICIAR APP =====
+    window.addEventListener('DOMContentLoaded', () => {
+      // ===== EVENT LISTENERS =====
+      document.getElementById("loginBtn").addEventListener("click", () => {
+        console.log("🔗 Redirigiendo a Discord OAuth...");
+        window.location.href = `${API}/auth/discord`;
       });
-      window.location.reload();
-    } catch (error) {
-      console.error("Error al cerrar sesión:", error);
-      window.location.reload();
-    }
-  });
 
-  document.getElementById("translateBtn").addEventListener("click", () => {
-    translateEnabled = !translateEnabled;
-    document.getElementById("translateBtn").classList.toggle("active");
-    renderTabla(armasData);
-  });
+      document.getElementById("logoutBtn").addEventListener("click", async () => {
+        console.log("👋 Cerrando sesión...");
+        try {
+          await fetch(`${API}/auth/logout`, {
+            method: 'POST',
+            credentials: 'include'
+          });
+          window.location.reload();
+        } catch (error) {
+          console.error("Error al cerrar sesión:", error);
+          window.location.reload();
+        }
+      });
 
-  document.querySelectorAll(".filter-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      
-      currentFilter = btn.dataset.filter;
-      filtrarTabla();
+      document.getElementById("translateBtn").addEventListener("click", () => {
+        translateEnabled = !translateEnabled;
+        document.getElementById("translateBtn").classList.toggle("active");
+        renderTabla(armasData);
+      });
+
+      document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          
+          currentFilter = btn.dataset.filter;
+          filtrarTabla();
+        });
+      });
+
+      document.getElementById("searchBox").addEventListener("input", filtrarTabla);
+
+      // Llamar a init() AL FINAL
+      init();
     });
-  });
-
-  document.getElementById("searchBox").addEventListener("input", filtrarTabla);
-
-  // Llamar a init() AL FINAL
-  init();
-});
+  </script>
+</body>
+</html>
