@@ -305,6 +305,7 @@
       filter: blur(8px);
       pointer-events: none;
       transition: all 0.5s ease;
+      overflow-x: auto;
     }
 
     .table-container.unlocked {
@@ -315,6 +316,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
+      min-width: 1200px;
     }
 
     thead {
@@ -326,11 +328,13 @@
       text-align: left;
       font-weight: 600;
       border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+      white-space: nowrap;
     }
 
     td {
       padding: 15px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      white-space: nowrap;
     }
 
     tbody tr {
@@ -353,19 +357,13 @@
       font-weight: 600;
     }
 
-    .status-disponible {
+    .status-deposito {
       background: rgba(34, 197, 94, 0.2);
       color: #4ade80;
       border: 1px solid rgba(34, 197, 94, 0.3);
     }
 
-    .status-asignado {
-      background: rgba(234, 179, 8, 0.2);
-      color: #facc15;
-      border: 1px solid rgba(234, 179, 8, 0.3);
-    }
-
-    .status-mantenimiento {
+    .status-retiro {
       background: rgba(239, 68, 68, 0.2);
       color: #f87171;
       border: 1px solid rgba(239, 68, 68, 0.3);
@@ -450,41 +448,28 @@
         <button class="translate-toggle" id="translateBtn">🌐 Traducir</button>
       </div>
 
-     <div class="table-container unlocked">
-  <div class="table-wrapper">
-    <table id="tabla-armas">
-   <thead>
-        <tr>
-          <th>ID</th>
-          <th>Tipo</th>
-          <th>Fecha / Hora</th>
-          <th>Nombre</th>
-          <th>Steam ID</th>
-          <th>Discord</th>
-          <th>Objeto</th>
-          <th>Cantidad</th>
-          <th>Almacén</th>
-          <th>En operativo</th>
-          <th>Creado</th>
-          <th>Discord ID</th>
-          <th>Validado</th>
-          <th>Validado por</th>
-          <th>Fecha validación</th>
-          <th>Alerta Msg ID</th>
-          <th>Alerta Channel ID</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
-</div>
-
-      <td>
-  <span class="status-badge ${r.tipo === "deposito" ? "status-deposito" : "status-retiro"}">
-    ${r.tipo}
-  </span>
-</td>
-
+      <div class="table-container" id="tableContainer">
+        <div class="table-wrapper">
+          <table id="tabla-armas">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tipo</th>
+                <th>Fecha / Hora</th>
+                <th>Nombre</th>
+                <th>Steam ID</th>
+                <th>Discord</th>
+                <th>Objeto</th>
+                <th>Cantidad</th>
+                <th>Almacén</th>
+                <th>En operativo</th>
+                <th>Validado</th>
+                <th>Validado por</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
     </main>
   </div>
@@ -539,147 +524,207 @@
     let armasData = [];
     let translateEnabled = false;
     let currentFilter = 'all';
-    let sessionChecked = false; // ⬅️ PREVIENE LOOPS
 
-    window.addEventListener('DOMContentLoaded', verificarSesion);
-
-    async function verificarSesion() {
-      // ⬅️ SI YA VERIFICAMOS, NO VOLVEMOS A VERIFICAR
-      if (sessionChecked) return;
-      sessionChecked = true;
-
+    // ===== INICIALIZACIÓN =====
+    async function init() {
+      console.log("🚀 Iniciando aplicación...");
+      
+      // Limpiar URL parameters inmediatamente
       const params = new URLSearchParams(window.location.search);
       
-      // Si viene de callback con login=ok
-      if (params.get("login") === "ok") {
-        // ⬅️ LIMPIAR URL INMEDIATAMENTE para evitar loops
-        window.history.replaceState({}, document.title, window.location.pathname);
+      if (params.has("login") || params.has("error") || params.has("debug_token")) {
+        console.log("🧹 Limpiando URL...");
         
-        try {
-          const res = await fetch(`${API}/auth/verify`, {
-            credentials: 'include'
-          });
-          
-          if (res.ok) {
-            const data = await res.json();
-            if (data.authenticated) {
-              mostrarUsuarioAutenticado(data.user);
-              cargarArmas();
-              return;
-            }
-          }
-        } catch (error) {
-          console.error("Error verificando sesión:", error);
-        }
-      }
-      
-      // Si hay error de Discord
-      if (params.get("error")) {
-        const errorType = params.get("error");
-        if (errorType === "denied") {
+        // Mostrar errores si los hay ANTES de limpiar
+        if (params.get("error") === "denied") {
           alert("⛔ Acceso denegado\nNo eres Armero ni Alto Rango");
-        } else {
-          alert("❌ Error en la autenticación");
+        } else if (params.get("error") === "server") {
+          alert("❌ Error del servidor");
+        } else if (params.get("error") === "no_code") {
+          alert("❌ Error: código de Discord no recibido");
         }
+        
+        // Limpiar URL INMEDIATAMENTE
         window.history.replaceState({}, document.title, window.location.pathname);
       }
       
-      // Mostrar overlay de login
-      document.getElementById("loginOverlay").classList.remove("hidden");
+      // Verificar sesión
+      await verificarSesion();
     }
 
+    // ===== VERIFICAR SESIÓN =====
+    async function verificarSesion() {
+      console.log("🔍 Verificando sesión...");
+      
+      try {
+        const res = await fetch(`${API}/auth/verify`, {
+          method: 'GET',
+          credentials: 'include', // CRÍTICO para enviar cookies
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+        
+        console.log("📡 Respuesta verify:", res.status);
+        
+        if (res.ok) {
+          const data = await res.json();
+          console.log("✅ Datos recibidos:", data);
+          
+          if (data.authenticated && data.user) {
+            mostrarUsuarioAutenticado(data.user);
+            await cargarArmas();
+            return;
+          }
+        }
+        
+        console.log("❌ No hay sesión válida");
+      } catch (error) {
+        console.error("❌ Error verificando sesión:", error);
+      }
+      
+      // Si llegamos aquí, mostrar login
+      mostrarLogin();
+    }
+
+    // ===== MOSTRAR LOGIN =====
+    function mostrarLogin() {
+      console.log("🔐 Mostrando pantalla de login");
+      document.getElementById("loginOverlay").classList.remove("hidden");
+      document.getElementById("tableContainer").classList.remove("unlocked");
+    }
+
+    // ===== MOSTRAR USUARIO AUTENTICADO =====
     function mostrarUsuarioAutenticado(user) {
+      console.log("👤 Mostrando usuario:", user);
+      
       document.getElementById("loginOverlay").classList.add("hidden");
       document.getElementById("tableContainer").classList.add("unlocked");
       document.getElementById("userInfo").classList.add("active");
       
-      document.getElementById("userName").textContent = user.username;
+      document.getElementById("userName").textContent = user.username || "Usuario";
       document.getElementById("userRole").textContent = user.roleName || "Usuario";
-      document.getElementById("userAvatar").src = user.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`;
+      
+      const avatarUrl = user.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`;
+      document.getElementById("userAvatar").src = avatarUrl;
     }
 
-    document.getElementById("loginBtn").addEventListener("click", () => {
-      window.location.href = `${API}/auth/discord`;
-    });
-
-    document.getElementById("logoutBtn").addEventListener("click", async () => {
-      try {
-        await fetch(`${API}/auth/logout`, {
-          method: 'POST',
-          credentials: 'include'
-        });
-        window.location.href = '/';
-      } catch (error) {
-        console.error("Error al cerrar sesión:", error);
-      }
-    });
-
-    function toggleTheme() {
-      const theme = document.body.dataset.theme === "light" ? "dark" : "light";
-      document.body.dataset.theme = theme;
-    }
-
+    // ===== CARGAR ARMAS =====
     async function cargarArmas() {
+      console.log("📦 Cargando datos...");
+      
       try {
         const res = await fetch(`${API}/api/registros_armas`, {
           credentials: "include"
         });
 
         if (!res.ok) {
-          console.log("No autorizado");
-          sessionChecked = false;
-          window.location.href = '/';
+          console.log("❌ No autorizado");
+          mostrarLogin();
           return;
         }
 
         const data = await res.json();
+        console.log("✅ Datos cargados:", data.length, "registros");
+        
         armasData = data;
         renderTabla(data);
       } catch (error) {
-        console.error("Error al cargar armas:", error);
+        console.error("❌ Error al cargar armas:", error);
       }
     }
 
-    function renderTabla(armas) {
+    // ===== RENDERIZAR TABLA =====
+    function renderTabla(registros) {
       const tbody = document.querySelector("#tabla-armas tbody");
       tbody.innerHTML = "";
       
-      armas.forEach(arma => {
+      registros.forEach(r => {
         const tr = document.createElement("tr");
-        tr.dataset.item = arma.nombre;
-        tr.dataset.categoria = getCategoriaItem(arma.nombre);
+        tr.dataset.item = r.objeto || "";
+        tr.dataset.categoria = getCategoriaItem(r.objeto || "");
         
-        let statusClass = "status-disponible";
-        let statusText = "Disponible";
-        
-        if (arma.estado === "asignado") {
-          statusClass = "status-asignado";
-          statusText = "Asignado";
-        } else if (arma.estado === "mantenimiento") {
-          statusClass = "status-mantenimiento";
-          statusText = "Mantenimiento";
-        }
-
-        const nombreMostrar = translateEnabled ? (TRADUCCIONES[arma.nombre] || arma.nombre) : arma.nombre;
+        const nombreMostrar = translateEnabled && TRADUCCIONES[r.objeto] 
+          ? TRADUCCIONES[r.objeto] 
+          : r.objeto || "-";
         
         tr.innerHTML = `
+          <td>${r.id}</td>
+          <td>
+            <span class="status-badge ${r.tipo === "deposito" ? "status-deposito" : "status-retiro"}">
+              ${r.tipo || "-"}
+            </span>
+          </td>
+          <td>${r.timestamp ? new Date(r.timestamp).toLocaleString() : "-"}</td>
+          <td>${r.nombre || "-"}</td>
+          <td>${r.steamid || "-"}</td>
+          <td>${r.discord || "-"}</td>
           <td>${nombreMostrar}</td>
-          <td>${arma.cantidad || 1}</td>
-          <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-          <td>${arma.asignado_a || "-"}</td>
-          <td>${new Date(arma.fecha).toLocaleDateString()}</td>
+          <td>${r.cantidad || 0}</td>
+          <td>${r.almacen || "-"}</td>
+          <td>${r.en_operativo ? "Sí" : "No"}</td>
+          <td>${r.validado ? "Sí" : "No"}</td>
+          <td>${r.validado_por || "-"}</td>
         `;
         
         tbody.appendChild(tr);
       });
     }
 
+    // ===== OBTENER CATEGORÍA =====
     function getCategoriaItem(nombre) {
       for (const [cat, items] of Object.entries(CATEGORIAS)) {
         if (items.includes(nombre)) return cat;
       }
       return 'otros';
     }
+
+    // ===== FILTRAR TABLA =====
+    function filtrarTabla() {
+      const searchTerm = document.getElementById("searchBox").value.toLowerCase();
+      const rows = document.querySelectorAll("#tabla-armas tbody tr");
+      
+      rows.forEach(row => {
+        const item = row.dataset.item.toLowerCase();
+        const categoria = row.dataset.categoria;
+        const itemText = row.textContent.toLowerCase();
+        
+        const matchSearch = itemText.includes(searchTerm) || item.includes(searchTerm);
+        const matchFilter = currentFilter === 'all' || categoria === currentFilter;
+        
+        if (matchSearch && matchFilter) {
+          row.classList.remove("hidden");
+        } else {
+          row.classList.add("hidden");
+        }
+      });
+    }
+
+    // ===== THEME TOGGLE =====
+    function toggleTheme() {
+      const theme = document.body.dataset.theme === "light" ? "dark" : "light";
+      document.body.dataset.theme = theme;
+    }
+
+    // ===== EVENT LISTENERS =====
+    document.getElementById("loginBtn").addEventListener("click", () => {
+      console.log("🔗 Redirigiendo a Discord OAuth...");
+      window.location.href = `${API}/auth/discord`;
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      console.log("👋 Cerrando sesión...");
+      try {
+        await fetch(`${API}/auth/logout`, {
+          method: 'POST',
+          credentials: 'include'
+        });
+        window.location.reload();
+      } catch (error) {
+        console.error("Error al cerrar sesión:", error);
+        window.location.reload();
+      }
+    });
 
     document.getElementById("translateBtn").addEventListener("click", () => {
       translateEnabled = !translateEnabled;
@@ -697,29 +742,7 @@
       });
     });
 
-    document.getElementById("searchBox").addEventListener("input", (e) => {
-      filtrarTabla();
-    });
+    document.getElementById("searchBox").addEventListener("input", filtrarTabla);
 
-    function filtrarTabla() {
-      const searchTerm = document.getElementById("searchBox").value.toLowerCase();
-      const rows = document.querySelectorAll("#tabla-armas tbody tr");
-      
-      rows.forEach(row => {
-        const item = row.dataset.item.toLowerCase();
-        const categoria = row.dataset.categoria;
-        const itemText = row.querySelector("td:first-child").textContent.toLowerCase();
-        
-        const matchSearch = itemText.includes(searchTerm) || item.includes(searchTerm);
-        const matchFilter = currentFilter === 'all' || categoria === currentFilter;
-        
-        if (matchSearch && matchFilter) {
-          row.classList.remove("hidden");
-        } else {
-          row.classList.add("hidden");
-        }
-      });
-    }
-  </script>
-</body>
-</html>
+    // ===== INICIAR APP =====
+    window.addEventListener('DOMContentLoaded', init);
