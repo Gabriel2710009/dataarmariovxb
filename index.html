@@ -18,7 +18,7 @@
       color: #ffffff;
       position: relative;
       overflow-x: hidden;
-      transition: background 0.5s ease, color 0.5s ease;
+      transition: background 0.8s cubic-bezier(0.4, 0, 0.2, 1), color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     body::before {
@@ -33,7 +33,7 @@
         radial-gradient(circle at 80% 80%, rgba(75, 0, 130, 0.1) 0%, transparent 50%);
       animation: pulse 8s ease-in-out infinite;
       pointer-events: none;
-      transition: opacity 0.5s ease;
+      transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     @keyframes pulse {
@@ -60,7 +60,7 @@
       border-radius: 20px;
       margin-bottom: 30px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      transition: all 0.5s ease;
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .header-title {
@@ -74,6 +74,11 @@
       height: 50px;
       border-radius: 10px;
       object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .header-logo:hover {
+      transform: scale(1.05);
     }
 
     h1 {
@@ -82,7 +87,7 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      transition: all 0.5s ease;
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .user-info {
@@ -93,11 +98,23 @@
       background: rgba(255, 255, 255, 0.1);
       border-radius: 50px;
       position: relative;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .user-info.active {
       display: flex;
+      animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
     .user-avatar {
@@ -106,6 +123,12 @@
       border-radius: 50%;
       border: 2px solid #8a2be2;
       object-fit: cover;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .user-avatar:hover {
+      transform: scale(1.1);
+      border-color: #b19cd9;
     }
 
     .user-details {
@@ -129,6 +152,7 @@
       padding: 2px 8px;
       border-radius: 10px;
       display: inline-block;
+      transition: all 0.3s ease;
     }
 
     .logout-btn {
@@ -139,13 +163,14 @@
       border-radius: 20px;
       cursor: pointer;
       font-size: 0.85rem;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       margin-left: 10px;
     }
 
     .logout-btn:hover {
       background: rgba(239, 68, 68, 0.3);
       transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
     }
 
     .theme-toggle {
@@ -156,13 +181,13 @@
       border-radius: 50%;
       cursor: pointer;
       font-size: 1.5rem;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       color: #ffffff;
     }
 
     .theme-toggle:hover {
       background: rgba(255, 255, 255, 0.2);
-      transform: scale(1.1);
+      transform: scale(1.1) rotate(20deg);
     }
 
     .login-overlay {
@@ -177,7 +202,7 @@
       align-items: center;
       justify-content: center;
       z-index: 1000;
-      animation: fadeIn 0.3s ease;
+      animation: fadeIn 0.4s ease;
     }
 
     .login-overlay.hidden {
@@ -197,7 +222,7 @@
       padding: 60px 50px;
       text-align: center;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-      animation: slideUp 0.5s ease;
+      animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     @keyframes slideUp {
@@ -232,7 +257,7 @@
       display: inline-flex;
       align-items: center;
       gap: 15px;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       box-shadow: 0 10px 30px rgba(88, 101, 242, 0.4);
     }
 
@@ -271,7 +296,14 @@
       padding: 12px 25px;
       color: white;
       font-size: 1rem;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .search-box:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.08);
+      border-color: #8a2be2;
+      box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
     }
 
     .search-box::placeholder {
@@ -291,18 +323,20 @@
       padding: 10px 20px;
       border-radius: 20px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       font-size: 0.9rem;
     }
 
     .filter-btn:hover {
       background: rgba(255, 255, 255, 0.1);
       transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(138, 43, 226, 0.2);
     }
 
     .filter-btn.active {
       background: linear-gradient(135deg, #8a2be2, #4b0082);
       border-color: #8a2be2;
+      transform: translateY(-2px);
     }
 
     .per-page-selector {
@@ -313,6 +347,11 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 20px;
       padding: 10px 20px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .per-page-selector:hover {
+      background: rgba(255, 255, 255, 0.08);
     }
 
     .per-page-selector label {
@@ -328,6 +367,12 @@
       border-radius: 10px;
       cursor: pointer;
       font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .per-page-selector select:focus {
+      outline: none;
+      border-color: #8a2be2;
     }
 
     .pagination {
@@ -345,12 +390,13 @@
       padding: 8px 16px;
       border-radius: 10px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .pagination button:hover:not(:disabled) {
       background: rgba(255, 255, 255, 0.1);
       transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(138, 43, 226, 0.2);
     }
 
     .pagination button:disabled {
@@ -370,13 +416,14 @@
       padding: 10px 20px;
       border-radius: 20px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       font-size: 0.9rem;
     }
 
     .translate-toggle:hover {
       background: rgba(34, 197, 94, 0.3);
       transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
     }
 
     .translate-toggle.active {
@@ -392,7 +439,7 @@
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       filter: blur(8px);
       pointer-events: none;
-      transition: all 0.5s ease;
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
       overflow-x: auto;
     }
 
@@ -426,11 +473,12 @@
     }
 
     tbody tr {
-      transition: background 0.3s ease;
+      transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s ease;
     }
 
     tbody tr:hover {
       background: rgba(255, 255, 255, 0.05);
+      transform: scale(1.01);
     }
 
     tbody tr.hidden {
@@ -443,6 +491,7 @@
       border-radius: 20px;
       font-size: 0.85rem;
       font-weight: 600;
+      transition: all 0.3s ease;
     }
 
     .status-deposito {
@@ -457,11 +506,11 @@
       border: 1px solid rgba(239, 68, 68, 0.3);
     }
 
-    .cat-pistolas { color: #fbbf24 !important; }
-    .cat-arma_blanca { color: #f87171 !important; }
-    .cat-balas { color: #a78bfa !important; }
-    .cat-drogas { color: #34d399 !important; }
-    .cat-otros { color: #60a5fa !important; }
+    .cat-pistolas { color: #fbbf24 !important; font-weight: 500; }
+    .cat-arma_blanca { color: #f87171 !important; font-weight: 500; }
+    .cat-balas { color: #a78bfa !important; font-weight: 500; }
+    .cat-drogas { color: #34d399 !important; font-weight: 500; }
+    .cat-otros { color: #60a5fa !important; font-weight: 500; }
 
     body[data-theme="light"] {
       background: linear-gradient(135deg, #e9d5ff 0%, #ddd6fe 50%, #e9d5ff 100%);
@@ -530,7 +579,7 @@
   <div class="container">
     <header>
       <div class="header-title">
-        <img src="https://i.postimg.cc/QtHsWSGd/Gemini-Generated-Image-6mk4496mk4496mk4-(1).png" alt="VxB Logo" class="header-logo" onerror="this.style.display='none'">
+        <img src="https://i.imgur.com/YourLogoHere.png" alt="VxB Logo" class="header-logo" onerror="this.style.display='none'">
         <h1>🔫 Armario VxB</h1>
       </div>
       <div style="display: flex; gap: 15px; align-items: center;">
@@ -590,6 +639,7 @@
               <th>Almacén</th>
               <th>En operativo</th>
               <th>Validado</th>
+              <th>Validado por</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -616,8 +666,9 @@
       </button>
     </div>
   </div>
- <script>
-   // ========== COPIAR ESTO Y PEGARLO EN EL <script> DEL HTML ==========
+<script>
+   
+  // ========== PEGAR ESTO DENTRO DEL <script> DEL HTML ==========
 
 const API = "https://backend-production-ce31.up.railway.app";
 
@@ -665,6 +716,7 @@ let translateEnabled = false;
 let currentFilter = 'all';
 let currentPage = 1;
 let itemsPerPage = 100;
+let autoRefreshInterval = null;
 
 async function init() {
   console.log("🚀 Iniciando aplicación...");
@@ -709,6 +761,7 @@ async function verificarSesion() {
       if (data.authenticated && data.user) {
         mostrarUsuarioAutenticado(data.user);
         await cargarArmas();
+        iniciarAutoRefresh();
         return;
       }
     }
@@ -734,22 +787,28 @@ function mostrarUsuarioAutenticado(user) {
   document.getElementById("tableContainer").classList.add("unlocked");
   document.getElementById("userInfo").classList.add("active");
   
+  // Determinar emoji y rol
   let roleEmoji = "";
+  let displayRole = user.roleName || "Usuario";
+  
   if (user.roleName === "Alto Rango") {
     roleEmoji = "🔰";
   } else if (user.roleName === "Armero") {
     roleEmoji = "🔫";
   }
   
-  document.getElementById("userName").innerHTML = `${roleEmoji} ${user.username || "Usuario"}`;
-  document.getElementById("userRole").textContent = user.roleName || "Usuario";
+  // Mostrar nick del servidor
+  document.getElementById("userName").innerHTML = `${user.username || "Usuario"}`;
+  document.getElementById("userRole").textContent = `${roleEmoji} ${displayRole}`;
   
   const avatarUrl = user.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`;
   document.getElementById("userAvatar").src = avatarUrl;
 }
 
-async function cargarArmas() {
-  console.log("📦 Cargando datos...");
+async function cargarArmas(silencioso = false) {
+  if (!silencioso) {
+    console.log("📦 Cargando datos...");
+  }
   
   try {
     const res = await fetch(`${API}/api/registros_armas`, {
@@ -759,18 +818,38 @@ async function cargarArmas() {
     if (!res.ok) {
       console.log("❌ No autorizado");
       mostrarLogin();
+      detenerAutoRefresh();
       return;
     }
 
     const data = await res.json();
-    console.log("✅ Datos cargados:", data.length, "registros");
+    if (!silencioso) {
+      console.log("✅ Datos cargados:", data.length, "registros");
+    }
     
-    armasData = data;
-    filteredData = data;
-    currentPage = 1;
-    renderTabla();
+    // Solo actualizar si hay cambios
+    if (JSON.stringify(armasData) !== JSON.stringify(data)) {
+      armasData = data;
+      filtrarTabla();
+    }
   } catch (error) {
     console.error("❌ Error al cargar armas:", error);
+  }
+}
+
+function iniciarAutoRefresh() {
+  // Refrescar cada 10 segundos
+  autoRefreshInterval = setInterval(() => {
+    cargarArmas(true); // true = silencioso
+  }, 10000);
+  console.log("🔄 Auto-refresh activado (cada 10s)");
+}
+
+function detenerAutoRefresh() {
+  if (autoRefreshInterval) {
+    clearInterval(autoRefreshInterval);
+    autoRefreshInterval = null;
+    console.log("⏸️ Auto-refresh detenido");
   }
 }
 
@@ -795,6 +874,13 @@ function renderTabla() {
     const almacenMostrar = ALMACENES[r.almacen] || r.almacen || "-";
     const categoria = getCategoriaItem(r.objeto || "");
     
+    // Aplicar color de fondo a toda la fila según el tipo
+    if (r.tipo === "deposito") {
+      tr.style.background = "rgba(34, 197, 94, 0.05)";
+    } else if (r.tipo === "retiro") {
+      tr.style.background = "rgba(239, 68, 68, 0.05)";
+    }
+    
     tr.innerHTML = `
       <td>${r.id}</td>
       <td>
@@ -809,6 +895,7 @@ function renderTabla() {
       <td>${almacenMostrar}</td>
       <td>${r.en_operativo ? "Sí" : "No"}</td>
       <td>${r.validado ? "Sí" : "No"}</td>
+      <td>${r.validado_por || "-"}</td>
     `;
     
     tbody.appendChild(tr);
@@ -881,6 +968,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById("logoutBtn").addEventListener("click", async () => {
     console.log("👋 Cerrando sesión...");
+    detenerAutoRefresh();
     try {
       await fetch(`${API}/auth/logout`, {
         method: 'POST',
@@ -942,4 +1030,3 @@ window.addEventListener('DOMContentLoaded', () => {
   </script>
 </body>
 </html>
-  <!-- VER PARTE 2 PARA EL JAVASCRIPT -->
