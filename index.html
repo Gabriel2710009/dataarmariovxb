@@ -1865,46 +1865,48 @@ if (document.readyState === 'loading') {
   init();
 }
 
-  <style>
-    /* MODO INVESTIGACIÓN */
-    body.investigation-mode {
-      background: #0a0a0a;
-      color: #00ff00;
-      font-family: 'Courier New', monospace;
-    }
+ <style>
+/* MODO INVESTIGACIÓN */
+body.investigation-mode {
+  background: #0a0a0a;
+  color: #00ff00;
+  font-family: 'Courier New', monospace;
+}
 
-    body.investigation-mode::before {
-      display: none;
-    }
-  </style>
-    body.investigation-mode .table-container {
-      background: #000;
-      border: 2px solid #00ff00;
-    }
+body.investigation-mode::before {
+  display: none;
+}
 
-    body.investigation-mode table {
-      font-family: 'Courier New', monospace;
-      font-size: 0.85rem;
-    }
+body.investigation-mode .table-container {
+  background: #000;
+  border: 2px solid #00ff00;
+}
 
-    body.investigation-mode tbody tr:hover {
-      background: rgba(0, 255, 0, 0.1);
-    }
+body.investigation-mode table {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+}
 
-    body.investigation-mode h1,
-    body.investigation-mode h2,
-    body.investigation-mode h3 {
-      color: #00ff00;
-      text-shadow: 0 0 10px #00ff00;
-    }
+body.investigation-mode tbody tr:hover {
+  background: rgba(0, 255, 0, 0.1);
+}
 
-    .container {
-      max-width: 1600px;
-      margin: 0 auto;
-      padding: 20px;
-      position: relative;
-      z-index: 1;
-    }
+body.investigation-mode h1,
+body.investigation-mode h2,
+body.investigation-mode h3 {
+  color: #00ff00;
+  text-shadow: 0 0 10px #00ff00;
+}
+
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
+  z-index: 1;
+}
+</style>
+
 
     /* HEADER */
     header {
