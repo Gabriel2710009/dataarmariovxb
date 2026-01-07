@@ -1787,7 +1787,84 @@ async function validarMovimiento(movementId) {
 function toggleTheme() {
   document.body.classList.toggle('investigation-mode');
 }
+// ==================== EVENT LISTENERS ====================
+function setupEventListeners() {
+  // Botón login
+  document.getElementById("loginBtn").addEventListener("click", () => {
+    console.log("🔗 Click en botón de login");
+    window.location.href = `${API}/auth/discord`;
+  });
+  
+  // Botón logout
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+    await fetch(`${API}/auth/logout`, { method: 'POST', credentials: 'include' });
+    location.reload();
+  });
+  
+  // Búsqueda
+  document.getElementById("smartSearch").addEventListener("input", (e) => {
+    smartSearchTerm = e.target.value;
+    aplicarFiltros();
+  });
+  
+  // Tabs categorías
+  document.querySelectorAll('.category-tab').forEach(tab => {
+    tab.addEventListener('click', (e) => {
+      document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+      e.target.classList.add('active');
+      currentCategory = e.target.dataset.category;
+      aplicarFiltros();
+    });
+  });
+  
+  // Quick filters
+  document.querySelectorAll('.quick-filter-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const filter = e.target.dataset.filter;
+      if (currentQuickFilter === filter) {
+        currentQuickFilter = null;
+        e.target.classList.remove('active');
+      } else {
+        document.querySelectorAll('.quick-filter-btn').forEach(b => b.classList.remove('active'));
+        currentQuickFilter = filter;
+        e.target.classList.add('active');
+      }
+      aplicarFiltros();
+    });
+  });
+  
+  // Paginación
+  document.getElementById("prevPage").addEventListener("click", () => {
+    if (currentPage > 1) { currentPage--; renderTabla(); }
+  });
+  document.getElementById("nextPage").addEventListener("click", () => {
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    if (currentPage < totalPages) { currentPage++; renderTabla(); }
+  });
+  document.getElementById("perPageSelect").addEventListener("change", (e) => {
+    itemsPerPage = e.target.value === 'all' ? 'all' : parseInt(e.target.value);
+    currentPage = 1;
+    renderTabla();
+  });
+  
+  // Modo investigación
+  document.getElementById("investigationToggle").addEventListener("click", () => {
+    investigationMode = !investigationMode;
+    document.getElementById("investigationToggle").classList.toggle('active');
+    document.body.classList.toggle('investigation-mode');
+    document.querySelectorAll('.investigation-only').forEach(el => {
+      el.style.display = investigationMode ? 'table-cell' : 'none';
+    });
+  });
+}
 
+// INICIAR
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+    
     /* MODO INVESTIGACIÓN */
     body.investigation-mode {
       background: #0a0a0a;
