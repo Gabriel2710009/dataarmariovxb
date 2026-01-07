@@ -22,10 +22,6 @@
       --bg-warning: rgba(234, 179, 8, 0.15);
       --bg-danger: rgba(239, 68, 68, 0.15);
       --bg-info: rgba(59, 130, 246, 0.15);
-      
-      --border-success: 4px solid var(--color-success);
-      --border-warning: 4px solid var(--color-warning);
-      --border-danger: 4px solid var(--color-danger);
     }
 
     body {
@@ -35,7 +31,6 @@
       color: #ffffff;
       position: relative;
       overflow-x: hidden;
-      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     body::before {
@@ -57,7 +52,6 @@
       50% { opacity: 1; }
     }
 
-    /* MODO INVESTIGACIÓN */
     body.investigation-mode {
       background: #0a0a0a;
       color: #00ff00;
@@ -71,15 +65,6 @@
     body.investigation-mode .table-container {
       background: #000;
       border: 2px solid #00ff00;
-    }
-
-    body.investigation-mode table {
-      font-family: 'Courier New', monospace;
-      font-size: 0.85rem;
-    }
-
-    body.investigation-mode tbody tr:hover {
-      background: rgba(0, 255, 0, 0.1);
     }
 
     body.investigation-mode h1,
@@ -97,7 +82,6 @@
       z-index: 1;
     }
 
-    /* HEADER */
     header {
       display: flex;
       justify-content: space-between;
@@ -109,21 +93,6 @@
       border-radius: 20px;
       margin-bottom: 30px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .header-title {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .header-logo {
-      width: 50px;
-      height: 50px;
-      border-radius: 10px;
-      object-fit: cover;
-      transition: transform 0.3s ease;
     }
 
     h1 {
@@ -131,7 +100,6 @@
       background: linear-gradient(135deg, #ffffff, #b19cd9);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-clip: text;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -159,24 +127,10 @@
       padding: 10px 20px;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 50px;
-      position: relative;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .user-info.active {
       display: flex;
-      animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateX(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
     }
 
     .user-avatar {
@@ -185,17 +139,6 @@
       border-radius: 50%;
       border: 2px solid #8a2be2;
       object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-
-    .user-avatar:hover {
-      transform: scale(1.1);
-    }
-
-    .user-details {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
     }
 
     .user-name {
@@ -209,7 +152,6 @@
       background: rgba(138, 43, 226, 0.2);
       padding: 2px 8px;
       border-radius: 10px;
-      display: inline-block;
     }
 
     .admin-badge {
@@ -218,49 +160,36 @@
       font-weight: bold;
     }
 
-    .logout-btn {
-      background: rgba(239, 68, 68, 0.2);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #f87171;
+    .logout-btn, .theme-toggle, .investigation-toggle {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
       padding: 8px 16px;
       border-radius: 20px;
       cursor: pointer;
-      font-size: 0.85rem;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.3s ease;
     }
 
-    .logout-btn:hover {
-      background: rgba(239, 68, 68, 0.3);
-      transform: translateY(-2px);
+    .logout-btn {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
     }
 
     .theme-toggle, .investigation-toggle {
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      cursor: pointer;
       font-size: 1.3rem;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .theme-toggle:hover, .investigation-toggle:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: scale(1.1);
-    }
-
     .investigation-toggle.active {
       background: var(--bg-success);
       color: var(--color-success);
-      box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
     }
 
-    /* LOGIN OVERLAY */
     .login-overlay {
       position: fixed;
       top: 0;
@@ -273,7 +202,6 @@
       align-items: center;
       justify-content: center;
       z-index: 1000;
-      animation: fadeIn 0.4s ease;
     }
 
     .login-overlay.hidden {
@@ -288,12 +216,6 @@
       padding: 60px 50px;
       text-align: center;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-      animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    @keyframes slideUp {
-      from { transform: translateY(50px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
     }
 
     .discord-btn {
@@ -308,19 +230,12 @@
       display: inline-flex;
       align-items: center;
       gap: 15px;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.3s ease;
       box-shadow: 0 10px 30px rgba(88, 101, 242, 0.4);
     }
 
     .discord-btn:hover {
       transform: translateY(-3px);
-      box-shadow: 0 15px 40px rgba(88, 101, 242, 0.6);
-    }
-
-    /* BÚSQUEDA INTELIGENTE */
-    .search-section {
-      margin-bottom: 20px;
-      position: relative;
     }
 
     .smart-search {
@@ -331,131 +246,45 @@
       padding: 15px 30px;
       color: white;
       font-size: 1.1rem;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-bottom: 20px;
     }
 
     .smart-search:focus {
       outline: none;
-      background: rgba(255, 255, 255, 0.08);
       border-color: #8a2be2;
       box-shadow: 0 0 30px rgba(138, 43, 226, 0.4);
     }
 
-    .smart-search::placeholder {
-      color: rgba(255, 255, 255, 0.5);
-    }
-
-    .search-hints {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
-
-    .search-hint {
-      font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.6);
-      background: rgba(255, 255, 255, 0.05);
-      padding: 4px 12px;
-      border-radius: 15px;
-    }
-
-    /* CATEGORÍAS SUPERIORES */
-    .category-tabs {
+    .category-tabs, .quick-filters {
       display: flex;
       gap: 10px;
       margin-bottom: 20px;
       flex-wrap: wrap;
-      padding: 10px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 20px;
     }
 
-    .category-tab {
+    .category-tab, .quick-filter-btn {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
       color: white;
       padding: 12px 24px;
       border-radius: 15px;
       cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      font-size: 0.95rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .category-tab:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-2px);
+      transition: all 0.3s ease;
     }
 
     .category-tab.active {
       background: linear-gradient(135deg, #8a2be2, #4b0082);
-      border-color: #8a2be2;
-      transform: translateY(-2px);
       box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
     }
 
-    /* QUICK FILTERS */
-    .quick-filters {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .filter-group {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .quick-filter-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      font-size: 0.9rem;
-    }
-
-    .quick-filter-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-2px);
-    }
-
-    .quick-filter-btn.active {
-      background: var(--bg-info);
-      border-color: var(--color-info);
-      color: var(--color-info);
-    }
-
-    .saved-searches-btn {
-      background: var(--bg-warning);
-      border-color: var(--color-warning);
-      color: var(--color-warning);
-    }
-
-    .saved-searches-btn:hover {
-      background: rgba(234, 179, 8, 0.25);
-    }
-
-    /* TABLA */
     .table-container {
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 20px;
       padding: 30px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       filter: blur(8px);
       pointer-events: none;
-      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
       overflow-x: auto;
     }
 
@@ -470,96 +299,41 @@
       min-width: 1200px;
     }
 
-    thead {
-      background: rgba(255, 255, 255, 0.1);
+    th, td {
+      padding: 15px;
+      text-align: left;
     }
 
     th {
-      padding: 15px;
-      text-align: left;
+      background: rgba(255, 255, 255, 0.1);
       font-weight: 600;
       border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-      white-space: nowrap;
     }
 
     td {
-      padding: 15px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      white-space: nowrap;
-    }
-
-    tbody tr {
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
     }
 
     tbody tr:hover {
       background: rgba(255, 255, 255, 0.05);
-      transform: scale(1.01);
     }
 
-    tbody tr:hover .row-actions {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    /* ROW ACTIONS (hover) */
-    .row-actions {
-      opacity: 0;
-      pointer-events: none;
-      display: flex;
-      gap: 5px;
-      transition: opacity 0.3s ease;
-    }
-
-    .action-btn {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: white;
-      padding: 5px 12px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      transition: all 0.3s ease;
-    }
-
-    .action-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: scale(1.05);
-    }
-
-    .action-btn.validate {
-      background: var(--bg-success);
-      color: var(--color-success);
-      border-color: var(--color-success);
-    }
-
-    .action-btn.profile {
-      background: var(--bg-info);
-      color: var(--color-info);
-      border-color: var(--color-info);
-    }
-
-    /* BADGES */
     .status-badge {
       display: inline-block;
       padding: 5px 15px;
       border-radius: 20px;
       font-size: 0.85rem;
       font-weight: 600;
-      transition: all 0.3s ease;
     }
 
     .status-deposito {
       background: var(--bg-success);
       color: var(--color-success);
-      border: 1px solid var(--color-success);
     }
 
     .status-retiro {
       background: var(--bg-danger);
       color: var(--color-danger);
-      border: 1px solid var(--color-danger);
     }
 
     .status-validado {
@@ -572,334 +346,50 @@
       color: var(--color-warning);
     }
 
-    /* CATEGORÍAS DE OBJETOS */
-    .cat-pistolas { color: #fbbf24 !important; font-weight: 500; }
-    .cat-arma_blanca { color: #f87171 !important; font-weight: 500; }
-    .cat-balas { color: #a78bfa !important; font-weight: 500; }
-    .cat-drogas { color: #34d399 !important; font-weight: 500; }
-    .cat-otros { color: #60a5fa !important; font-weight: 500; }
-
     .username-clickable {
       cursor: pointer;
-      transition: all 0.3s ease;
       text-decoration: underline;
       text-decoration-style: dotted;
     }
 
     .username-clickable:hover {
       color: var(--color-info);
-      transform: scale(1.05);
     }
 
-    /* USER DRAWER */
-    .drawer-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(5px);
-      z-index: 2000;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .drawer-content {
-      width: 600px;
-      max-width: 90vw;
-      height: 100%;
-      background: rgba(27, 0, 58, 0.98);
-      backdrop-filter: blur(20px);
-      border-left: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: -10px 0 50px rgba(0, 0, 0, 0.5);
-      overflow-y: auto;
-      animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      padding: 30px;
-    }
-
-    @keyframes slideInRight {
-      from {
-        transform: translateX(100%);
-      }
-      to {
-        transform: translateX(0);
-      }
-    }
-
-    .drawer-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .drawer-close {
-      background: rgba(239, 68, 68, 0.2);
-      border: none;
-      color: #f87171;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1.5rem;
-      transition: all 0.3s ease;
-    }
-
-    .drawer-close:hover {
-      background: rgba(239, 68, 68, 0.3);
-      transform: rotate(90deg);
-    }
-
-    .profile-stats {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
-      margin-bottom: 30px;
-    }
-
-    .stat-card {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 20px;
-      border-radius: 15px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      transition: all 0.3s ease;
-    }
-
-    .stat-card:hover {
-      background: rgba(255, 255, 255, 0.08);
-      transform: translateY(-2px);
-    }
-
-    .stat-label {
-      font-size: 0.85rem;
-      color: rgba(255, 255, 255, 0.6);
-      margin-bottom: 5px;
-    }
-
-    .stat-value {
-      font-size: 2rem;
-      font-weight: bold;
+    .action-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       color: white;
+      padding: 5px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.8rem;
     }
 
-    .stat-value.success {
+    .action-btn.validate {
+      background: var(--bg-success);
       color: var(--color-success);
     }
 
-    .stat-value.danger {
-      color: var(--color-danger);
-    }
-
-    .indicators-section {
-      margin-bottom: 30px;
-    }
-
-    .indicator {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      border-left: 4px solid transparent;
-      transition: all 0.3s ease;
-    }
-
-    .indicator.warning {
-      border-left-color: var(--color-warning);
-      background: var(--bg-warning);
-    }
-
-    .indicator.info {
-      border-left-color: var(--color-info);
+    .action-btn.profile {
       background: var(--bg-info);
-    }
-
-    .timeline {
-      margin-bottom: 30px;
-    }
-
-    .timeline-item {
-      display: flex;
-      gap: 15px;
-      margin-bottom: 20px;
-      padding: 15px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
-      transition: all 0.3s ease;
-    }
-
-    .timeline-item:hover {
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .timeline-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      margin-top: 5px;
-      flex-shrink: 0;
-    }
-
-    .timeline-dot.deposito {
-      background: var(--color-success);
-      box-shadow: 0 0 10px var(--color-success);
-    }
-
-    .timeline-dot.retiro {
-      background: var(--color-danger);
-      box-shadow: 0 0 10px var(--color-danger);
-    }
-
-    .notes-section {
-      margin-bottom: 30px;
-    }
-
-    .note-item {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      border-left: 4px solid var(--color-info);
-    }
-
-    .note-author {
-      font-size: 0.85rem;
       color: var(--color-info);
-      margin-bottom: 5px;
     }
 
-    .note-text {
-      color: rgba(255, 255, 255, 0.9);
-    }
-
-    .note-date {
-      font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.5);
-      margin-top: 5px;
-    }
-
-    .add-note-form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .add-note-form textarea {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: white;
-      padding: 12px;
-      border-radius: 10px;
-      resize: vertical;
-      min-height: 80px;
-      font-family: inherit;
-    }
-
-    .add-note-form textarea:focus {
-      outline: none;
-      border-color: var(--color-info);
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #8a2be2, #4b0082);
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 12px 24px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    /* MODAL BÚSQUEDAS GUARDADAS */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(10px);
-      z-index: 3000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .modal-content {
-      background: rgba(27, 0, 58, 0.98);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 40px;
-      max-width: 600px;
-      width: 90%;
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-
-    .saved-search-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
-      margin-bottom: 10px;
-      transition: all 0.3s ease;
-    }
-
-    .saved-search-item:hover {
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    /* PAGINATION */
     .pagination {
       display: flex;
       justify-content: center;
-      align-items: center;
       gap: 10px;
       margin-top: 20px;
     }
 
-    .pagination button {
+    .pagination button, .pagination select {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
       color: white;
       padding: 8px 16px;
       border-radius: 10px;
       cursor: pointer;
-      transition: all 0.4s ease;
-    }
-
-    .pagination button:hover:not(:disabled) {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-2px);
     }
 
     .pagination button:disabled {
@@ -907,76 +397,38 @@
       cursor: not-allowed;
     }
 
-    .pagination select {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: white;
-      padding: 8px 16px;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    /* LOADING */
     .loading {
       text-align: center;
       padding: 40px;
-      font-size: 1.2rem;
       color: var(--color-info);
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
-      h1 { font-size: 1.5rem; }
-      .category-tabs { justify-content: flex-start; overflow-x: auto; }
-      .drawer-content { width: 100%; }
-      table { font-size: 0.85rem; }
-      th, td { padding: 10px; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <div class="header-title">
-        <h1>
-          🔫 Armario VxB
-          <span class="version-badge">v2.0</span>
-        </h1>
-      </div>
+      <h1>
+        🔫 Armario VxB
+        <span class="version-badge">v2.0</span>
+      </h1>
       <div class="header-actions">
         <div class="user-info" id="userInfo">
           <img class="user-avatar" id="userAvatar" src="" alt="Avatar">
-          <div class="user-details">
-            <span class="user-name" id="userName">Usuario</span>
-            <span class="user-role" id="userRole">Rol</span>
+          <div>
+            <div class="user-name" id="userName">Usuario</div>
+            <div class="user-role" id="userRole">Rol</div>
           </div>
           <button class="logout-btn" id="logoutBtn">Salir</button>
         </div>
-        <button class="investigation-toggle" id="investigationToggle" title="Modo Investigación" style="display: none;">
-          🔍
-        </button>
-        <button class="theme-toggle" onclick="toggleTheme()">🌗</button>
+        <button class="investigation-toggle" id="investigationToggle" style="display: none;">🔍</button>
+        <button class="theme-toggle">🌗</button>
       </div>
     </header>
 
     <main>
-      <!-- BÚSQUEDA INTELIGENTE -->
-      <div class="search-section">
-        <input 
-          type="text" 
-          class="smart-search" 
-          id="smartSearch" 
-          placeholder="🔍 Búsqueda inteligente: @usuario, #123, 'sin validar', 'últimos 15 min'..."
-        >
-        <div class="search-hints">
-          <span class="search-hint">@usuario → buscar por nombre</span>
-          <span class="search-hint">#123 → buscar por ID</span>
-          <span class="search-hint">"sin validar" → pendientes</span>
-          <span class="search-hint">"últimos 15 min" → recientes</span>
-        </div>
-      </div>
+      <input type="text" class="smart-search" id="smartSearch" 
+        placeholder="🔍 Búsqueda inteligente: @usuario, #123, 'sin validar', 'últimos 15 min'...">
 
-      <!-- CATEGORÍAS SUPERIORES -->
       <div class="category-tabs" id="categoryTabs">
         <button class="category-tab active" data-category="all">📋 Todos</button>
         <button class="category-tab" data-category="deposits">📥 Depósitos</button>
@@ -988,33 +440,24 @@
         <button class="category-tab" data-category="otros">📦 Otros</button>
       </div>
 
-      <!-- QUICK FILTERS -->
       <div class="quick-filters">
-        <div class="filter-group">
-          <button class="quick-filter-btn" data-filter="pending">⏳ Pendientes</button>
-          <button class="quick-filter-btn" data-filter="recent15">🕐 Últimos 15 min</button>
-          <button class="quick-filter-btn" data-filter="recent60">🕑 Última hora</button>
-        </div>
-        <div class="filter-group">
-          <button class="saved-searches-btn" id="savedSearchesBtn">🔖 Búsquedas Guardadas</button>
-        </div>
+        <button class="quick-filter-btn" data-filter="pending">⏳ Pendientes</button>
+        <button class="quick-filter-btn" data-filter="recent15">🕐 Últimos 15 min</button>
+        <button class="quick-filter-btn" data-filter="recent60">🕑 Última hora</button>
       </div>
 
-      <!-- TABLA -->
       <div class="table-container" id="tableContainer">
         <table id="tabla-armas">
           <thead>
             <tr>
               <th>ID</th>
               <th>Tipo</th>
-              <th>Fecha / Hora</th>
+              <th>Fecha</th>
               <th>Usuario</th>
               <th>Objeto</th>
               <th>Cantidad</th>
               <th>Almacén</th>
               <th>Validado</th>
-              <th class="investigation-only" style="display: none;">Discord ID</th>
-              <th class="investigation-only" style="display: none;">Timestamp Raw</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -1022,7 +465,6 @@
         </table>
       </div>
 
-      <!-- PAGINACIÓN -->
       <div class="pagination">
         <button id="prevPage">← Anterior</button>
         <span id="pageInfo">Página 1</span>
@@ -1030,20 +472,18 @@
           <option value="50">50 por página</option>
           <option value="100" selected>100 por página</option>
           <option value="500">500 por página</option>
-          <option value="all">Todos</option>
         </select>
         <button id="nextPage">Siguiente →</button>
       </div>
     </main>
   </div>
 
-  <!-- LOGIN OVERLAY -->
   <div class="login-overlay" id="loginOverlay">
     <div class="login-box">
       <h2>🔐 Acceso Restringido</h2>
       <p>Inicia sesión con Discord para acceder al armario</p>
       <button class="discord-btn" id="loginBtn">
-        <svg class="discord-icon" width="30" height="30" viewBox="0 0 127.14 96.36" fill="currentColor">
+        <svg width="30" height="30" viewBox="0 0 127.14 96.36" fill="currentColor">
           <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
         </svg>
         Iniciar sesión con Discord
@@ -1052,27 +492,15 @@
   </div>
 
   <script>
-
     const API = "https://backend-rsff.onrender.com";
-
-    // TRADUCCIONES Y CATEGORÍAS
+    
     const TRADUCCIONES = {
       'WEAPON_PISTOL': '9MM', 'WEAPON_PISTOL_MK2': '9MM MK2', 'WEAPON_SNSPISTOL_MK2': 'Pistola SNS',
-      'WEAPON_DOUBLEACTION': 'Revolver', 'WEAPON_COMBATPISTOL': 'Glock', 'at_compensator': 'Compensador',
-      'at_flashlight': 'Linterna Pistola', 'at_suppressor_light': 'Silenciador Pistola',
-      'at_clip_extended_pistol': 'Cargador ext. Pistola', 'at_clip_extended_shotgun': 'Cargador ext. Escopeta',
-      'at_clip_extended_smg': 'Cargador ext. SMG', 'at_clip_drum_smg': 'Cargador tambor SMG',
-      'WEAPON_SWITCHBLADE': 'Navaja', 'WEAPON_KNIFE': 'Cuchillo', 'WEAPON_KNUCKLE': 'Puño Americano',
-      'WEAPON_BAT': 'Bate', 'ammo-9': 'Munición 9MM', 'ammo-38': 'Munición .38', 'ammo-50': 'Munición .50',
-      'ammo-rifle': 'Munición Rifle', 'ammo-45': 'Munición SNS', 'radio': 'Radio', 'chaleco': 'Chaleco Antibalas',
-      'oxygenmask': 'Máscara de Oxígeno', 'repairkit': 'Kit de Reparación', 'medikit': 'Botiquín',
-      'lockpick': 'Ganzúa', 'money': 'Dinero', 'black_money': 'Dinero Negro', 'bandage': 'Venda',
-      'defibrillator': 'Desfibrilador', 'phone': 'Teléfono', 'police_cad': 'Tablet Policía',
-      'boombox': 'Radio Música', 'bike': 'Bicicleta', 'sandwich': 'Sándwich', 'water': 'Agua',
-      'chocolate': 'Chocolate', 'roscon': 'Roscón', 'polvoron': 'Polvorón', 'turron': 'Turrón',
-      'coquito': 'Coquito', 'supervodka': 'Vodka', 'weed_amnesia': 'Hoja Amnesia',
-      'bag_amnesia': 'Amnesia Procesada', 'peyote': 'Peyote', 'coca_leaf': 'Hoja de Coca',
-      'cocaine': 'Cocaína', 'poppy_plant': 'Amapola', 'WEAPON_SNOWBALL': 'Nieve'
+      'WEAPON_DOUBLEACTION': 'Revolver', 'WEAPON_COMBATPISTOL': 'Glock', 'WEAPON_SWITCHBLADE': 'Navaja',
+      'WEAPON_KNIFE': 'Cuchillo', 'WEAPON_KNUCKLE': 'Puño Americano', 'WEAPON_BAT': 'Bate',
+      'ammo-9': 'Munición 9MM', 'ammo-38': 'Munición .38', 'ammo-50': 'Munición .50',
+      'weed_amnesia': 'Hoja Amnesia', 'bag_amnesia': 'Amnesia Procesada', 'cocaine': 'Cocaína',
+      'black_money': 'Dinero Negro', 'money': 'Dinero', 'radio': 'Radio', 'chaleco': 'Chaleco'
     };
 
     const ALMACENES = {
@@ -1082,73 +510,38 @@
       'job_stash_271': 'Armario Altos'
     };
 
-    const CATEGORIAS = {
-      pistolas: ['WEAPON_PISTOL', 'WEAPON_PISTOL_MK2', 'WEAPON_SNSPISTOL_MK2', 'WEAPON_DOUBLEACTION',
-        'WEAPON_COMBATPISTOL', 'at_compensator', 'at_flashlight', 'at_suppressor_light',
-        'at_clip_extended_pistol', 'at_clip_extended_shotgun', 'at_clip_extended_smg', 'at_clip_drum_smg'],
-      arma_blanca: ['WEAPON_SWITCHBLADE', 'WEAPON_KNIFE', 'WEAPON_KNUCKLE', 'WEAPON_BAT'],
-      balas: ['ammo-9', 'ammo-38', 'ammo-50', 'ammo-rifle', 'ammo-45'],
-      drogas: ['weed_amnesia', 'bag_amnesia', 'peyote', 'coca_leaf', 'cocaine', 'poppy_plant', 'black_money'],
-      otros: ['money', 'radio', 'chaleco', 'oxygenmask', 'repairkit', 'medikit', 'lockpick', 'bandage',
-        'defibrillator', 'phone', 'police_cad', 'boombox', 'bike', 'sandwich', 'water', 'chocolate',
-        'roscon', 'polvoron', 'turron', 'coquito', 'supervodka', 'WEAPON_SNOWBALL']
-    };
-
-    // ESTADO GLOBAL
     let currentUser = null;
     let allMovements = [];
     let filteredData = [];
     let currentPage = 1;
     let itemsPerPage = 100;
-    let currentCategory = 'all';
-    let currentQuickFilter = null;
-    let smartSearchTerm = '';
-    let investigationMode = false;
-    let autoRefreshInterval = null;
 
-    // ==================== INICIALIZACIÓN ====================
     async function init() {
-      console.log("🚀 Iniciando aplicación v2.0...");
-      
-      const params = new URLSearchParams(window.location.search);
-      
-      if (params.has("login") || params.has("error")) {
-        if (params.get("error") === "denied") {
-          alert("⛔ Acceso denegado");
-        }
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
-      
+      console.log("🚀 Iniciando aplicación...");
       await verificarSesion();
       setupEventListeners();
     }
 
     async function verificarSesion() {
       try {
-        const res = await fetch(`${API}/auth/verify`, {
-          credentials: 'include'
-        });
-        
+        const res = await fetch(`${API}/auth/verify`, { credentials: 'include' });
         if (res.ok) {
           const data = await res.json();
           if (data.authenticated && data.user) {
             currentUser = data.user;
             mostrarUsuarioAutenticado(data.user);
             await cargarMovimientos();
-            iniciarAutoRefresh();
             return;
           }
         }
       } catch (error) {
         console.error("Error verificando sesión:", error);
       }
-      
       mostrarLogin();
     }
 
     function mostrarLogin() {
       document.getElementById("loginOverlay").classList.remove("hidden");
-      document.getElementById("tableContainer").classList.remove("unlocked");
     }
 
     function mostrarUsuarioAutenticado(user) {
@@ -1156,1714 +549,115 @@
       document.getElementById("tableContainer").classList.add("unlocked");
       document.getElementById("userInfo").classList.add("active");
       
-      let roleEmoji = "👤";
-      let displayRole = "Usuario";
-      
-      if (user.roleName === "Alto Rango") {
-        roleEmoji = "🔰";
-        displayRole = "Alto Rango";
-      } else if (user.roleName === "Armero") {
-        roleEmoji = "🔫";
-        displayRole = "Armero";
-      }
-      
       document.getElementById("userName").textContent = user.username || "Usuario";
-      const roleEl = document.getElementById("userRole");
-      roleEl.textContent = `${roleEmoji} ${displayRole}`;
-      
-      // Si es admin, agregar clase especial
-      if (user.roleName === "Alto Rango" || user.roleName === "Armero") {
-        roleEl.classList.add("admin-badge");
-        // Mostrar botón de modo investigación solo para admins
-        document.getElementById("investigationToggle").style.display = "flex";
-      }
+      document.getElementById("userRole").textContent = user.roleName || "Usuario";
       
       const avatarUrl = user.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`;
       document.getElementById("userAvatar").src = avatarUrl;
+      
+      if (user.roleName === "Alto Rango" || user.roleName === "Armero") {
+        document.getElementById("userRole").classList.add("admin-badge");
+        document.getElementById("investigationToggle").style.display = "flex";
+      }
     }
 
-    // ==================== CARGAR DATOS ====================
-    async function cargarMovimientos(silencioso = false) {
-      if (!silencioso) {
-        document.querySelector("#tabla-armas tbody").innerHTML = '<tr><td colspan="11" class="loading">⏳ Cargando datos...</td></tr>';
-      }
+    async function cargarMovimientos() {
+      document.querySelector("#tabla-armas tbody").innerHTML = '<tr><td colspan="9" class="loading">⏳ Cargando...</td></tr>';
       
       try {
-        const res = await fetch(`${API}/api/registros_armas`, {
-          credentials: "include"
-        });
-
+        const res = await fetch(`${API}/api/registros_armas`, { credentials: "include" });
         if (!res.ok) {
           mostrarLogin();
-          detenerAutoRefresh();
           return;
         }
-
         const response = await res.json();
         allMovements = response.data || response;
-        
-        console.log(`✅ ${allMovements.length} registros cargados`);
-        
-        aplicarFiltros();
+        filteredData = [...allMovements];
+        renderTabla();
       } catch (error) {
-        console.error("Error al cargar movimientos:", error);
+        console.error("Error:", error);
       }
     }
 
-    function iniciarAutoRefresh() {
-      autoRefreshInterval = setInterval(() => {
-        cargarMovimientos(true);
-      }, 10000);
-      console.log("🔄 Auto-refresh activado");
-    }
-
-    function detenerAutoRefresh() {
-      if (autoRefreshInterval) {
-        clearInterval(autoRefreshInterval);
-        autoRefreshInterval = null;
-      }
-    }
-
-    // ==================== BÚSQUEDA INTELIGENTE ====================
-    function parseSmartSearch(query) {
-      const trimmed = query.trim().toLowerCase();
-      
-      if (!trimmed) return null;
-      
-      // @usuario
-      if (trimmed.startsWith('@')) {
-        return {
-          type: 'user',
-          value: trimmed.substring(1)
-        };
-      }
-      
-      // #ID
-      if (trimmed.startsWith('#')) {
-        return {
-          type: 'id',
-          value: parseInt(trimmed.substring(1))
-        };
-      }
-      
-      // "sin validar"
-      if (trimmed.includes('sin validar') || trimmed.includes('pendiente')) {
-        return { type: 'pending' };
-      }
-      
-      // "depósito" o "deposito"
-      if (trimmed.includes('depósito') || trimmed.includes('deposito')) {
-        return { type: 'movement', value: 'deposito' };
-      }
-      
-      // "retiro"
-      if (trimmed.includes('retiro')) {
-        return { type: 'movement', value: 'retiro' };
-      }
-      
-      // "últimos X min"
-      const timeMatch = trimmed.match(/últimos?\s+(\d+)\s*min/);
-      if (timeMatch) {
-        return { type: 'timeRange', value: parseInt(timeMatch[1]) };
-      }
-      
-      // Búsqueda de texto genérica
-      return { type: 'text', value: trimmed };
-    }
-
-    function applySmartSearch(movements, searchResult) {
-      if (!searchResult) return movements;
-      
-      switch (searchResult.type) {
-        case 'user':
-          return movements.filter(m => 
-            (m.nombre || '').toLowerCase().includes(searchResult.value) ||
-            (m.discord || '').toLowerCase().includes(searchResult.value)
-          );
-          
-        case 'id':
-          return movements.filter(m => m.id === searchResult.value);
-          
-        case 'pending':
-          return movements.filter(m => !m.validado);
-          
-        case 'movement':
-          return movements.filter(m => m.tipo === searchResult.value);
-          
-        case 'timeRange':
-          const now = new Date();
-          const cutoff = new Date(now - searchResult.value * 60 * 1000);
-          return movements.filter(m => new Date(m.timestamp) >= cutoff);
-          
-        case 'text':
-          return movements.filter(m => {
-            const searchIn = [
-              m.nombre,
-              m.objeto,
-              TRADUCCIONES[m.objeto],
-              m.discord,
-              m.tipo,
-              m.almacen
-            ].filter(Boolean).join(' ').toLowerCase();
-            
-            return searchIn.includes(searchResult.value);
-          });
-          
-        default:
-          return movements;
-      }
-    }
-
-    // ==================== FILTROS ====================
-    function getCategoriaItem(nombre) {
-      for (const [cat, items] of Object.entries(CATEGORIAS)) {
-        if (items.includes(nombre)) return cat;
-      }
-      return 'otros';
-    }
-
-    function aplicarFiltros() {
-      let result = [...allMovements];
-      
-      // 1. Categoría
-      if (currentCategory !== 'all') {
-        if (currentCategory === 'deposits') {
-          result = result.filter(m => m.tipo === 'deposito');
-        } else if (currentCategory === 'withdrawals') {
-          result = result.filter(m => m.tipo === 'retiro');
-        } else {
-          result = result.filter(m => getCategoriaItem(m.objeto) === currentCategory);
-        }
-      }
-      
-      // 2. Quick Filter
-      if (currentQuickFilter === 'pending') {
-        result = result.filter(m => !m.validado);
-      } else if (currentQuickFilter === 'recent15') {
-        const cutoff = new Date(Date.now() - 15 * 60 * 1000);
-        result = result.filter(m => new Date(m.timestamp) >= cutoff);
-      } else if (currentQuickFilter === 'recent60') {
-        const cutoff = new Date(Date.now() - 60 * 60 * 1000);
-        result = result.filter(m => new Date(m.timestamp) >= cutoff);
-      }
-      
-      // 3. Búsqueda inteligente
-      const searchResult = parseSmartSearch(smartSearchTerm);
-      result = applySmartSearch(result, searchResult);
-      
-      filteredData = result;
-      currentPage = 1;
-      renderTabla();
-    }
-
-    // ==================== RENDER TABLA ====================
     function renderTabla() {
       const tbody = document.querySelector("#tabla-armas tbody");
       tbody.innerHTML = "";
       
       if (filteredData.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="11" style="text-align: center; padding: 40px; color: rgba(255,255,255,0.5);">No se encontraron registros</td></tr>';
-        updatePagination();
+        tbody.innerHTML = '<tr><td colspan="9" class="loading">No hay registros</td></tr>';
         return;
       }
       
-      const startIndex = itemsPerPage === 'all' ? 0 : (currentPage - 1) * itemsPerPage;
-      const endIndex = itemsPerPage === 'all' ? filteredData.length : startIndex + itemsPerPage;
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
       const paginatedData = filteredData.slice(startIndex, endIndex);
       
       paginatedData.forEach(r => {
         const tr = document.createElement("tr");
-        
         const nombreMostrar = TRADUCCIONES[r.objeto] || r.objeto || "-";
         const almacenMostrar = ALMACENES[r.almacen] || r.almacen || "-";
-        const categoria = getCategoriaItem(r.objeto || "");
-        
-        // Color de fondo según tipo
-        if (r.tipo === "deposito") {
-          tr.style.background = "rgba(34, 197, 94, 0.15)";
-          tr.style.borderLeft = "4px solid #22c55e";
-        } else if (r.tipo === "retiro") {
-          tr.style.background = "rgba(239, 68, 68, 0.15)";
-          tr.style.borderLeft = "4px solid #ef4444";
-        }
-        
-        const isAdmin = currentUser.roleName === "Alto Rango" || currentUser.roleName === "Armero";
         
         tr.innerHTML = `
           <td>${r.id}</td>
-          <td>
-            <span class="status-badge ${r.tipo === "deposito" ? "status-deposito" : "status-retiro"}">
-              ${r.tipo || "-"}
-            </span>
-          </td>
+          <td><span class="status-badge status-${r.tipo}">${r.tipo || "-"}</span></td>
           <td>${r.timestamp ? new Date(r.timestamp).toLocaleString('es-ES') : "-"}</td>
-          <td>
-            <span class="username-clickable" data-user-id="${r.discord_id}" data-user-name="${r.nombre}">
-              ${r.nombre || "-"}
-            </span>
-          </td>
-          <td class="cat-${categoria}">${nombreMostrar}</td>
+          <td><span class="username-clickable">${r.nombre || "-"}</span></td>
+          <td>${nombreMostrar}</td>
           <td>${r.cantidad || 0}</td>
           <td>${almacenMostrar}</td>
+          <td><span class="status-badge ${r.validado ? 'status-validado' : 'status-pendiente'}">${r.validado ? '✓ Sí' : '⏳ No'}</span></td>
           <td>
-            <span class="status-badge ${r.validado ? 'status-validado' : 'status-pendiente'}">
-              ${r.validado ? '✓ Sí' : '⏳ No'}
-            </span>
-          </td>
-          <td class="investigation-only" style="display: ${investigationMode ? 'table-cell' : 'none'};">
-            ${r.discord_id || "-"}
-          </td>
-          <td class="investigation-only" style="display: ${investigationMode ? 'table-cell' : 'none'};">
-            ${r.timestamp || "-"}
-          </td>
-          <td>
-            <div class="row-actions">
-              <button class="action-btn profile" onclick="abrirPerfil('${r.discord_id}', '${r.nombre}')">
-                👤 Perfil
-              </button>
-              ${isAdmin && !r.validado ? `
-                <button class="action-btn validate" onclick="validarMovimiento(${r.id})">
-                  ✓ Validar
-                </button>
-              ` : ''}
-            </div>
+            <button class="action-btn profile">👤</button>
+            ${!r.validado && currentUser?.roleName ? '<button class="action-btn validate">✓</button>' : ''}
           </td>
         `;
-        
         tbody.appendChild(tr);
-      });
-      
-      // Event listeners para nombres clickeables
-      document.querySelectorAll('.username-clickable').forEach(el => {
-        el.addEventListener('click', (e) => {
-          const userId = e.target.dataset.userId;
-          const userName = e.target.dataset.userName;
-          abrirPerfil(userId, userName);
-        });
       });
       
       updatePagination();
     }
 
     function updatePagination() {
-      const totalPages = itemsPerPage === 'all' ? 1 : Math.ceil(filteredData.length / itemsPerPage);
-      
+      const totalPages = Math.ceil(filteredData.length / itemsPerPage);
       document.getElementById("prevPage").disabled = currentPage === 1;
-      document.getElementById("nextPage").disabled = currentPage >= totalPages || itemsPerPage === 'all';
-      
-      if (itemsPerPage === 'all') {
-        document.getElementById("pageInfo").textContent = `Mostrando todos (${filteredData.length} registros)`;
-      } else {
-        document.getElementById("pageInfo").textContent = `Página ${currentPage} de ${totalPages} (${filteredData.length} registros)`;
-      }
+      document.getElementById("nextPage").disabled = currentPage >= totalPages;
+      document.getElementById("pageInfo").textContent = `Página ${currentPage} de ${totalPages}`;
     }
 
-    // ==================== PERFIL DE USUARIO ====================
-    async function abrirPerfil(userId, userName) {
-      const isAdmin = currentUser.roleName === "Alto Rango" || currentUser.roleName === "Armero";
-      
-      if (!isAdmin) {
-        alert("⛔ Solo administradores pueden ver perfiles de usuarios");
-        return;
-      }
-      
-      // Crear overlay
-      const overlay = document.createElement('div');
-      overlay.className = 'drawer-overlay';
-      overlay.innerHTML = `
-        <div class="drawer-content">
-          <div class="drawer-header">
-            <h2>👤 ${userName}</h2>
-            <button class="drawer-close" onclick="cerrarPerfil()">✕</button>
-          </div>
-          <div class="loading">⏳ Cargando perfil...</div>
-        </div>
-      `;
-      document.body.appendChild(overlay);
-      
-      // Cargar datos del perfil
-      try {
-        const res = await fetch(`${API}/admin/user-profile/${userId}`, {
-          credentials: 'include'
-        });
-        
-        if (!res.ok) throw new Error("Error al cargar perfil");
-        
-        const { movements, notes } = await res.json();
-        
-        // Calcular estadísticas
-        const stats = calcularEstadisticas(movements);
-        
-        // Renderizar perfil completo
-        const content = overlay.querySelector('.drawer-content');
-        content.innerHTML = `
-          <div class="drawer-header">
-            <h2>👤 ${userName}</h2>
-            <button class="drawer-close" onclick="cerrarPerfil()">✕</button>
-          </div>
-          
-          <!-- ESTADÍSTICAS -->
-          <div class="profile-stats">
-            <div class="stat-card">
-              <div class="stat-label">Total Depósitos</div>
-              <div class="stat-value success">${stats.totalDeposits}</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Total Retiros</div>
-              <div class="stat-value danger">${stats.totalWithdrawals}</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Primera Actividad</div>
-              <div class="stat-value" style="font-size: 1rem;">${stats.firstSeen ? new Date(stats.firstSeen).toLocaleDateString('es-ES') : 'N/A'}</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Última Actividad</div>
-              <div class="stat-value" style="font-size: 1rem;">${stats.lastActivity ? new Date(stats.lastActivity).toLocaleDateString('es-ES') : 'N/A'}</div>
-            </div>
-          </div>
-          
-          <!-- INDICADORES -->
-          ${renderIndicadores(stats.indicators)}
-          
-          <!-- TIMELINE -->
-          <h3 style="margin-bottom: 15px;">📊 Actividad Reciente</h3>
-          <div class="timeline">
-            ${stats.recentMovements.map(m => `
-              <div class="timeline-item">
-                <div class="timeline-dot ${m.tipo}"></div>
-                <div style="flex: 1;">
-                  <div style="font-weight: 600;">${m.tipo === 'deposito' ? '📥' : '📤'} ${TRADUCCIONES[m.objeto] || m.objeto}</div>
-                  <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">
-                    Cantidad: ${m.cantidad} | ${new Date(m.timestamp).toLocaleString('es-ES')}
-                  </div>
-                </div>
-              </div>
-            `).join('') || '<p style="color: rgba(255,255,255,0.5);">Sin actividad reciente</p>'}
-          </div>
-          
-          <!-- NOTAS -->
-          <div class="notes-section">
-            <h3 style="margin-bottom: 15px;">📝 Notas Internas</h3>
-            ${notes && notes.length > 0 ? notes.map(note => `
-              <div class="note-item">
-                <div class="note-author">Por: ${note.author_name}</div>
-                <div class="note-text">${note.note}</div>
-                <div class="note-date">${new Date(note.created_at).toLocaleString('es-ES')}</div>
-              </div>
-            `).join('') : '<p style="color: rgba(255,255,255,0.5);">Sin notas</p>'}
-            
-            <div class="add-note-form">
-              <textarea id="newNoteText" placeholder="Agregar nota interna..."></textarea>
-              <button class="btn-primary" onclick="agregarNota('${userId}', '${userName}')">
-                💾 Guardar Nota
-              </button>
-            </div>
-          </div>
-          
-          <!-- EXPORTAR -->
-          <button class="btn-secondary" onclick="exportarUsuario('${userId}', '${userName}', ${movements.length})" style="width: 100%; margin-top: 20px;">
-            📥 Exportar Movimientos (${movements.length})
-          </button>
-        `;
-        
-      } catch (error) {
-        console.error("Error cargando perfil:", error);
-        alert("Error al cargar el perfil del usuario");
-        cerrarPerfil();
-      }
-    }
-
-    function calcularEstadisticas(movements) {
-      const deposits = movements.filter(m => m.tipo === 'deposito');
-      const withdrawals = movements.filter(m => m.tipo === 'retiro');
-      
-      const firstSeen = movements.length > 0 ? movements[movements.length - 1].timestamp : null;
-      const lastActivity = movements.length > 0 ? movements[0].timestamp : null;
-      
-      // Indicadores suaves
-      const withdrawsMore = withdrawals.length > deposits.length * 1.5;
-      const burstActivity = checkBurstActivity(movements);
-      const repeatedWithdrawals = checkRepeatedWithdrawals(withdrawals);
-      
-      return {
-        totalDeposits: deposits.length,
-        totalWithdrawals: withdrawals.length,
-        firstSeen,
-        lastActivity,
-        indicators: {
-          withdrawsMore,
-          burstActivity,
-          repeatedWithdrawals
-        },
-        recentMovements: movements.slice(0, 10)
-      };
-    }
-
-    function checkBurstActivity(movements) {
-      if (movements.length < 5) return false;
-      
-      const recent = movements.slice(0, 5);
-      const timespan = new Date(recent[0].timestamp) - new Date(recent[4].timestamp);
-      const minutes = timespan / (1000 * 60);
-      
-      return minutes < 5;
-    }
-
-    function checkRepeatedWithdrawals(withdrawals) {
-      const objectCounts = {};
-      withdrawals.forEach(w => {
-        objectCounts[w.objeto] = (objectCounts[w.objeto] || 0) + 1;
+    function setupEventListeners() {
+      document.getElementById("loginBtn").addEventListener("click", () => {
+        window.location.href = `${API}/auth/discord`;
       });
       
-      return Object.values(objectCounts).some(count => count >= 5);
-    }
-
-    function renderIndicadores(indicators) {
-      const indicadoresList = [];
+      document.getElementById("logoutBtn").addEventListener("click", async () => {
+        await fetch(`${API}/auth/logout`, { method: 'POST', credentials: 'include' });
+        location.reload();
+      });
       
-      if (indicators.withdrawsMore) {
-        indicadoresList.push({
-          type: 'warning',
-          icon: '⚠️',
-          text: 'Retira significativamente más de lo que deposita'
+      document.getElementById("prevPage").addEventListener("click", () => {
+        if (currentPage > 1) { currentPage--; renderTabla(); }
+      });
+      
+      document.getElementById("nextPage").addEventListener("click", () => {
+        const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+        if (currentPage < totalPages) { currentPage++; renderTabla(); }
+      });
+      
+      document.querySelectorAll('.category-tab').forEach(tab => {
+        tab.addEventListener('click', (e) => {
+          document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+          e.target.classList.add('active');
+          currentPage = 1;
+          renderTabla();
         });
-      }
-      
-      if (indicators.burstActivity) {
-        indicadoresList.push({
-          type: 'warning',
-          icon: '⏱️',
-          text: 'Actividad concentrada en pocos minutos'
-        });
-      }
-      
-      if (indicators.repeatedWithdrawals) {
-        indicadoresList.push({
-          type: 'info',
-          icon: '🔄',
-          text: 'Retiros frecuentes del mismo objeto'
-        });
-      }
-      
-      if (indicadoresList.length === 0) {
-        return `
-          <div class="indicators-section">
-            <div class="indicator info">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="font-size: 1.5rem;">✅</span>
-                <span>Sin indicadores inusuales detectados</span>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-      
-      return `
-        <div class="indicators-section">
-          <h3 style="margin-bottom: 15px;">🔍 Indicadores</h3>
-          ${indicadoresList.map(ind => `
-            <div class="indicator ${ind.type}">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="font-size: 1.5rem;">${ind.icon}</span>
-                <span>${ind.text}</span>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      `;
+      });
     }
 
-    function cerrarPerfil() {
-      const overlay = document.querySelector('.drawer-overlay');
-      if (overlay) overlay.remove();
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
     }
-
-    async function agregarNota(userId, userName) {
-      const noteText = document.getElementById('newNoteText').value.trim();
-      
-      if (!noteText) {
-        alert("Escribe una nota antes de guardar");
-        return;
-      }
-      
-      try {
-        const res = await fetch(`${API}/admin/add-note`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            user_id: userId,
-            note: noteText
-          })
-        });
-        
-        if (!res.ok) throw new Error("Error al guardar nota");
-        
-        alert("✅ Nota guardada correctamente");
-        cerrarPerfil();
-        abrirPerfil(userId, userName);
-      } catch (error) {
-        console.error("Error:", error);
-        alert("❌ Error al guardar la nota");
-      }
-    }
-
-    async function exportarUsuario(userId, userName, count) {
-      try {
-        const res = await fetch(`${API}/admin/user-profile/${userId}`, {
-          credentials: 'include'
-        });
-        
-        if (!res.ok) throw new Error("Error al exportar");
-        
-        const { movements } = await res.json();
-        
-        // Convertir a CSV
-        const csv = convertToCSV(movements);
-        downloadFile(csv, `usuario_${userName}_${Date.now()}.csv`);
-        
-        // Registrar acción
-        await fetch(`${API}/admin/log-action`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action_type: 'export',
-            target_user_id: userId,
-            details: { recordCount: movements.length }
-          })
-        });
-        
-        alert(`✅ ${count} movimientos exportados`);
-      } catch (error) {
-        console.error("Error:", error);
-        alert("❌ Error al exportar");
-      }
-    }
-
-    function convertToCSV(data) {
-      if (!data || data.length === 0) return '';
-      
-      const headers = Object.keys(data[0]).join(',');
-      const rows = data.map(row => 
-        Object.values(row).map(val => 
-          typeof val === 'string' && val.includes(',') ? `"${val}"` : val
-        ).join(',')
-      );
-      
-      return headers + '\n' + rows.join('\n');
-    }
-
-    function downloadFile(content, filename) {
-      const blob = new Blob([content], { type: 'text/csv' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      a.click();
-      window.URL.revokeObjectURL(url);
-    }
-
-  // ==================== VALIDAR MOVIMIENTO ====================
-async function validarMovimiento(movementId) {
-  if (!confirm("¿Confirmar validación?")) return;
-  
-  try {
-    const res = await fetch(`${API}/admin/validate-movement`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ movement_id: movementId })
-    });
-    
-    if (!res.ok) throw new Error("Error");
-    alert("✅ Validado");
-    await cargarMovimientos(true);
-  } catch (error) {
-    alert("❌ Error al validar");
-  }
-}
-
-function toggleTheme() {
-  document.body.classList.toggle('investigation-mode');
-}
-// ==================== EVENT LISTENERS ====================
-function setupEventListeners() {
-  // Botón login
-  document.getElementById("loginBtn").addEventListener("click", () => {
-    console.log("🔗 Click en botón de login");
-    window.location.href = `${API}/auth/discord`;
-  });
-  
-  // Botón logout
-  document.getElementById("logoutBtn").addEventListener("click", async () => {
-    await fetch(`${API}/auth/logout`, { method: 'POST', credentials: 'include' });
-    location.reload();
-  });
-  
-  // Búsqueda
-  document.getElementById("smartSearch").addEventListener("input", (e) => {
-    smartSearchTerm = e.target.value;
-    aplicarFiltros();
-  });
-  
-  // Tabs categorías
-  document.querySelectorAll('.category-tab').forEach(tab => {
-    tab.addEventListener('click', (e) => {
-      document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
-      e.target.classList.add('active');
-      currentCategory = e.target.dataset.category;
-      aplicarFiltros();
-    });
-  });
-  
-  // Quick filters
-  document.querySelectorAll('.quick-filter-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const filter = e.target.dataset.filter;
-      if (currentQuickFilter === filter) {
-        currentQuickFilter = null;
-        e.target.classList.remove('active');
-      } else {
-        document.querySelectorAll('.quick-filter-btn').forEach(b => b.classList.remove('active'));
-        currentQuickFilter = filter;
-        e.target.classList.add('active');
-      }
-      aplicarFiltros();
-    });
-  });
-  
-  // Paginación
-  document.getElementById("prevPage").addEventListener("click", () => {
-    if (currentPage > 1) { currentPage--; renderTabla(); }
-  });
-  document.getElementById("nextPage").addEventListener("click", () => {
-    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-    if (currentPage < totalPages) { currentPage++; renderTabla(); }
-  });
-  document.getElementById("perPageSelect").addEventListener("change", (e) => {
-    itemsPerPage = e.target.value === 'all' ? 'all' : parseInt(e.target.value);
-    currentPage = 1;
-    renderTabla();
-  });
-  
-  // Modo investigación
-  document.getElementById("investigationToggle").addEventListener("click", () => {
-    investigationMode = !investigationMode;
-    document.getElementById("investigationToggle").classList.toggle('active');
-    document.body.classList.toggle('investigation-mode');
-    document.querySelectorAll('.investigation-only').forEach(el => {
-      el.style.display = investigationMode ? 'table-cell' : 'none';
-    });
-  });
-}
-
-// INICIAR
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
-}
-
- <style>
-/* MODO INVESTIGACIÓN */
-body.investigation-mode {
-  background: #0a0a0a;
-  color: #00ff00;
-  font-family: 'Courier New', monospace;
-}
-
-body.investigation-mode::before {
-  display: none;
-}
-
-body.investigation-mode .table-container {
-  background: #000;
-  border: 2px solid #00ff00;
-}
-
-body.investigation-mode table {
-  font-family: 'Courier New', monospace;
-  font-size: 0.85rem;
-}
-
-body.investigation-mode tbody tr:hover {
-  background: rgba(0, 255, 0, 0.1);
-}
-
-body.investigation-mode h1,
-body.investigation-mode h2,
-body.investigation-mode h3 {
-  color: #00ff00;
-  text-shadow: 0 0 10px #00ff00;
-}
-
-.container {
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 20px;
-  position: relative;
-  z-index: 1;
-}
-</style>
-
-
-    /* HEADER */
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 30px;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      margin-bottom: 30px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .header-title {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .header-logo {
-      width: 50px;
-      height: 50px;
-      border-radius: 10px;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-
-    h1 {
-      font-size: 2rem;
-      background: linear-gradient(135deg, #ffffff, #b19cd9);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .version-badge {
-      font-size: 0.7rem;
-      background: linear-gradient(135deg, #8a2be2, #4b0082);
-      color: white;
-      padding: 4px 10px;
-      border-radius: 10px;
-      font-weight: normal;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 15px;
-      align-items: center;
-    }
-
-    .user-info {
-      display: none;
-      align-items: center;
-      gap: 15px;
-      padding: 10px 20px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 50px;
-      position: relative;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .user-info.active {
-      display: flex;
-      animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateX(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-
-    .user-avatar {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      border: 2px solid #8a2be2;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-
-    .user-avatar:hover {
-      transform: scale(1.1);
-    }
-
-    .user-details {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .user-name {
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
-
-    .user-role {
-      font-size: 0.75rem;
-      color: #b19cd9;
-      background: rgba(138, 43, 226, 0.2);
-      padding: 2px 8px;
-      border-radius: 10px;
-      display: inline-block;
-    }
-
-    .admin-badge {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      color: white;
-      font-weight: bold;
-    }
-
-    .logout-btn {
-      background: rgba(239, 68, 68, 0.2);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #f87171;
-      padding: 8px 16px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .logout-btn:hover {
-      background: rgba(239, 68, 68, 0.3);
-      transform: translateY(-2px);
-    }
-
-    .theme-toggle, .investigation-toggle {
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1.3rem;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .theme-toggle:hover, .investigation-toggle:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: scale(1.1);
-    }
-
-    .investigation-toggle.active {
-      background: var(--bg-success);
-      color: var(--color-success);
-      box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
-    }
-
-    /* LOGIN OVERLAY */
-    .login-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(10px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      animation: fadeIn 0.4s ease;
-    }
-
-    .login-overlay.hidden {
-      display: none;
-    }
-
-    .login-box {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 30px;
-      padding: 60px 50px;
-      text-align: center;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-      animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    @keyframes slideUp {
-      from { transform: translateY(50px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    .discord-btn {
-      background: linear-gradient(135deg, #5865F2, #7289DA);
-      color: white;
-      border: none;
-      padding: 18px 50px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      border-radius: 50px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 15px;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 10px 30px rgba(88, 101, 242, 0.4);
-    }
-
-    .discord-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 15px 40px rgba(88, 101, 242, 0.6);
-    }
-
-    /* BÚSQUEDA INTELIGENTE */
-    .search-section {
-      margin-bottom: 20px;
-      position: relative;
-    }
-
-    .smart-search {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.05);
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      border-radius: 50px;
-      padding: 15px 30px;
-      color: white;
-      font-size: 1.1rem;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .smart-search:focus {
-      outline: none;
-      background: rgba(255, 255, 255, 0.08);
-      border-color: #8a2be2;
-      box-shadow: 0 0 30px rgba(138, 43, 226, 0.4);
-    }
-
-    .smart-search::placeholder {
-      color: rgba(255, 255, 255, 0.5);
-    }
-
-    .search-hints {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
-
-    .search-hint {
-      font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.6);
-      background: rgba(255, 255, 255, 0.05);
-      padding: 4px 12px;
-      border-radius: 15px;
-    }
-
-    /* CATEGORÍAS SUPERIORES */
-    .category-tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      padding: 10px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 20px;
-    }
-
-    .category-tab {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: white;
-      padding: 12px 24px;
-      border-radius: 15px;
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      font-size: 0.95rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .category-tab:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-2px);
-    }
-
-    .category-tab.active {
-      background: linear-gradient(135deg, #8a2be2, #4b0082);
-      border-color: #8a2be2;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
-    }
-
-    /* QUICK FILTERS */
-    .quick-filters {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .filter-group {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .quick-filter-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      font-size: 0.9rem;
-    }
-
-    .quick-filter-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-2px);
-    }
-
-    .quick-filter-btn.active {
-      background: var(--bg-info);
-      border-color: var(--color-info);
-      color: var(--color-info);
-    }
-
-    .saved-searches-btn {
-      background: var(--bg-warning);
-      border-color: var(--color-warning);
-      color: var(--color-warning);
-    }
-
-    .saved-searches-btn:hover {
-      background: rgba(234, 179, 8, 0.25);
-    }
-
-    /* TABLA */
-    .table-container {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      filter: blur(8px);
-      pointer-events: none;
-      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-      overflow-x: auto;
-    }
-
-    .table-container.unlocked {
-      filter: blur(0);
-      pointer-events: all;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 1200px;
-    }
-
-    thead {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    th {
-      padding: 15px;
-      text-align: left;
-      font-weight: 600;
-      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 15px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      white-space: nowrap;
-    }
-
-    tbody tr {
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-    }
-
-    tbody tr:hover {
-      background: rgba(255, 255, 255, 0.05);
-      transform: scale(1.01);
-    }
-
-    tbody tr:hover .row-actions {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    /* ROW ACTIONS (hover) */
-    .row-actions {
-      opacity: 0;
-      pointer-events: none;
-      display: flex;
-      gap: 5px;
-      transition: opacity 0.3s ease;
-    }
-
-    .action-btn {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: white;
-      padding: 5px 12px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      transition: all 0.3s ease;
-    }
-
-    .action-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: scale(1.05);
-    }
-
-    .action-btn.validate {
-      background: var(--bg-success);
-      color: var(--color-success);
-      border-color: var(--color-success);
-    }
-
-    .action-btn.profile {
-      background: var(--bg-info);
-      color: var(--color-info);
-      border-color: var(--color-info);
-    }
-
-    /* BADGES */
-    .status-badge {
-      display: inline-block;
-      padding: 5px 15px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
-
-    .status-deposito {
-      background: var(--bg-success);
-      color: var(--color-success);
-      border: 1px solid var(--color-success);
-    }
-
-    .status-retiro {
-      background: var(--bg-danger);
-      color: var(--color-danger);
-      border: 1px solid var(--color-danger);
-    }
-
-    .status-validado {
-      background: var(--bg-success);
-      color: var(--color-success);
-    }
-
-    .status-pendiente {
-      background: var(--bg-warning);
-      color: var(--color-warning);
-    }
-
-    /* CATEGORÍAS DE OBJETOS */
-    .cat-pistolas { color: #fbbf24 !important; font-weight: 500; }
-    .cat-arma_blanca { color: #f87171 !important; font-weight: 500; }
-    .cat-balas { color: #a78bfa !important; font-weight: 500; }
-    .cat-drogas { color: #34d399 !important; font-weight: 500; }
-    .cat-otros { color: #60a5fa !important; font-weight: 500; }
-
-    .username-clickable {
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-decoration: underline;
-      text-decoration-style: dotted;
-    }
-
-    .username-clickable:hover {
-      color: var(--color-info);
-      transform: scale(1.05);
-    }
-
-    /* USER DRAWER */
-    .drawer-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(5px);
-      z-index: 2000;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .drawer-content {
-      width: 600px;
-      max-width: 90vw;
-      height: 100%;
-      background: rgba(27, 0, 58, 0.98);
-      backdrop-filter: blur(20px);
-      border-left: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: -10px 0 50px rgba(0, 0, 0, 0.5);
-      overflow-y: auto;
-      animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      padding: 30px;
-    }
-
-    @keyframes slideInRight {
-      from {
-        transform: translateX(100%);
-      }
-      to {
-        transform: translateX(0);
-      }
-    }
-
-    .drawer-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .drawer-close {
-      background: rgba(239, 68, 68, 0.2);
-      border: none;
-      color: #f87171;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1.5rem;
-      transition: all 0.3s ease;
-    }
-
-    .drawer-close:hover {
-      background: rgba(239, 68, 68, 0.3);
-      transform: rotate(90deg);
-    }
-
-    .profile-stats {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
-      margin-bottom: 30px;
-    }
-
-    .stat-card {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 20px;
-      border-radius: 15px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      transition: all 0.3s ease;
-    }
-
-    .stat-card:hover {
-      background: rgba(255, 255, 255, 0.08);
-      transform: translateY(-2px);
-    }
-
-    .stat-label {
-      font-size: 0.85rem;
-      color: rgba(255, 255, 255, 0.6);
-      margin-bottom: 5px;
-    }
-
-    .stat-value {
-      font-size: 2rem;
-      font-weight: bold;
-      color: white;
-    }
-
-    .stat-value.success {
-      color: var(--color-success);
-    }
-
-    .stat-value.danger {
-      color: var(--color-danger);
-    }
-
-    .indicators-section {
-      margin-bottom: 30px;
-    }
-
-    .indicator {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      border-left: 4px solid transparent;
-      transition: all 0.3s ease;
-    }
-
-    .indicator.warning {
-      border-left-color: var(--color-warning);
-      background: var(--bg-warning);
-    }
-
-    .indicator.info {
-      border-left-color: var(--color-info);
-      background: var(--bg-info);
-    }
-
-    .timeline {
-      margin-bottom: 30px;
-    }
-
-    .timeline-item {
-      display: flex;
-      gap: 15px;
-      margin-bottom: 20px;
-      padding: 15px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
-      transition: all 0.3s ease;
-    }
-
-    .timeline-item:hover {
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .timeline-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      margin-top: 5px;
-      flex-shrink: 0;
-    }
-
-    .timeline-dot.deposito {
-      background: var(--color-success);
-      box-shadow: 0 0 10px var(--color-success);
-    }
-
-    .timeline-dot.retiro {
-      background: var(--color-danger);
-      box-shadow: 0 0 10px var(--color-danger);
-    }
-
-    .notes-section {
-      margin-bottom: 30px;
-    }
-
-    .note-item {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      border-left: 4px solid var(--color-info);
-    }
-
-    .note-author {
-      font-size: 0.85rem;
-      color: var(--color-info);
-      margin-bottom: 5px;
-    }
-
-    .note-text {
-      color: rgba(255, 255, 255, 0.9);
-    }
-
-    .note-date {
-      font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.5);
-      margin-top: 5px;
-    }
-
-    .add-note-form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .add-note-form textarea {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: white;
-      padding: 12px;
-      border-radius: 10px;
-      resize: vertical;
-      min-height: 80px;
-      font-family: inherit;
-    }
-
-    .add-note-form textarea:focus {
-      outline: none;
-      border-color: var(--color-info);
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #8a2be2, #4b0082);
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 12px 24px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    /* MODAL BÚSQUEDAS GUARDADAS */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(10px);
-      z-index: 3000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .modal-content {
-      background: rgba(27, 0, 58, 0.98);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 40px;
-      max-width: 600px;
-      width: 90%;
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-
-    .saved-search-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
-      margin-bottom: 10px;
-      transition: all 0.3s ease;
-    }
-
-    .saved-search-item:hover {
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    /* PAGINATION */
-    .pagination {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .pagination button {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: white;
-      padding: 8px 16px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.4s ease;
-    }
-
-    .pagination button:hover:not(:disabled) {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-2px);
-    }
-
-    .pagination button:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-    }
-
-    .pagination select {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: white;
-      padding: 8px 16px;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    /* LOADING */
-    .loading {
-      text-align: center;
-      padding: 40px;
-      font-size: 1.2rem;
-      color: var(--color-info);
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
-      h1 { font-size: 1.5rem; }
-      .category-tabs { justify-content: flex-start; overflow-x: auto; }
-      .drawer-content { width: 100%; }
-      table { font-size: 0.85rem; }
-      th, td { padding: 10px; }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <header>
-      <div class="header-title">
-        <h1>
-          🔫 Armario VxB
-          <span class="version-badge">v2.0</span>
-        </h1>
-      </div>
-      <div class="header-actions">
-        <div class="user-info" id="userInfo">
-          <img class="user-avatar" id="userAvatar" src="" alt="Avatar">
-          <div class="user-details">
-            <span class="user-name" id="userName">Usuario</span>
-            <span class="user-role" id="userRole">Rol</span>
-          </div>
-          <button class="logout-btn" id="logoutBtn">Salir</button>
-        </div>
-        <button class="investigation-toggle" id="investigationToggle" title="Modo Investigación" style="display: none;">
-          🔍
-        </button>
-        <button class="theme-toggle" onclick="toggleTheme()">🌗</button>
-      </div>
-    </header>
-
-    <main>
-      <!-- BÚSQUEDA INTELIGENTE -->
-      <div class="search-section">
-        <input 
-          type="text" 
-          class="smart-search" 
-          id="smartSearch" 
-          placeholder="🔍 Búsqueda inteligente: @usuario, #123, 'sin validar', 'últimos 15 min'..."
-        >
-        <div class="search-hints">
-          <span class="search-hint">@usuario → buscar por nombre</span>
-          <span class="search-hint">#123 → buscar por ID</span>
-          <span class="search-hint">"sin validar" → pendientes</span>
-          <span class="search-hint">"últimos 15 min" → recientes</span>
-        </div>
-      </div>
-
-      <!-- CATEGORÍAS SUPERIORES -->
-      <div class="category-tabs" id="categoryTabs">
-        <button class="category-tab active" data-category="all">📋 Todos</button>
-        <button class="category-tab" data-category="deposits">📥 Depósitos</button>
-        <button class="category-tab" data-category="withdrawals">📤 Retiros</button>
-        <button class="category-tab" data-category="pistolas">🔫 Pistolas</button>
-        <button class="category-tab" data-category="arma_blanca">🔪 Arma Blanca</button>
-        <button class="category-tab" data-category="balas">🎯 Balas</button>
-        <button class="category-tab" data-category="drogas">💊 Drogas</button>
-        <button class="category-tab" data-category="otros">📦 Otros</button>
-      </div>
-
-      <!-- QUICK FILTERS -->
-      <div class="quick-filters">
-        <div class="filter-group">
-          <button class="quick-filter-btn" data-filter="pending">⏳ Pendientes</button>
-          <button class="quick-filter-btn" data-filter="recent15">🕐 Últimos 15 min</button>
-          <button class="quick-filter-btn" data-filter="recent60">🕑 Última hora</button>
-        </div>
-        <div class="filter-group">
-          <button class="saved-searches-btn" id="savedSearchesBtn">🔖 Búsquedas Guardadas</button>
-        </div>
-      </div>
-
-      <!-- TABLA -->
-      <div class="table-container" id="tableContainer">
-        <table id="tabla-armas">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Tipo</th>
-              <th>Fecha / Hora</th>
-              <th>Usuario</th>
-              <th>Objeto</th>
-              <th>Cantidad</th>
-              <th>Almacén</th>
-              <th>Validado</th>
-              <th class="investigation-only" style="display: none;">Discord ID</th>
-              <th class="investigation-only" style="display: none;">Timestamp Raw</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-
-      <!-- PAGINACIÓN -->
-      <div class="pagination">
-        <button id="prevPage">← Anterior</button>
-        <span id="pageInfo">Página 1</span>
-        <select id="perPageSelect">
-          <option value="50">50 por página</option>
-          <option value="100" selected>100 por página</option>
-          <option value="500">500 por página</option>
-          <option value="all">Todos</option>
-        </select>
-        <button id="nextPage">Siguiente →</button>
-      </div>
-    </main>
-  </div>
-
-  <!-- LOGIN OVERLAY -->
-  <div class="login-overlay" id="loginOverlay">
-    <div class="login-box">
-      <h2>🔐 Acceso Restringido</h2>
-      <p>Inicia sesión con Discord para acceder al armario</p>
-      <button class="discord-btn" id="loginBtn">
-        <svg class="discord-icon" width="30" height="30" viewBox="0 0 127.14 96.36" fill="currentColor">
-          <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
-        </svg>
-        Iniciar sesión con Discord
-      </button>
-    </div>
-  </div>
-
-   <script src="js/config.js"></script>
-  <script src="js/auth.js"></script>
+  </script>
 </body>
 </html>
-
