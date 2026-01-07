@@ -528,12 +528,6 @@
       transform: scale(1.05);
     }
 
-    .action-btn.validate {
-      background: var(--bg-success);
-      color: var(--color-success);
-      border-color: var(--color-success);
-    }
-
     .action-btn.profile {
       background: var(--bg-info);
       color: var(--color-info);
@@ -571,6 +565,16 @@
       background: var(--bg-warning);
       color: var(--color-warning);
     }
+     .status-no-validado {
+  background: var(--bg-danger);
+  color: var(--color-danger);
+  animation: pulse-alert 2s infinite;
+  }
+
+    @keyframes pulse-alert {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+  }
 
     /* CATEGORÍAS DE OBJETOS */
     .cat-pistolas { color: #fbbf24 !important; font-weight: 500; }
@@ -717,7 +721,10 @@
       border-left-color: var(--color-info);
       background: var(--bg-info);
     }
-
+	.indicator.danger {
+	  border-left-color: var(--color-danger);
+	  background: var(--bg-danger);
+	}
     .timeline {
       margin-bottom: 30px;
     }
@@ -997,6 +1004,7 @@
         </div>
         <div class="filter-group">
           <button class="saved-searches-btn" id="savedSearchesBtn">🔖 Búsquedas Guardadas</button>
+					<button class="quick-filter-btn" onclick="abrirConfiguracion()">⚙️ Configuración</button>
         </div>
       </div>
 
@@ -1094,6 +1102,70 @@
         'roscon', 'polvoron', 'turron', 'coquito', 'supervodka', 'WEAPON_SNOWBALL']
     };
 
+	  // SISTEMA DE ALERTAS INTELIGENTE
+	const ARMAS_CRITICAS = [
+	  'WEAPON_PISTOL', 'WEAPON_PISTOL_MK2', 'WEAPON_SNSPISTOL_MK2',
+	  'WEAPON_DOUBLEACTION', 'WEAPON_COMBATPISTOL'
+	];
+	
+	const WHITELIST = [
+	  // Agregar Discord IDs de usuarios autorizados
+	  // Ejemplo: '123456789012345678'
+	];
+	
+	let alertasActivas = true;
+	
+	function esArma(objeto) {
+	  return ARMAS_CRITICAS.includes(objeto);
+	}
+	
+	function analizarRetiros(movements, userId) {
+	  if (WHITELIST.includes(userId)) return null;
+	  if (!alertasActivas) return null;
+	  
+	  const ultimaHora = new Date(Date.now() - 60 * 60 * 1000);
+	  const retirosRecientes = movements.filter(m => 
+	    m.tipo === 'retiro' && 
+	    esArma(m.objeto) &&
+	    new Date(m.timestamp) >= ultimaHora
+	  );
+	  
+	  const totalArmasRetiradas = retirosRecientes.reduce((sum, m) => sum + (m.cantidad || 1), 0);
+	  
+	  // Detectar si es operativo (múltiples retiros en 5 minutos)
+	  const ultimos5min = new Date(Date.now() - 5 * 60 * 1000);
+	  const retirosRapidos = retirosRecientes.filter(m => new Date(m.timestamp) >= ultimos5min);
+	  const esOperativo = retirosRapidos.length >= 3;
+	  
+	  if (esOperativo) {
+	    if (totalArmasRetiradas >= 40) {
+	      return { nivel: 'fuerte', mensaje: `⚠️ ALERTA: ${totalArmasRetiradas} armas en operativo` };
+	    } else if (totalArmasRetiradas >= 20) {
+	      return { nivel: 'media', mensaje: `⚡ ATENCIÓN: ${totalArmasRetiradas} armas en operativo` };
+	    }
+	  } else {
+	    // Fuera de operativo - más estricto
+	    if (totalArmasRetiradas >= 40) {
+	      return { nivel: 'fuerte', mensaje: `🚨 ALERTA CRÍTICA: ${totalArmasRetiradas} armas retiradas` };
+	    } else if (totalArmasRetiradas >= 10) {
+	      return { nivel: 'media', mensaje: `⚠️ Retiros sospechosos: ${totalArmasRetiradas} armas` };
+	    }
+	    
+	    // Detectar patrón: mismo objeto múltiples veces
+	    const objetosCounts = {};
+	    retirosRecientes.forEach(r => {
+	      objetosCounts[r.objeto] = (objetosCounts[r.objeto] || 0) + (r.cantidad || 1);
+	    });
+	    
+	    for (const [objeto, count] of Object.entries(objetosCounts)) {
+	      if (count >= 5) {
+	        return { nivel: 'media', mensaje: `⚡ Retiros repetidos: ${count}x ${TRADUCCIONES[objeto] || objeto}` };
+	      }
+	    }
+	  }
+	  
+	  return null;
+	}
     // ESTADO GLOBAL
     let currentUser = null;
     let allMovements = [];
@@ -1266,6 +1338,16 @@
       if (timeMatch) {
         return { type: 'timeRange', value: parseInt(timeMatch[1]) };
       }
+
+		// "armas"
+		if (trimmed.includes('arma')) {
+		  return { type: 'weapons' };
+		}
+		
+		// "alertas" o "sospechoso"
+		if (trimmed.includes('alerta') || trimmed.includes('sospechoso')) {
+		  return { type: 'suspicious' };
+		}
       
       // Búsqueda de texto genérica
       return { type: 'text', value: trimmed };
@@ -1308,11 +1390,21 @@
             
             return searchIn.includes(searchResult.value);
           });
-          
-        default:
-          return movements;
-      }
-    }
+	
+		case 'weapons':
+		  return movements.filter(m => esArma(m.objeto));
+		  
+		case 'suspicious':
+		  return movements.filter(m => {
+		    const userMovements = allMovements.filter(mov => mov.discord_id === m.discord_id);
+		    const alerta = analizarRetiros(userMovements, m.discord_id);
+		    return alerta !== null;
+		  });
+		          
+		        default:
+		          return movements;
+		      }
+		    }
 
     // ==================== FILTROS ====================
     function getCategoriaItem(nombre) {
@@ -1406,8 +1498,8 @@
           <td>${r.cantidad || 0}</td>
           <td>${almacenMostrar}</td>
           <td>
-            <span class="status-badge ${r.validado ? 'status-validado' : 'status-pendiente'}">
-              ${r.validado ? '✓ Sí' : '⏳ No'}
+            <span class="status-badge ${r.validado ? 'status-validado' : (r.no_validado ? 'status-no-validado' : 'status-pendiente')}">
+              ${r.validado ? '✓ Sí' : (r.no_validado ? '⚠️ NO VALIDADO' : '⏳ Pendiente')}
             </span>
           </td>
           <td class="investigation-only" style="display: ${investigationMode ? 'table-cell' : 'none'};">
@@ -1421,11 +1513,6 @@
               <button class="action-btn profile" onclick="abrirPerfil('${r.discord_id}', '${r.nombre}')">
                 👤 Perfil
               </button>
-              ${isAdmin && !r.validado ? `
-                <button class="action-btn validate" onclick="validarMovimiento(${r.id})">
-                  ✓ Validar
-                </button>
-              ` : ''}
             </div>
           </td>
         `;
@@ -1480,7 +1567,56 @@
         </div>
       `;
       document.body.appendChild(overlay);
-      
+
+		function abrirConfiguracion() {
+		  const overlay = document.createElement('div');
+		  overlay.className = 'modal-overlay';
+		  overlay.id = 'configModal';
+		  overlay.innerHTML = `
+		    <div class="modal-content">
+		      <div class="drawer-header">
+		        <h2>⚙️ Configuración</h2>
+		        <button class="drawer-close" onclick="cerrarConfiguracion()">✕</button>
+		      </div>
+		      
+		      <h3 style="margin-bottom: 15px;">🔕 Alertas</h3>
+		      <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; cursor: pointer;">
+		        <input type="checkbox" id="toggleAlertas" ${alertasActivas ? 'checked' : ''} 
+		          onchange="alertasActivas = this.checked; alert(alertasActivas ? '✅ Alertas activadas' : '🔕 Alertas desactivadas')">
+		        <span>Activar sistema de alertas inteligente</span>
+		      </label>
+		      
+		      <h3 style="margin-bottom: 15px;">✅ Whitelist</h3>
+		      <p style="color: rgba(255,255,255,0.7); margin-bottom: 10px; font-size: 0.9rem;">
+		        Usuarios en whitelist no generan alertas
+		      </p>
+		      <textarea id="whitelistInput" style="width: 100%; min-height: 150px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 12px; border-radius: 10px; font-family: monospace;"
+		        placeholder="Ingresa Discord IDs (uno por línea)&#10;Ejemplo:&#10;123456789012345678&#10;987654321098765432">${WHITELIST.join('\n')}</textarea>
+		      
+		      <button class="btn-primary" onclick="guardarConfiguracion()" style="width: 100%; margin-top: 15px;">
+		        💾 Guardar Configuración
+		      </button>
+		    </div>
+		  `;
+		  document.body.appendChild(overlay);
+		}
+		
+		function cerrarConfiguracion() {
+		  const modal = document.getElementById('configModal');
+		  if (modal) modal.remove();
+		}
+		
+		function guardarConfiguracion() {
+		  const input = document.getElementById('whitelistInput').value;
+		  const newWhitelist = input.split('\n').map(id => id.trim()).filter(id => id.length > 0);
+		  
+		  // Actualizar whitelist (en producción esto debería guardarse en backend)
+		  WHITELIST.length = 0;
+		  WHITELIST.push(...newWhitelist);
+		  
+		  alert(`✅ Configuración guardada\n${WHITELIST.length} usuarios en whitelist`);
+		  cerrarConfiguracion();
+		}      
       // Cargar datos del perfil
       try {
         const res = await fetch(`${API}/admin/user-profile/${userId}`, {
@@ -1493,6 +1629,8 @@
         
         // Calcular estadísticas
         const stats = calcularEstadisticas(movements);
+
+		const alerta = analizarRetiros(movements, movements[0]?.discord_id);
         
         // Renderizar perfil completo
         const content = overlay.querySelector('.drawer-content');
@@ -1522,9 +1660,18 @@
             </div>
           </div>
           
-          <!-- INDICADORES -->
-          ${renderIndicadores(stats.indicators)}
-          
+          <!-- ALERTA -->
+		${stats.alerta ? `
+		  <div class="indicator ${stats.alerta.nivel === 'fuerte' ? 'danger' : 'warning'}" style="margin-bottom: 20px; border-left-color: ${stats.alerta.nivel === 'fuerte' ? 'var(--color-danger)' : 'var(--color-warning)'}; background: ${stats.alerta.nivel === 'fuerte' ? 'var(--bg-danger)' : 'var(--bg-warning)'}">
+		    <div style="display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: bold;">
+		      ${stats.alerta.mensaje}
+		    </div>
+		  </div>
+		` : ''}
+		
+		<!-- INDICADORES -->
+		${renderIndicadores(stats.indicators)}
+		
           <!-- TIMELINE -->
           <h3 style="margin-bottom: 15px;">📊 Actividad Reciente</h3>
           <div class="timeline">
@@ -1585,20 +1732,19 @@
       const burstActivity = checkBurstActivity(movements);
       const repeatedWithdrawals = checkRepeatedWithdrawals(withdrawals);
       
-      return {
-        totalDeposits: deposits.length,
-        totalWithdrawals: withdrawals.length,
-        firstSeen,
-        lastActivity,
-        indicators: {
-          withdrawsMore,
-          burstActivity,
-          repeatedWithdrawals
-        },
-        recentMovements: movements.slice(0, 10)
-      };
-    }
-
+     return {
+	  totalDeposits: deposits.length,
+	  totalWithdrawals: withdrawals.length,
+	  firstSeen,
+	  lastActivity,
+	  alerta: alerta,
+	  indicators: {
+	    withdrawsMore,
+	    burstActivity,
+	    repeatedWithdrawals
+	  },
+	  recentMovements: movements.slice(0, 10)
+	};
     function checkBurstActivity(movements) {
       if (movements.length < 5) return false;
       
@@ -1708,6 +1854,14 @@
       }
     }
 
+	function verMiPerfil() {
+	  if (!currentUser || !currentUser.discordId) {
+	    alert("Error: No se pudo obtener tu información");
+	    return;
+	  }
+	  abrirPerfil(currentUser.discordId, currentUser.username);
+	}
+
     async function exportarUsuario(userId, userName, count) {
       try {
         const res = await fetch(`${API}/admin/user-profile/${userId}`, {
@@ -1763,30 +1917,7 @@
       a.click();
       window.URL.revokeObjectURL(url);
     }
-
-  // ==================== VALIDAR MOVIMIENTO ====================
-async function validarMovimiento(movementId) {
-  if (!confirm("¿Confirmar validación?")) return;
-  
-  try {
-    const res = await fetch(`${API}/admin/validate-movement`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ movement_id: movementId })
-    });
-    
-    if (!res.ok) throw new Error("Error");
-    alert("✅ Validado");
-    await cargarMovimientos(true);
-  } catch (error) {
-    alert("❌ Error al validar");
-  }
-}
-
-function toggleTheme() {
-  document.body.classList.toggle('investigation-mode');
-}
+		
 // ==================== EVENT LISTENERS ====================
 function setupEventListeners() {
   // Botón login
