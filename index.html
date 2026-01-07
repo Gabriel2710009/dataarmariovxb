@@ -874,11 +874,13 @@ function renderTabla() {
     const almacenMostrar = ALMACENES[r.almacen] || r.almacen || "-";
     const categoria = getCategoriaItem(r.objeto || "");
     
-    // Aplicar color de fondo a toda la fila según el tipo
+   // Aplicar color de fondo a toda la fila según el tipo
     if (r.tipo === "deposito") {
-      tr.style.background = "rgba(34, 197, 94, 0.05)";
+      tr.style.background = "rgba(34, 197, 94, 0.15)";
+      tr.style.borderLeft = "4px solid #22c55e";
     } else if (r.tipo === "retiro") {
-      tr.style.background = "rgba(239, 68, 68, 0.05)";
+      tr.style.background = "rgba(239, 68, 68, 0.15)";
+      tr.style.borderLeft = "4px solid #ef4444";
     }
     
     tr.innerHTML = `
