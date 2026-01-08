@@ -1372,45 +1372,37 @@
     }
 
     function mostrarUsuarioAutenticado(user) {
-      document.getElementById("loginOverlay").classList.add("hidden");
-      document.getElementById("tableContainer").classList.add("unlocked");
-      document.getElementById("userInfo").classList.add("active");
-      
-      let roleEmoji = "👤";
-      let displayRole = "Usuario";
-      
-      if (user.roleName === "Alto Rango") {
-        roleEmoji = "🔰";
-        displayRole = "Alto Rango";
-      } else if (user.roleName === "Armero") {
-        roleEmoji = "🔫";
-        displayRole = "Armero";
-      }
-
-			// Si es admin, agregar clase especial
-			if (user.roleName === "Alto Rango" || user.roleName === "Armero") {
-			  roleEl.classList.add("admin-badge");
-			  // Mostrar botón de modo investigación solo para admins
-			  document.getElementById("investigationToggle").style.display = "flex";
-			  // Mostrar botón "Mi Perfil" para admins
-			  document.getElementById("myProfileBtn").style.display = "block";
-			}
-      
-      document.getElementById("userName").textContent = user.username || "Usuario";
-      const roleEl = document.getElementById("userRole");
-      roleEl.textContent = `${roleEmoji} ${displayRole}`;
-      
-      // Si es admin, agregar clase especial
-      if (user.roleName === "Alto Rango" || user.roleName === "Armero") {
-        roleEl.classList.add("admin-badge");
-        // Mostrar botón de modo investigación solo para admins
-        document.getElementById("investigationToggle").style.display = "flex";
-      }
-      
-      const avatarUrl = user.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`;
-      document.getElementById("userAvatar").src = avatarUrl;
-    }
-
+  document.getElementById("loginOverlay").classList.add("hidden");
+  document.getElementById("tableContainer").classList.add("unlocked");
+  document.getElementById("userInfo").classList.add("active");
+  
+  let roleEmoji = "👤";
+  let displayRole = "Usuario";
+  
+  if (user.roleName === "Alto Rango") {
+    roleEmoji = "🔰";
+    displayRole = "Alto Rango";
+  } else if (user.roleName === "Armero") {
+    roleEmoji = "🔫";
+    displayRole = "Armero";
+  }
+  
+  document.getElementById("userName").textContent = user.username || "Usuario";
+  const roleEl = document.getElementById("userRole");
+  roleEl.textContent = `${roleEmoji} ${displayRole}`;
+  
+  // Si es admin, agregar clase especial
+  if (user.roleName === "Alto Rango" || user.roleName === "Armero") {
+    roleEl.classList.add("admin-badge");
+    // Mostrar botón de modo investigación solo para admins
+    document.getElementById("investigationToggle").style.display = "flex";
+    // Mostrar botón "Mi Perfil" para admins
+    document.getElementById("myProfileBtn").style.display = "block";
+  }
+  
+  const avatarUrl = user.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`;
+  document.getElementById("userAvatar").src = avatarUrl;
+}
 		
 
     // ==================== CARGAR DATOS ====================
@@ -1708,16 +1700,7 @@
       }
     }
 
-    // ==================== PERFIL DE USUARIO ====================
-    async function abrirPerfil(userId, userName) {
-      const isAdmin = currentUser.roleName === "Alto Rango" || currentUser.roleName === "Armero";
-      
-      if (!isAdmin) {
-        alert("⛔ Solo administradores pueden ver perfiles de usuarios");
-        return;
-      }
-
-			// ==================== CONFIGURACIÓN ====================
+		// ==================== CONFIGURACIÓN ====================
 		function cerrarConfiguracion() {
 		  const modal = document.getElementById('configModal');
 		  if (modal) modal.remove();
@@ -1852,6 +1835,7 @@
 		    alert("❌ Error al eliminar");
 		  }
 		}
+
       
       // Crear overlay
       const overlay = document.createElement('div');
