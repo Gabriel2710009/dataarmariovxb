@@ -1080,15 +1080,18 @@
           <span class="version-badge">v2.0</span>
         </h1>
       </div>
-      <div class="header-actions">
-        <div class="user-info" id="userInfo">
-          <img class="user-avatar" id="userAvatar" src="" alt="Avatar">
-          <div class="user-details">
-            <span class="user-name" id="userName">Usuario</span>
-            <span class="user-role" id="userRole">Rol</span>
-          </div>
-          <button class="logout-btn" id="logoutBtn">Salir</button>
-        </div>
+	      <div class="header-actions">
+					<div class="user-info" id="userInfo">
+					  <img class="user-avatar" id="userAvatar" src="" alt="Avatar">
+					  <div class="user-details">
+					    <span class="user-name" id="userName">Usuario</span>
+					    <span class="user-role" id="userRole">Rol</span>
+					  </div>
+					  <button class="btn-secondary" id="myProfileBtn" style="display: none; padding: 8px 16px; margin-right: 10px;">
+					    👤 Mi Perfil
+					  </button>
+					  <button class="logout-btn" id="logoutBtn">Salir</button>
+					</div>
         <button class="investigation-toggle" id="investigationToggle" title="Modo Investigación" style="display: none;">
           🔍
         </button>
@@ -1383,6 +1386,15 @@
         roleEmoji = "🔫";
         displayRole = "Armero";
       }
+
+			// Si es admin, agregar clase especial
+			if (user.roleName === "Alto Rango" || user.roleName === "Armero") {
+			  roleEl.classList.add("admin-badge");
+			  // Mostrar botón de modo investigación solo para admins
+			  document.getElementById("investigationToggle").style.display = "flex";
+			  // Mostrar botón "Mi Perfil" para admins
+			  document.getElementById("myProfileBtn").style.display = "block";
+			}
       
       document.getElementById("userName").textContent = user.username || "Usuario";
       const roleEl = document.getElementById("userRole");
@@ -1398,6 +1410,8 @@
       const avatarUrl = user.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`;
       document.getElementById("userAvatar").src = avatarUrl;
     }
+
+		
 
     // ==================== CARGAR DATOS ====================
     async function cargarMovimientos(silencioso = false) {
@@ -1703,69 +1717,56 @@
         return;
       }
 
+			// ==================== CONFIGURACIÓN ====================
 		function cerrarConfiguracion() {
 		  const modal = document.getElementById('configModal');
 		  if (modal) modal.remove();
-			}
-      
-      // Crear overlay
-      const overlay = document.createElement('div');
-      overlay.className = 'drawer-overlay';
-      overlay.innerHTML = `
-        <div class="drawer-content">
-          <div class="drawer-header">
-            <h2>👤 ${userName}</h2>
-            <button class="drawer-close" onclick="cerrarPerfil()">✕</button>
-          </div>
-          <div class="loading">⏳ Cargando perfil...</div>
-        </div>
-      `;
-      document.body.appendChild(overlay);
-
+		}
+		
 		async function abrirConfiguracion() {
-  // Cargar whitelist actual
-  await cargarWhitelist();
-  
-  const overlay = document.createElement('div');
-  overlay.className = 'modal-overlay';
-  overlay.id = 'configModal';
-  overlay.innerHTML = `
-    <div class="modal-content" style="max-width: 700px;">
-      <div class="drawer-header">
-        <h2>⚙️ Configuración</h2>
-        <button class="drawer-close" onclick="cerrarConfiguracion()">✕</button>
-      </div>
-      
-      <h3 style="margin-bottom: 15px;">🔕 Alertas</h3>
-      <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 30px; cursor: pointer;">
-        <input type="checkbox" id="toggleAlertas" ${alertasActivas ? 'checked' : ''} 
-          onchange="alertasActivas = this.checked; alert(alertasActivas ? '✅ Alertas activadas' : '🔕 Alertas desactivadas')">
-        <span>Activar sistema de alertas inteligente</span>
-      </label>
-      
-      <h3 style="margin-bottom: 15px;">✅ Whitelist (${WHITELIST.length} usuarios)</h3>
-      <p style="color: rgba(255,255,255,0.7); margin-bottom: 10px; font-size: 0.9rem;">
-        Usuarios en whitelist NO generan alertas
-      </p>
-      
-      <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-        <input type="text" id="newDiscordId" placeholder="Discord ID" 
-          style="flex: 2; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 12px; border-radius: 10px;">
-        <input type="text" id="newUserName" placeholder="Nombre (opcional)" 
-          style="flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 12px; border-radius: 10px;">
-        <button class="btn-primary" onclick="agregarAWhitelist()" style="padding: 12px 24px;">
-          ➕ Agregar
-        </button>
-      </div>
-      
-      <div id="whitelistItems" style="max-height: 300px; overflow-y: auto; margin-bottom: 15px;">
-        ${await renderWhitelistItems()}
-      </div>
-    </div>
-  `;
-  document.body.appendChild(overlay);
-}
-
+		  // Cargar whitelist actual
+		  await cargarWhitelist();
+		  
+		  const overlay = document.createElement('div');
+		  overlay.className = 'modal-overlay';
+		  overlay.id = 'configModal';
+		  overlay.innerHTML = `
+		    <div class="modal-content" style="max-width: 700px;">
+		      <div class="drawer-header">
+		        <h2>⚙️ Configuración</h2>
+		        <button class="drawer-close" onclick="cerrarConfiguracion()">✕</button>
+		      </div>
+		      
+		      <h3 style="margin-bottom: 15px;">🔕 Alertas</h3>
+		      <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 30px; cursor: pointer;">
+		        <input type="checkbox" id="toggleAlertas" ${alertasActivas ? 'checked' : ''} 
+		          onchange="alertasActivas = this.checked; alert(alertasActivas ? '✅ Alertas activadas' : '🔕 Alertas desactivadas')">
+		        <span>Activar sistema de alertas inteligente</span>
+		      </label>
+		      
+		      <h3 style="margin-bottom: 15px;">✅ Whitelist (${WHITELIST.length} usuarios)</h3>
+		      <p style="color: rgba(255,255,255,0.7); margin-bottom: 10px; font-size: 0.9rem;">
+		        Usuarios en whitelist NO generan alertas
+		      </p>
+		      
+		      <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+		        <input type="text" id="newDiscordId" placeholder="Discord ID" 
+		          style="flex: 2; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 12px; border-radius: 10px;">
+		        <input type="text" id="newUserName" placeholder="Nombre (opcional)" 
+		          style="flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 12px; border-radius: 10px;">
+		        <button class="btn-primary" onclick="agregarAWhitelist()" style="padding: 12px 24px;">
+		          ➕ Agregar
+		        </button>
+		      </div>
+		      
+		      <div id="whitelistItems" style="max-height: 300px; overflow-y: auto; margin-bottom: 15px;">
+		        ${await renderWhitelistItems()}
+		      </div>
+		    </div>
+		  `;
+		  document.body.appendChild(overlay);
+		}
+		
 		async function renderWhitelistItems() {
 		  try {
 		    const res = await fetch(`${API}/admin/whitelist`, {
@@ -1824,7 +1825,7 @@
 		    
 		    alert("✅ Usuario agregado a whitelist");
 		    cerrarConfiguracion();
-		    abrirConfiguracion(); // Reabrir para actualizar
+		    abrirConfiguracion();
 		  } catch (error) {
 		    alert("❌ Error al agregar");
 		  }
@@ -1846,11 +1847,25 @@
 		    
 		    alert("✅ Eliminado de whitelist");
 		    cerrarConfiguracion();
-		    abrirConfiguracion(); // Reabrir para actualizar
+		    abrirConfiguracion();
 		  } catch (error) {
 		    alert("❌ Error al eliminar");
 		  }
 		}
+      
+      // Crear overlay
+      const overlay = document.createElement('div');
+      overlay.className = 'drawer-overlay';
+      overlay.innerHTML = `
+        <div class="drawer-content">
+          <div class="drawer-header">
+            <h2>👤 ${userName}</h2>
+            <button class="drawer-close" onclick="cerrarPerfil()">✕</button>
+          </div>
+          <div class="loading">⏳ Cargando perfil...</div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
      
       // Cargar datos del perfil
       try {
@@ -1955,35 +1970,40 @@
       }
     }
 
-    function calcularEstadisticas(movements) {
-      const deposits = movements.filter(m => m.tipo === 'deposito');
-      const withdrawals = movements.filter(m => m.tipo === 'retiro');
-      
-      const firstSeen = movements.length > 0 ? movements[movements.length - 1].timestamp : null;
-      const lastActivity = movements.length > 0 ? movements[0].timestamp : null;
-      
-      // Indicadores suaves
-      const withdrawsMore = withdrawals.length > deposits.length * 1.5;
-      const burstActivity = checkBurstActivity(movements);
-      const repeatedWithdrawals = checkRepeatedWithdrawals(withdrawals);
-			// Calcular alerta
-			const alerta = analizarRetiros(movements, movements[0]?.discord_id);
-      
-     return {
-	  totalDeposits: deposits.length,
-	  totalWithdrawals: withdrawals.length,
-	  firstSeen,
-	  lastActivity,
-	  alerta: alerta,
-	  indicators: {
-	    withdrawsMore,
-	    burstActivity,
-	    repeatedWithdrawals
-	  },
-	  recentMovements: movements.slice(0, 10)
-	};
+	   function calcularEstadisticas(movements) {
+	  const deposits = movements.filter(m => m.tipo === 'deposito');
+	  const withdrawals = movements.filter(m => m.tipo === 'retiro');
+	  
+	  // CONTAR CANTIDADES, no solo registros
+	  const totalDepositsCount = deposits.reduce((sum, m) => sum + (parseInt(m.cantidad) || 0), 0);
+	  const totalWithdrawalsCount = withdrawals.reduce((sum, m) => sum + (parseInt(m.cantidad) || 0), 0);
+	  
+	  const firstSeen = movements.length > 0 ? movements[movements.length - 1].timestamp : null;
+	  const lastActivity = movements.length > 0 ? movements[0].timestamp : null;
+	  
+	  // Indicadores suaves
+	  const withdrawsMore = withdrawals.length > deposits.length * 1.5;
+	  const burstActivity = checkBurstActivity(movements);
+	  const repeatedWithdrawals = checkRepeatedWithdrawals(withdrawals);
+	  
+	  // Calcular alerta
+	  const alerta = analizarRetiros(movements, movements[0]?.discord_id);
+	  
+	  return {
+	    totalDeposits: totalDepositsCount,  // ← Ahora suma cantidades
+	    totalWithdrawals: totalWithdrawalsCount,  // ← Ahora suma cantidades
+	    firstSeen,
+	    lastActivity,
+	    alerta: alerta,
+	    indicators: {
+	      withdrawsMore,
+	      burstActivity,
+	      repeatedWithdrawals
+	    },
+	    recentMovements: movements.slice(0, 10)
+	  };
 	}
-	
+		
     function checkBurstActivity(movements) {
       if (movements.length < 5) return false;
       
@@ -2208,6 +2228,13 @@ function setupEventListeners() {
       aplicarFiltros();
     });
   });
+
+	// Mi perfil (solo para admins)
+	document.getElementById("myProfileBtn").addEventListener("click", () => {
+	  if (currentUser && currentUser.id) {
+	    abrirPerfil(currentUser.id, currentUser.username);
+	  }
+	});
   
   // Paginación
   document.getElementById("prevPage").addEventListener("click", () => {
