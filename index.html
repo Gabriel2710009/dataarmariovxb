@@ -1699,17 +1699,7 @@
         document.getElementById("pageInfo").textContent = `Página ${currentPage} de ${totalPages} (${filteredData.length} registros)`;
       }
     }
-// ==================== PERFIL DE USUARIO ====================
-    async function abrirPerfil(userId, userName) {
-      const isAdmin = currentUser.roleName === "Alto Rango" || currentUser.roleName === "Armero";
-      
-      if (!isAdmin) {
-        alert("⛔ Solo administradores pueden ver perfiles de usuarios");
-        return;
-      }
-      
-      
-		// ==================== CONFIGURACIÓN ====================
+	// ==================== CONFIGURACIÓN ====================
 		function cerrarConfiguracion() {
 		  const modal = document.getElementById('configModal');
 		  if (modal) modal.remove();
@@ -1845,6 +1835,14 @@
 		  }
 		}
 
+// ==================== PERFIL DE USUARIO ====================
+    async function abrirPerfil(userId, userName) {
+      const isAdmin = currentUser.roleName === "Alto Rango" || currentUser.roleName === "Armero";
+      
+      if (!isAdmin) {
+        alert("⛔ Solo administradores pueden ver perfiles de usuarios");
+        return;
+      }
       
       // Crear overlay
       const overlay = document.createElement('div');
