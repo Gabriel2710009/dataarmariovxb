@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Armario VxB - Console v2.0</title>
+	<link rel="icon" type="image/png" href="https://cdn.discordapp.com/attachments/779197022787862539/1458659129630654656/Gemini_Generated_Image_uch613uch613uch6.png?ex=696071ad&is=695f202d&hm=a0bc763244fe0efa1f1eb311724f89b0aa54eb16bbf89741b2227f9c9b776733&">
   <style>
     * {
       margin: 0;
@@ -57,6 +58,134 @@
       50% { opacity: 1; }
     }
 
+		/* MODO CLARO */
+		body[data-theme="light"] {
+		  background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 50%, #f0f4ff 100%);
+		  color: #1a1a1a;
+		}
+		
+		body[data-theme="light"]::before {
+		  background: 
+		    radial-gradient(circle at 20% 50%, rgba(138, 43, 226, 0.05) 0%, transparent 50%),
+		    radial-gradient(circle at 80% 80%, rgba(75, 0, 130, 0.05) 0%, transparent 50%);
+		}
+		
+		body[data-theme="light"] header {
+		  background: rgba(255, 255, 255, 0.9);
+		  border-color: rgba(0, 0, 0, 0.1);
+		}
+		
+		body[data-theme="light"] h1 {
+		  background: linear-gradient(135deg, #1a1a1a, #6b46c1);
+		  -webkit-background-clip: text;
+		  -webkit-text-fill-color: transparent;
+		  background-clip: text;
+		}
+		
+		body[data-theme="light"] .user-info {
+		  background: rgba(0, 0, 0, 0.05);
+		}
+		
+		body[data-theme="light"] .user-role {
+		  color: #6b46c1;
+		  background: rgba(138, 43, 226, 0.15);
+		}
+		
+		body[data-theme="light"] .smart-search {
+		  background: rgba(0, 0, 0, 0.03);
+		  border-color: rgba(0, 0, 0, 0.1);
+		  color: #1a1a1a;
+		}
+		
+		body[data-theme="light"] .smart-search::placeholder {
+		  color: rgba(0, 0, 0, 0.4);
+		}
+		
+		body[data-theme="light"] .search-hint {
+		  color: rgba(0, 0, 0, 0.6);
+		  background: rgba(0, 0, 0, 0.05);
+		}
+		
+		body[data-theme="light"] .category-tabs {
+		  background: rgba(255, 255, 255, 0.6);
+		}
+		
+		body[data-theme="light"] .category-tab {
+		  background: rgba(255, 255, 255, 0.8);
+		  border-color: rgba(0, 0, 0, 0.1);
+		  color: #1a1a1a;
+		}
+		
+		body[data-theme="light"] .category-tab:hover {
+		  background: rgba(255, 255, 255, 1);
+		}
+		
+		body[data-theme="light"] .category-tab.active {
+		  background: linear-gradient(135deg, #8a2be2, #6b46c1);
+		  color: white;
+		}
+		
+		body[data-theme="light"] .quick-filter-btn {
+		  background: rgba(255, 255, 255, 0.8);
+		  border-color: rgba(0, 0, 0, 0.1);
+		  color: #1a1a1a;
+		}
+		
+		body[data-theme="light"] .quick-filter-btn:hover {
+		  background: rgba(255, 255, 255, 1);
+		}
+		
+		body[data-theme="light"] .table-container {
+		  background: rgba(255, 255, 255, 0.9);
+		  border-color: rgba(0, 0, 0, 0.1);
+		}
+		
+		body[data-theme="light"] table {
+		  color: #1a1a1a;
+		}
+		
+		body[data-theme="light"] thead {
+		  background: rgba(0, 0, 0, 0.05);
+		}
+		
+		body[data-theme="light"] th {
+		  border-bottom-color: rgba(0, 0, 0, 0.1);
+		}
+		
+		body[data-theme="light"] td {
+		  border-bottom-color: rgba(0, 0, 0, 0.05);
+		}
+		
+		body[data-theme="light"] tbody tr:hover {
+		  background: rgba(0, 0, 0, 0.03);
+		}
+		
+		body[data-theme="light"] .action-btn {
+		  background: rgba(0, 0, 0, 0.05);
+		  border-color: rgba(0, 0, 0, 0.1);
+		  color: #1a1a1a;
+		}
+		
+		body[data-theme="light"] .pagination button {
+		  background: rgba(255, 255, 255, 0.8);
+		  border-color: rgba(0, 0, 0, 0.1);
+		  color: #1a1a1a;
+		}
+		
+		body[data-theme="light"] .pagination select {
+		  background: rgba(255, 255, 255, 0.8);
+		  border-color: rgba(0, 0, 0, 0.1);
+		  color: #1a1a1a;
+		}
+
+		/* Filas con colores en modo claro */
+		body[data-theme="light"] tbody tr[style*="border-left: 4px solid rgb(34, 197, 94)"] {
+		  background: rgba(34, 197, 94, 0.08) !important;
+		}
+		
+		body[data-theme="light"] tbody tr[style*="border-left: 4px solid rgb(239, 68, 68)"] {
+		  background: rgba(239, 68, 68, 0.08) !important;
+		}
     /* MODO INVESTIGACIÓN */
     body.investigation-mode {
       background: #0a0a0a;
@@ -143,7 +272,8 @@
       color: white;
       padding: 4px 10px;
       border-radius: 10px;
-      font-weight: normal;
+      font-weight: 600;	
+			letter-spacing: 0.5px;
     }
 
     .header-actions {
@@ -962,7 +1092,7 @@
         <button class="investigation-toggle" id="investigationToggle" title="Modo Investigación" style="display: none;">
           🔍
         </button>
-        <button class="theme-toggle" onclick="toggleTheme()">🌗</button>
+        <button class="theme-toggle" id="themeToggle">🌗</button>
       </div>
     </header>
 
@@ -1004,7 +1134,7 @@
         </div>
         <div class="filter-group">
           <button class="saved-searches-btn" id="savedSearchesBtn">🔖 Búsquedas Guardadas</button>
-					<button class="quick-filter-btn" onclick="abrirConfiguracion()">⚙️ Configuración</button>
+					<button class="quick-filter-btn" id="configBtn">⚙️ Configuración</button>
         </div>
       </div>
 
@@ -1485,14 +1615,16 @@
         const almacenMostrar = ALMACENES[r.almacen] || r.almacen || "-";
         const categoria = getCategoriaItem(r.objeto || "");
         
-        // Color de fondo según tipo
-        if (r.tipo === "deposito") {
-          tr.style.background = "rgba(34, 197, 94, 0.15)";
-          tr.style.borderLeft = "4px solid #22c55e";
-        } else if (r.tipo === "retiro") {
-          tr.style.background = "rgba(239, 68, 68, 0.15)";
-          tr.style.borderLeft = "4px solid #ef4444";
-        }
+        // Color de fondo según tipo - IMPORTANTE: aplicar después del innerHTML
+				const applyRowColors = () => {
+				  if (r.tipo === "deposito") {
+				    tr.style.background = "rgba(34, 197, 94, 0.1)";
+				    tr.style.borderLeft = "4px solid #22c55e";
+				  } else if (r.tipo === "retiro") {
+				    tr.style.background = "rgba(239, 68, 68, 0.1)";
+				    tr.style.borderLeft = "4px solid #ef4444";
+				  }
+				};
         
         const isAdmin = currentUser.roleName === "Alto Rango" || currentUser.roleName === "Armero";
         
@@ -1531,7 +1663,9 @@
             </div>
           </td>
         `;
-        
+        // Aplicar colores
+				applyRowColors();
+				
         tbody.appendChild(tr);
       });
       
@@ -1568,6 +1702,11 @@
         alert("⛔ Solo administradores pueden ver perfiles de usuarios");
         return;
       }
+
+		function cerrarConfiguracion() {
+		  const modal = document.getElementById('configModal');
+		  if (modal) modal.remove();
+			}
       
       // Crear overlay
       const overlay = document.createElement('div');
@@ -1827,6 +1966,8 @@
       const withdrawsMore = withdrawals.length > deposits.length * 1.5;
       const burstActivity = checkBurstActivity(movements);
       const repeatedWithdrawals = checkRepeatedWithdrawals(withdrawals);
+			// Calcular alerta
+			const alerta = analizarRetiros(movements, movements[0]?.discord_id);
       
      return {
 	  totalDeposits: deposits.length,
@@ -2029,6 +2170,12 @@ function setupEventListeners() {
     await fetch(`${API}/auth/logout`, { method: 'POST', credentials: 'include' });
     location.reload();
   });
+
+	// Theme toggle
+	document.getElementById("themeToggle").addEventListener("click", () => {
+	  const theme = document.body.dataset.theme === "light" ? "dark" : "light";
+	  document.body.dataset.theme = theme;
+	});
   
   // Búsqueda
   document.getElementById("smartSearch").addEventListener("input", (e) => {
@@ -2075,6 +2222,9 @@ function setupEventListeners() {
     currentPage = 1;
     renderTabla();
   });
+
+	// Configuración
+	document.getElementById("configBtn").addEventListener("click", abrirConfiguracion);
   
   // Modo investigación
   document.getElementById("investigationToggle").addEventListener("click", () => {
