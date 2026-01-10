@@ -1010,6 +1010,43 @@
 		  font-size: 0.8rem;
 		  white-space: nowrap;
 		}
+
+		.search-help-btn:hover {
+		  background: rgba(59, 130, 246, 0.3);
+		  transform: translateY(-50%) scale(1.1);
+		}
+		
+		.search-help-modal {
+		  position: absolute;
+		  top: 70px;
+		  right: 0;
+		  width: 500px;
+		  max-width: 90vw;
+		  background: rgba(27, 0, 58, 0.98);
+		  backdrop-filter: blur(20px);
+		  border: 1px solid rgba(255, 255, 255, 0.1);
+		  border-radius: 15px;
+		  padding: 20px;
+		  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+		  z-index: 100;
+		  animation: slideDown 0.3s ease;
+		  display: none;
+		}
+		
+		.search-help-modal.active {
+		  display: block;
+		}
+		
+		@keyframes slideDown {
+		  from {
+		    opacity: 0;
+		    transform: translateY(-10px);
+		  }
+		  to {
+		    opacity: 1;
+		    transform: translateY(0);
+		  }
+		}
 		
     /* PAGINATION */
     .pagination {
@@ -1097,24 +1134,33 @@
 
     <main>
       <!-- BÚSQUEDA INTELIGENTE -->
-      <div class="search-section">
-        <input 
-          type="text" 
-          class="smart-search" 
-          id="smartSearch" 
-         placeholder="🔍 Buscar: Toni Lopez tipo:retiro objeto:glock en:armeria"
-        >
-				
-				<div class="search-help" style="margin-top: 10px; padding: 15px; background: rgba(255, 255, 255, 0.05); border-radius: 15px; font-size: 0.85rem; line-height: 1.8;">
-			  <strong>💡 Ejemplos de búsqueda:</strong><br>
-			  <code>Toni Lopez tipo:retiro objeto:glock en:armeria</code><br>
-			  <code>usuario:juan validado:no</code><br>
-			  <code>objeto:pistola despues:2024-01-01</code><br>
-			  <strong style="margin-top: 8px; display: block;">Filtros disponibles:</strong>
-			  <code>usuario:</code> <code>tipo:</code> <code>objeto:</code> <code>en:</code> 
-			  <code>validado:si/no/pendiente/auto</code>
-			</div>
+		<div class="search-section">
+		  <div style="position: relative;">
+		    <input 
+		      type="text" 
+		      class="smart-search" 
+		      id="smartSearch" 
+		      placeholder="🔍 Buscar: Toni Lopez tipo:retiro objeto:glock en:armeria"
+		    >
+		    <button class="search-help-btn" id="searchHelpBtn" 
+		      style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; transition: all 0.3s ease;">
+		      ?
+		    </button>
+		  </div>
 
+			<div class="search-help-modal" id="searchHelpModal">
+			  <h3 style="margin-bottom: 15px; color: #60a5fa;">💡 Guía de Búsqueda</h3>
+			  <div style="font-size: 0.9rem; line-height: 1.8;">
+			    <strong>Ejemplos:</strong><br>
+			    <code>Toni Lopez tipo:retiro objeto:glock en:armeria</code><br>
+			    <code>usuario:juan validado:no</code><br>
+			    <code>objeto:pistola despues:2024-01-01</code><br><br>
+			    <strong>Filtros disponibles:</strong><br>
+			    <code>usuario:</code> <code>tipo:</code> <code>objeto:</code> <code>en:</code> 
+			    <code>validado:si/no/pendiente/auto</code>
+			  </div>
+			</div>
+			
       <!-- CATEGORÍAS SUPERIORES -->
      	 <div class="category-tabs" id="categoryTabs">
 	        <button class="category-tab active" data-category="all">📋 Todos</button>
@@ -1271,6 +1317,11 @@
 		  if (CONFIG_ALERTAS.objetos_que_alertan.length === 0) {
 		    return false;
 		  }
+		// Alias para compatibilidad
+		function esObjetoPermitido(objeto) {
+		  return esObjetoLibre(objeto);
+		}
+
 		  
 		  // Si el objeto NO está en la lista, es de uso libre
 		  return !CONFIG_ALERTAS.objetos_que_alertan.includes(objeto);
@@ -2594,7 +2645,23 @@ function setupEventListeners() {
 	// Configuración
 	document.getElementById("configBtn").addEventListener("click", abrirConfiguracion);
 	document.getElementById("adminAlertsBtn").addEventListener("click", abrirPanelAdmins);
-  
+
+		// Ayuda de búsqueda
+		document.getElementById("searchHelpBtn").addEventListener("click", (e) => {
+		  e.stopPropagation();
+		  const modal = document.getElementById("searchHelpModal");
+		  modal.classList.toggle("active");
+		});
+		
+		// Cerrar al hacer click fuera
+		document.addEventListener("click", (e) => {
+		  const modal = document.getElementById("searchHelpModal");
+		  const btn = document.getElementById("searchHelpBtn");
+		  if (modal.classList.contains("active") && !modal.contains(e.target) && e.target !== btn) {
+		    modal.classList.remove("active");
+		  }
+		});
+	
   // Modo investigación
   document.getElementById("investigationToggle").addEventListener("click", () => {
     investigationMode = !investigationMode;
@@ -2605,6 +2672,7 @@ function setupEventListeners() {
     });
   });
 }
+
 
 // INICIAR
 if (document.readyState === 'loading') {
