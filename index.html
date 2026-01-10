@@ -1283,11 +1283,9 @@
         'roscon', 'polvoron', 'turron', 'coquito', 'supervodka', 'WEAPON_SNOWBALL']
     };
 
-// REEMPLAZAR TODO EL BLOQUE:
-		
 		let CONFIG_ALERTAS = {
 		  alertas_activas: true,
-		  objetos_que_alertan: [] // Los que SÍ están en objetos_alertar
+		  objetos_que_alertan: []
 		};
 		
 		// Cargar config desde BD
@@ -1310,8 +1308,7 @@
 		  }
 		}
 		
-		// Si el objeto ESTÁ en objetos_alertar → genera alerta y usa validación normal
-		// Si el objeto NO está en objetos_alertar → "Uso Libre" (no genera alerta)
+		// Si el objeto NO está en objetos_alertar → "Uso Libre"
 		function esObjetoLibre(objeto) {
 		  if (CONFIG_ALERTAS.objetos_que_alertan.length === 0) {
 		    return false;
@@ -1324,50 +1321,41 @@
 		  return esObjetoLibre(objeto);
 		}
 		
+		// Si el objeto está en objetos_alertar → genera alerta
 		function debeAlertarObjeto(objeto) {
 		  return CONFIG_ALERTAS.objetos_que_alertan.includes(objeto);
 		}
-				  
-				  // Si el objeto NO está en la lista, es de uso libre
-				  return !CONFIG_ALERTAS.objetos_que_alertan.includes(objeto);
-				}
-				
-				function debeAlertarObjeto(objeto) {
-				  // Si está en la lista de objetos_alertar, SÍ debe generar alerta
-				  return CONFIG_ALERTAS.objetos_que_alertan.includes(objeto);
-				}
-
-	  // SISTEMA DE ALERTAS INTELIGENTE
-	const ARMAS_CRITICAS = [
-	  'WEAPON_PISTOL', 'WEAPON_PISTOL_MK2', 'WEAPON_SNSPISTOL_MK2',
-	  'WEAPON_DOUBLEACTION', 'WEAPON_COMBATPISTOL'
-	];
-	
-	let WHITELIST = [];
-
-	// Cargar whitelist desde backend
-	async function cargarWhitelist() {
-	  try {
-	    const res = await fetch(`${API}/admin/whitelist`, {
-	      credentials: 'include'
-	    });
-	    
-	    if (res.ok) {
-	      const data = await res.json();
-	      WHITELIST = data.map(item => item.discord_id);
-	      console.log(`✅ ${WHITELIST.length} usuarios en whitelist`);
-	    }
-	  } catch (error) {
-	    console.error("Error cargando whitelist:", error);
-	  }
-	}
+		
+		// SISTEMA DE ALERTAS INTELIGENTE
+		const ARMAS_CRITICAS = [
+		  'WEAPON_PISTOL', 'WEAPON_PISTOL_MK2', 'WEAPON_SNSPISTOL_MK2',
+		  'WEAPON_DOUBLEACTION', 'WEAPON_COMBATPISTOL'
+		];
+		
+		let WHITELIST = [];
+		
+		// Cargar whitelist desde backend
+		async function cargarWhitelist() {
+		  try {
+		    const res = await fetch(`${API}/admin/whitelist`, {
+		      credentials: 'include'
+		    });
+		    
+		    if (res.ok) {
+		      const data = await res.json();
+		      WHITELIST = data.map(item => item.discord_id);
+		      console.log(`✅ ${WHITELIST.length} usuarios en whitelist`);
+		    }
+		  } catch (error) {
+		    console.error("Error cargando whitelist:", error);
+		  }
+		}
 		
 		let alertasActivas = true;
 		
 		function esArma(objeto) {
 		  return ARMAS_CRITICAS.includes(objeto);
 		}
-	
 // REEMPLAZAR FUNCIÓN COMPLETA:
 
 		function analizarRetiros(movements, userId) {
