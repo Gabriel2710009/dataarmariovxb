@@ -1313,24 +1313,29 @@
 		// Si el objeto ESTÁ en objetos_alertar → genera alerta y usa validación normal
 		// Si el objeto NO está en objetos_alertar → "Uso Libre" (no genera alerta)
 		function esObjetoLibre(objeto) {
-		  // Si la lista está vacía, considerar todo como restringido (por seguridad)
 		  if (CONFIG_ALERTAS.objetos_que_alertan.length === 0) {
 		    return false;
 		  }
-		// Alias para compatibilidad
-		function esObjetoPermitido(objeto) {
-		  return esObjetoLibre(objeto);
-		}
-
-		  
-		  // Si el objeto NO está en la lista, es de uso libre
 		  return !CONFIG_ALERTAS.objetos_que_alertan.includes(objeto);
 		}
 		
+		// Alias para compatibilidad (usado en renderTabla)
+		function esObjetoPermitido(objeto) {
+		  return esObjetoLibre(objeto);
+		}
+		
 		function debeAlertarObjeto(objeto) {
-		  // Si está en la lista de objetos_alertar, SÍ debe generar alerta
 		  return CONFIG_ALERTAS.objetos_que_alertan.includes(objeto);
 		}
+				  
+				  // Si el objeto NO está en la lista, es de uso libre
+				  return !CONFIG_ALERTAS.objetos_que_alertan.includes(objeto);
+				}
+				
+				function debeAlertarObjeto(objeto) {
+				  // Si está en la lista de objetos_alertar, SÍ debe generar alerta
+				  return CONFIG_ALERTAS.objetos_que_alertan.includes(objeto);
+				}
 
 	  // SISTEMA DE ALERTAS INTELIGENTE
 	const ARMAS_CRITICAS = [
