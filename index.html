@@ -2342,17 +2342,17 @@
 		<!-- INDICADORES -->
 		${renderIndicadores(stats.indicators)}
 		
-				<!-- TIMELINE -->
+				 <!-- TIMELINE -->
 				          <h3 style="margin-bottom: 15px;">📊 Actividad Reciente</h3>
 				          <div class="timeline">
 				            ${stats.recentMovements && stats.recentMovements.length > 0 ? stats.recentMovements.map(m => {
-				              // Determinar badge de validación según el tipo y estado
+				              // ⭐ USAR EL CAMPO CORRECTO: puede ser "type" o "tipo"
+				              const tipoMovimiento = m.type || m.tipo;
+				              
 				              let validacionBadge = '';
-				              if (m.tipo === 'deposito') {
-				                // DEPÓSITOS NO MUESTRAN "PENDIENTE", solo su badge verde
+				              if (tipoMovimiento === 'deposito') {
 				                validacionBadge = '<span class="status-badge status-deposito">📥 Depósito</span>';
 				              } else {
-				                // RETIROS - mostrar estado de validación
 				                if (esObjetoPermitido(m.objeto)) {
 				                  validacionBadge = '<span class="status-badge status-validado">✅ Uso Libre</span>';
 				                } else if (m.validado) {
@@ -2368,10 +2368,10 @@
 				              
 				              return `
 				                <div class="timeline-item">
-				                  <div class="timeline-dot ${m.tipo}"></div>
+				                  <div class="timeline-dot ${tipoMovimiento}"></div>
 				                  <div style="flex: 1;">
 				                    <div style="font-weight: 600;">
-				                      ${m.tipo === 'deposito' ? '📥' : '📤'} ${TRADUCCIONES[m.objeto] || m.objeto}
+				                      ${tipoMovimiento === 'deposito' ? '📥' : '📤'} ${TRADUCCIONES[m.objeto] || m.objeto}
 				                    </div>
 				                    <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7); margin: 5px 0;">
 				                      Cantidad: ${m.cantidad || 1} | ${new Date(m.timestamp).toLocaleString('es-ES')}
@@ -2420,9 +2420,9 @@
 
 		async function calcularEstadisticas(movements) {
 		  console.log("📊 Calculando estadísticas para", movements?.length || 0, "movimientos");
+		  console.log("🔍 Primer movimiento:", movements[0]); // DEBUG
 		  
 		  if (!movements || movements.length === 0) {
-		    console.log("⚠️ Sin movimientos para calcular");
 		    return {
 		      totalDeposits: 0,
 		      totalWithdrawals: 0,
@@ -2438,12 +2438,12 @@
 		    };
 		  }
 		  
-		  const deposits = movements.filter(m => m.tipo === 'deposito');
-		  const withdrawals = movements.filter(m => m.tipo === 'retiro');
+		  // ⭐ IMPORTANTE: El campo es "type" NO "tipo"
+		  const deposits = movements.filter(m => m.type === 'deposito' || m.tipo === 'deposito');
+		  const withdrawals = movements.filter(m => m.type === 'retiro' || m.tipo === 'retiro');
 		  
 		  console.log(`💰 Depósitos: ${deposits.length} | Retiros: ${withdrawals.length}`);
 		  
-		  // CONTAR CANTIDADES - usar || 1 para contar items sin cantidad definida
 		  const totalDepositsCount = deposits.reduce((sum, m) => {
 		    const cantidad = parseInt(m.cantidad) || 1;
 		    return sum + cantidad;
@@ -2456,7 +2456,6 @@
 		  
 		  console.log(`📦 Total depositado: ${totalDepositsCount} | Total retirado: ${totalWithdrawalsCount}`);
 		  
-		  // Ordenar por timestamp para obtener primera y última actividad CORRECTAMENTE
 		  const sorted = [...movements].sort((a, b) => 
 		    new Date(a.timestamp) - new Date(b.timestamp)
 		  );
@@ -2466,21 +2465,17 @@
 		  
 		  console.log(`📅 Primera: ${firstSeen} | Última: ${lastActivity}`);
 		  
-		  // Indicadores
 		  const withdrawsMore = withdrawals.length > deposits.length * 1.5;
 		  const burstActivity = checkBurstActivity(movements);
 		  const repeatedWithdrawals = checkRepeatedWithdrawals(withdrawals);
 		  
-		  // Calcular alerta
 		  const alerta = analizarRetiros(movements, movements[0]?.discord_id);
 		  
-		  // ENVIAR ALERTA AUTOMÁTICAMENTE SI ES CRÍTICA O SOSPECHOSA
 		  if (alerta && (alerta.tipo === 'critico' || alerta.tipo === 'sospechoso')) {
 		    console.log(`🚨 Alerta detectada para ${movements[0]?.nombre}:`, alerta.mensaje);
 		    await enviarAlertaAdmin(movements[0]?.discord_id, movements[0]?.nombre, alerta);
 		  }
 		  
-		  // Movimientos recientes (últimos 10, ordenados por fecha DESC)
 		  const recentMovements = [...movements]
 		    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
 		    .slice(0, 10);
@@ -2500,17 +2495,16 @@
 		    },
 		    recentMovements
 		  };
-		}
 			
-    function checkBurstActivity(movements) {
-      if (movements.length < 5) return false;
-      
-      const recent = movements.slice(0, 5);
-      const timespan = new Date(recent[0].timestamp) - new Date(recent[4].timestamp);
-      const minutes = timespan / (1000 * 60);
-      
-      return minutes < 5;
-    }
+		function checkBurstActivity(movements) {
+		  if (movements.length < 5) return false;
+		  
+		  const recent = movements.slice(0, 5);
+		  const timespan = new Date(recent[0].timestamp) - new Date(recent[4].timestamp);
+		  const minutes = Math.abs(timespan) / (1000 * 60); // Usar Math.abs por si están invertidos
+		  
+		  return minutes < 5;
+		}
 
     function checkRepeatedWithdrawals(withdrawals) {
       const objectCounts = {};
