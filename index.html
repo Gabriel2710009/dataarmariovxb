@@ -2390,42 +2390,45 @@
       }
     }
 
-	   function calcularEstadisticas(movements) {
-	  const deposits = movements.filter(m => m.tipo === 'deposito');
-	  const withdrawals = movements.filter(m => m.tipo === 'retiro');
-	  
-	  // CONTAR CANTIDADES, no solo registros
-	  const totalDepositsCount = deposits.reduce((sum, m) => sum + (parseInt(m.cantidad) || 0), 0);
-	  const totalWithdrawalsCount = withdrawals.reduce((sum, m) => sum + (parseInt(m.cantidad) || 0), 0);
-	  
-	  const firstSeen = movements.length > 0 ? movements[movements.length - 1].timestamp : null;
-	  const lastActivity = movements.length > 0 ? movements[0].timestamp : null;
-	  
-	  // Indicadores suaves
-	  const withdrawsMore = withdrawals.length > deposits.length * 1.5;
-	  const burstActivity = checkBurstActivity(movements);
-	  const repeatedWithdrawals = checkRepeatedWithdrawals(withdrawals);
-	  
-	  // Calcular alerta
-		const alerta = analizarRetiros(movements, movements[0]?.discord_id);
-		if (alerta && (alerta.tipo === 'critico' || alerta.tipo === 'sospechoso')) {
-		  enviarAlertaAdmin(movements[0]?.discord_id, movements[0]?.nombre, alerta);
-		}
-	  
-	  return {
-	    totalDeposits: totalDepositsCount,  // ← Ahora suma cantidades
-	    totalWithdrawals: totalWithdrawalsCount,  // ← Ahora suma cantidades
-	    firstSeen,
-	    lastActivity,
-	    alerta: alerta,
-	    indicators: {
-	      withdrawsMore,
-	      burstActivity,
-	      repeatedWithdrawals
-	    },
-	    recentMovements: movements.slice(0, 10)
-	  };
-	}
+		async function calcularEstadisticas(movements) {
+			  const deposits = movements.filter(m => m.tipo === 'deposito');
+			  const withdrawals = movements.filter(m => m.tipo === 'retiro');
+			  
+			  // CONTAR CANTIDADES, no solo registros
+			  const totalDepositsCount = deposits.reduce((sum, m) => sum + (parseInt(m.cantidad) || 0), 0);
+			  const totalWithdrawalsCount = withdrawals.reduce((sum, m) => sum + (parseInt(m.cantidad) || 0), 0);
+			  
+			  const firstSeen = movements.length > 0 ? movements[movements.length - 1].timestamp : null;
+			  const lastActivity = movements.length > 0 ? movements[0].timestamp : null;
+			  
+			  // Indicadores suaves
+			  const withdrawsMore = withdrawals.length > deposits.length * 1.5;
+			  const burstActivity = checkBurstActivity(movements);
+			  const repeatedWithdrawals = checkRepeatedWithdrawals(withdrawals);
+			  
+			  // Calcular alerta
+				const alerta = analizarRetiros(movements, movements[0]?.discord_id);
+				
+				// ⭐ ENVIAR ALERTA AUTOMÁTICAMENTE SI ES CRÍTICA O SOSPECHOSA
+				if (alerta && (alerta.tipo === 'critico' || alerta.tipo === 'sospechoso')) {
+				  console.log(`🚨 Alerta detectada para ${movements[0]?.nombre}:`, alerta.mensaje);
+				  await enviarAlertaAdmin(movements[0]?.discord_id, movements[0]?.nombre, alerta);
+				}
+			  
+			  return {
+			    totalDeposits: totalDepositsCount,
+			    totalWithdrawals: totalWithdrawalsCount,
+			    firstSeen,
+			    lastActivity,
+			    alerta: alerta,
+			    indicators: {
+			      withdrawsMore,
+			      burstActivity,
+			      repeatedWithdrawals
+			    },
+			    recentMovements: movements.slice(0, 10)
+			  };
+			}
 		
     function checkBurstActivity(movements) {
       if (movements.length < 5) return false;
