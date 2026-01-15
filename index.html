@@ -2343,20 +2343,48 @@
 		${renderIndicadores(stats.indicators)}
 		
 				<!-- TIMELINE -->
-				<h3 style="margin-bottom: 15px;">📊 Actividad Reciente</h3>
-				<div class="timeline">
-				  ${stats.recentMovements && stats.recentMovements.length > 0 ? stats.recentMovements.map(m => `
-				    <div class="timeline-item">
-				      <div class="timeline-dot ${m.tipo}"></div>
-				      <div style="flex: 1;">
-				        <div style="font-weight: 600;">${m.tipo === 'deposito' ? '📥' : '📤'} ${TRADUCCIONES[m.objeto] || m.objeto}</div>
-				        <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">
-				          Cantidad: ${m.cantidad} | ${new Date(m.timestamp).toLocaleString('es-ES')}
-				        </div>
-				      </div>
-				    </div>
-				  `).join('') : '<p style="color: rgba(255,255,255,0.5);">Sin actividad reciente</p>'}
-				</div>
+				          <h3 style="margin-bottom: 15px;">📊 Actividad Reciente</h3>
+				          <div class="timeline">
+				            ${stats.recentMovements && stats.recentMovements.length > 0 ? stats.recentMovements.map(m => {
+				              // Determinar badge de validación según el tipo y estado
+				              let validacionBadge = '';
+				              if (m.tipo === 'deposito') {
+				                // DEPÓSITOS NO MUESTRAN "PENDIENTE", solo su badge verde
+				                validacionBadge = '<span class="status-badge status-deposito">📥 Depósito</span>';
+				              } else {
+				                // RETIROS - mostrar estado de validación
+				                if (esObjetoPermitido(m.objeto)) {
+				                  validacionBadge = '<span class="status-badge status-validado">✅ Uso Libre</span>';
+				                } else if (m.validado) {
+				                  validacionBadge = '<span class="status-badge status-validado">✓ Validado</span>';
+				                } else if (m.no_validado) {
+				                  validacionBadge = '<span class="status-badge status-no-validado">⚠️ NO VALIDADO</span>';
+				                } else if (m.en_operativo) {
+				                  validacionBadge = '<span class="status-badge status-pendiente">🎯 En Operativo</span>';
+				                } else {
+				                  validacionBadge = '<span class="status-badge status-pendiente">⏳ Pendiente</span>';
+				                }
+				              }
+				              
+				              return `
+				                <div class="timeline-item">
+				                  <div class="timeline-dot ${m.tipo}"></div>
+				                  <div style="flex: 1;">
+				                    <div style="font-weight: 600;">
+				                      ${m.tipo === 'deposito' ? '📥' : '📤'} ${TRADUCCIONES[m.objeto] || m.objeto}
+				                    </div>
+				                    <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7); margin: 5px 0;">
+				                      Cantidad: ${m.cantidad || 1} | ${new Date(m.timestamp).toLocaleString('es-ES')}
+				                    </div>
+				                    <div style="margin-top: 5px;">
+				                      ${validacionBadge}
+				                      ${m.validado_por ? `<span style="font-size: 0.75rem; color: rgba(255,255,255,0.6); margin-left: 8px;">por ${m.validado_por}</span>` : ''}
+				                    </div>
+				                  </div>
+				                </div>
+				              `;
+				            }).join('') : '<p style="color: rgba(255,255,255,0.5);">Sin actividad reciente</p>'}
+				          </div>
           
           <!-- NOTAS -->
           <div class="notes-section">
@@ -2391,60 +2419,88 @@
     }
 
 		async function calcularEstadisticas(movements) {
-					  if (!movements || movements.length === 0) {
-					    return {
-					      totalDeposits: 0,
-					      totalWithdrawals: 0,
-					      firstSeen: null,
-					      lastActivity: null,
-					      alerta: null,
-					      indicators: {
-					        withdrawsMore: false,
-					        burstActivity: false,
-					        repeatedWithdrawals: false
-					      },
-					      recentMovements: []
-					    };
-					  }
-					  
-					  const deposits = movements.filter(m => m.tipo === 'deposito');
-					  const withdrawals = movements.filter(m => m.tipo === 'retiro');
-					  
-					  // CONTAR CANTIDADES, no solo registros
-					  const totalDepositsCount = deposits.reduce((sum, m) => sum + (parseInt(m.cantidad) || 0), 0);
-					  const totalWithdrawalsCount = withdrawals.reduce((sum, m) => sum + (parseInt(m.cantidad) || 0), 0);
-					  
-					  const firstSeen = movements[movements.length - 1]?.timestamp || null;
-					  const lastActivity = movements[0]?.timestamp || null;
-					  
-					  // Indicadores suaves
-					  const withdrawsMore = withdrawals.length > deposits.length * 1.5;
-					  const burstActivity = checkBurstActivity(movements);
-					  const repeatedWithdrawals = checkRepeatedWithdrawals(withdrawals);
-					  
-					  // Calcular alerta
-						const alerta = analizarRetiros(movements, movements[0]?.discord_id);
-						
-						// ⭐ ENVIAR ALERTA AUTOMÁTICAMENTE SI ES CRÍTICA O SOSPECHOSA
-						if (alerta && (alerta.tipo === 'critico' || alerta.tipo === 'sospechoso')) {
-						  console.log(`🚨 Alerta detectada para ${movements[0]?.nombre}:`, alerta.mensaje);
-						  await enviarAlertaAdmin(movements[0]?.discord_id, movements[0]?.nombre, alerta);
-						}
-					  
-					  return {
-					    totalDeposits: totalDepositsCount,
-					    totalWithdrawals: totalWithdrawalsCount,
-					    firstSeen,
-					    lastActivity,
-					    alerta: alerta,
-					    indicators: {
-					      withdrawsMore,
-					      burstActivity,
-					      repeatedWithdrawals
-					    },
-					    recentMovements: movements.slice(0, 10)
-					  };
-					}
+		  console.log("📊 Calculando estadísticas para", movements?.length || 0, "movimientos");
+		  
+		  if (!movements || movements.length === 0) {
+		    console.log("⚠️ Sin movimientos para calcular");
+		    return {
+		      totalDeposits: 0,
+		      totalWithdrawals: 0,
+		      firstSeen: null,
+		      lastActivity: null,
+		      alerta: null,
+		      indicators: {
+		        withdrawsMore: false,
+		        burstActivity: false,
+		        repeatedWithdrawals: false
+		      },
+		      recentMovements: []
+		    };
+		  }
+		  
+		  const deposits = movements.filter(m => m.tipo === 'deposito');
+		  const withdrawals = movements.filter(m => m.tipo === 'retiro');
+		  
+		  console.log(`💰 Depósitos: ${deposits.length} | Retiros: ${withdrawals.length}`);
+		  
+		  // CONTAR CANTIDADES - usar || 1 para contar items sin cantidad definida
+		  const totalDepositsCount = deposits.reduce((sum, m) => {
+		    const cantidad = parseInt(m.cantidad) || 1;
+		    return sum + cantidad;
+		  }, 0);
+		  
+		  const totalWithdrawalsCount = withdrawals.reduce((sum, m) => {
+		    const cantidad = parseInt(m.cantidad) || 1;
+		    return sum + cantidad;
+		  }, 0);
+		  
+		  console.log(`📦 Total depositado: ${totalDepositsCount} | Total retirado: ${totalWithdrawalsCount}`);
+		  
+		  // Ordenar por timestamp para obtener primera y última actividad CORRECTAMENTE
+		  const sorted = [...movements].sort((a, b) => 
+		    new Date(a.timestamp) - new Date(b.timestamp)
+		  );
+		  
+		  const firstSeen = sorted[0]?.timestamp || null;
+		  const lastActivity = sorted[sorted.length - 1]?.timestamp || null;
+		  
+		  console.log(`📅 Primera: ${firstSeen} | Última: ${lastActivity}`);
+		  
+		  // Indicadores
+		  const withdrawsMore = withdrawals.length > deposits.length * 1.5;
+		  const burstActivity = checkBurstActivity(movements);
+		  const repeatedWithdrawals = checkRepeatedWithdrawals(withdrawals);
+		  
+		  // Calcular alerta
+		  const alerta = analizarRetiros(movements, movements[0]?.discord_id);
+		  
+		  // ENVIAR ALERTA AUTOMÁTICAMENTE SI ES CRÍTICA O SOSPECHOSA
+		  if (alerta && (alerta.tipo === 'critico' || alerta.tipo === 'sospechoso')) {
+		    console.log(`🚨 Alerta detectada para ${movements[0]?.nombre}:`, alerta.mensaje);
+		    await enviarAlertaAdmin(movements[0]?.discord_id, movements[0]?.nombre, alerta);
+		  }
+		  
+		  // Movimientos recientes (últimos 10, ordenados por fecha DESC)
+		  const recentMovements = [...movements]
+		    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+		    .slice(0, 10);
+		  
+		  console.log(`📋 Movimientos recientes: ${recentMovements.length}`);
+		  
+		  return {
+		    totalDeposits: totalDepositsCount,
+		    totalWithdrawals: totalWithdrawalsCount,
+		    firstSeen,
+		    lastActivity,
+		    alerta: alerta,
+		    indicators: {
+		      withdrawsMore,
+		      burstActivity,
+		      repeatedWithdrawals
+		    },
+		    recentMovements
+		  };
+		}
 			
     function checkBurstActivity(movements) {
       if (movements.length < 5) return false;
