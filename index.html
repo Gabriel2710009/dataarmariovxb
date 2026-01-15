@@ -2342,21 +2342,21 @@
 		<!-- INDICADORES -->
 		${renderIndicadores(stats.indicators)}
 		
-          <!-- TIMELINE -->
-          <h3 style="margin-bottom: 15px;">📊 Actividad Reciente</h3>
-          <div class="timeline">
-            ${stats.recentMovements.map(m => `
-              <div class="timeline-item">
-                <div class="timeline-dot ${m.tipo}"></div>
-                <div style="flex: 1;">
-                  <div style="font-weight: 600;">${m.tipo === 'deposito' ? '📥' : '📤'} ${TRADUCCIONES[m.objeto] || m.objeto}</div>
-                  <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">
-                    Cantidad: ${m.cantidad} | ${new Date(m.timestamp).toLocaleString('es-ES')}
-                  </div>
-                </div>
-              </div>
-            `).join('') || '<p style="color: rgba(255,255,255,0.5);">Sin actividad reciente</p>'}
-          </div>
+				<!-- TIMELINE -->
+				<h3 style="margin-bottom: 15px;">📊 Actividad Reciente</h3>
+				<div class="timeline">
+				  ${stats.recentMovements && stats.recentMovements.length > 0 ? stats.recentMovements.map(m => `
+				    <div class="timeline-item">
+				      <div class="timeline-dot ${m.tipo}"></div>
+				      <div style="flex: 1;">
+				        <div style="font-weight: 600;">${m.tipo === 'deposito' ? '📥' : '📤'} ${TRADUCCIONES[m.objeto] || m.objeto}</div>
+				        <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">
+				          Cantidad: ${m.cantidad} | ${new Date(m.timestamp).toLocaleString('es-ES')}
+				        </div>
+				      </div>
+				    </div>
+				  `).join('') : '<p style="color: rgba(255,255,255,0.5);">Sin actividad reciente</p>'}
+				</div>
           
           <!-- NOTAS -->
           <div class="notes-section">
