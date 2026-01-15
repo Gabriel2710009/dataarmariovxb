@@ -1866,36 +1866,36 @@
           <td class="cat-${categoria}">${nombreMostrar}</td>
           <td>${r.cantidad || 0}</td>
           <td>${almacenMostrar}</td>
-					<td>
-					  <span class="status-badge ${
-					    // Si es DEPÓSITO → siempre "✅ Depósito" (no pendiente)
-					    r.tipo === 'deposito' ? 'status-deposito' :
-					    // Si es RETIRO:
-					    esObjetoPermitido(r.objeto) ? 'status-validado' :
-					    r.validado ? 'status-validado' : 
-					    (r.no_validado ? 'status-no-validado' : 
-					    (r.en_operativo ? 'status-pendiente' : 'status-pendiente'))
-					  }">
-					    ${
-					      // Si es DEPÓSITO
-					      r.tipo === 'deposito' ? '✅ Depósito' :
-					      // Si es RETIRO de objeto libre
-					      esObjetoPermitido(r.objeto) ? '✅ Uso Libre' :
-					      // Si está validado, mostrar quién validó
-					      r.validado ? (
-					        r.validado_por === 'Armero' || r.validado_por === 'Alto Rango' 
-					          ? `✓ ${r.validado_por}` 
-					          : '✓ Validado'
-					      ) : 
-					      // Si NO está validado
-					      (r.no_validado ? '⚠️ NO VALIDADO' : 
-					      // Si está en operativo
-					      (r.en_operativo ? '🎯 En Operativo' : 
-					      // Pendiente
-					      '⏳ Pendiente'))
-					    }
-					  </span>
-					</td>
+          <td>
+            <span class="status-badge ${
+              // Si es DEPÓSITO → siempre "✅ Depósito" (no pendiente)
+              r.tipo === 'deposito' ? 'status-deposito' :
+              // Si es RETIRO:
+              esObjetoPermitido(r.objeto) ? 'status-validado' :
+              r.validado ? 'status-validado' : 
+              (r.no_validado ? 'status-no-validado' : 
+              (r.en_operativo ? 'status-pendiente' : 'status-pendiente'))
+            }">
+              ${
+                // Si es DEPÓSITO
+                r.tipo === 'deposito' ? '✅ Depósito' :
+                // Si es RETIRO de objeto libre
+                esObjetoPermitido(r.objeto) ? '✅ Uso Libre' :
+                // Si está validado, mostrar quién validó
+                r.validado ? (
+                  r.validado_por === 'Armero' || r.validado_por === 'Alto Rango' 
+                    ? `✓ ${r.validado_por}` 
+                    : '✓ Validado'
+                ) : 
+                // Si NO está validado
+                (r.no_validado ? '⚠️ NO VALIDADO' : 
+                // Si está en operativo
+                (r.en_operativo ? '🎯 En Operativo' : 
+                // Pendiente
+                '⏳ Pendiente'))
+              }
+            </span>
+          </td>
           <td class="investigation-only" style="display: ${investigationMode ? 'table-cell' : 'none'};">
             ${r.discord_id || "-"}
           </td>
