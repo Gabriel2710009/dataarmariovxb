@@ -1868,16 +1868,31 @@
           <td>${almacenMostrar}</td>
 					<td>
 					  <span class="status-badge ${
+					    // Si es DEPÓSITO → siempre "✅ Depósito" (no pendiente)
+					    r.tipo === 'deposito' ? 'status-deposito' :
+					    // Si es RETIRO:
 					    esObjetoPermitido(r.objeto) ? 'status-validado' :
 					    r.validado ? 'status-validado' : 
 					    (r.no_validado ? 'status-no-validado' : 
 					    (r.en_operativo ? 'status-pendiente' : 'status-pendiente'))
 					  }">
 					    ${
+					      // Si es DEPÓSITO
+					      r.tipo === 'deposito' ? '✅ Depósito' :
+					      // Si es RETIRO de objeto libre
 					      esObjetoPermitido(r.objeto) ? '✅ Uso Libre' :
-					      r.validado ? '✓ Validado' : 
+					      // Si está validado, mostrar quién validó
+					      r.validado ? (
+					        r.validado_por === 'Armero' || r.validado_por === 'Alto Rango' 
+					          ? `✓ ${r.validado_por}` 
+					          : '✓ Validado'
+					      ) : 
+					      // Si NO está validado
 					      (r.no_validado ? '⚠️ NO VALIDADO' : 
-					      (r.en_operativo ? '🎯 En Operativo' : '⏳ Pendiente'))
+					      // Si está en operativo
+					      (r.en_operativo ? '🎯 En Operativo' : 
+					      // Pendiente
+					      '⏳ Pendiente'))
 					    }
 					  </span>
 					</td>
@@ -2495,6 +2510,7 @@
 		    },
 		    recentMovements
 		  };
+		}
 			
 		function checkBurstActivity(movements) {
 		  if (movements.length < 5) return false;
