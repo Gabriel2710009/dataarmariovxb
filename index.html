@@ -2465,60 +2465,76 @@
       return Object.values(objectCounts).some(count => count >= 5);
     }
 
-    function renderIndicadores(indicators) {
-      const indicadoresList = [];
-      
-      if (indicators.withdrawsMore) {
-        indicadoresList.push({
-          type: 'warning',
-          icon: '⚠️',
-          text: 'Retira significativamente más de lo que deposita'
-        });
-      }
-      
-      if (indicators.burstActivity) {
-        indicadoresList.push({
-          type: 'warning',
-          icon: '⏱️',
-          text: 'Actividad concentrada en pocos minutos'
-        });
-      }
-      
-      if (indicators.repeatedWithdrawals) {
-        indicadoresList.push({
-          type: 'info',
-          icon: '🔄',
-          text: 'Retiros frecuentes del mismo objeto'
-        });
-      }
-      
-      if (indicadoresList.length === 0) {
-        return `
-          <div class="indicators-section">
-            <div class="indicator info">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="font-size: 1.5rem;">✅</span>
-                <span>Sin indicadores inusuales detectados</span>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-      
-      return `
-        <div class="indicators-section">
-          <h3 style="margin-bottom: 15px;">🔍 Indicadores</h3>
-          ${indicadoresList.map(ind => `
-            <div class="indicator ${ind.type}">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="font-size: 1.5rem;">${ind.icon}</span>
-                <span>${ind.text}</span>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      `;
-    }
+// REEMPLAZAR la función renderIndicadores completa:
+
+		function renderIndicadores(indicators) {
+		  // ⭐ VALIDAR que indicators existe y tiene las propiedades necesarias
+		  if (!indicators || typeof indicators !== 'object') {
+		    return `
+		      <div class="indicators-section">
+		        <div class="indicator info">
+		          <div style="display: flex; align-items: center; gap: 10px;">
+		            <span style="font-size: 1.5rem;">✅</span>
+		            <span>Sin indicadores inusuales detectados</span>
+		          </div>
+		        </div>
+		      </div>
+		    `;
+		  }
+		
+		  const indicadoresList = [];
+		  
+		  if (indicators.withdrawsMore) {
+		    indicadoresList.push({
+		      type: 'warning',
+		      icon: '⚠️',
+		      text: 'Retira significativamente más de lo que deposita'
+		    });
+		  }
+		  
+		  if (indicators.burstActivity) {
+		    indicadoresList.push({
+		      type: 'warning',
+		      icon: '⏱️',
+		      text: 'Actividad concentrada en pocos minutos'
+		    });
+		  }
+		  
+		  if (indicators.repeatedWithdrawals) {
+		    indicadoresList.push({
+		      type: 'info',
+		      icon: '🔄',
+		      text: 'Retiros frecuentes del mismo objeto'
+		    });
+		  }
+		  
+		  if (indicadoresList.length === 0) {
+		    return `
+		      <div class="indicators-section">
+		        <div class="indicator info">
+		          <div style="display: flex; align-items: center; gap: 10px;">
+		            <span style="font-size: 1.5rem;">✅</span>
+		            <span>Sin indicadores inusuales detectados</span>
+		          </div>
+		        </div>
+		      </div>
+		    `;
+		  }
+		  
+		  return `
+		    <div class="indicators-section">
+		      <h3 style="margin-bottom: 15px;">🔍 Indicadores</h3>
+		      ${indicadoresList.map(ind => `
+		        <div class="indicator ${ind.type}">
+		          <div style="display: flex; align-items: center; gap: 10px;">
+		            <span style="font-size: 1.5rem;">${ind.icon}</span>
+		            <span>${ind.text}</span>
+		          </div>
+		        </div>
+		      `).join('')}
+		    </div>
+		  `;
+		}
 
     function cerrarPerfil() {
       const overlay = document.querySelector('.drawer-overlay');
