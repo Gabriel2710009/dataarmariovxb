@@ -1176,15 +1176,10 @@
       <!-- QUICK FILTERS -->
       <div class="quick-filters">
         <div class="filter-group">
-          <button class="quick-filter-btn" data-filter="pending">⏳ Pendientes</button>
-          <button class="quick-filter-btn" data-filter="recent15">🕐 Últimos 15 min</button>
+          <button class="quick-filter-btn" data-filter="pending">⏳ Pendientes</button>\n          <button class="quick-filter-btn" data-filter="recent15">🕐 Últimos 15 min</button>
           <button class="quick-filter-btn" data-filter="recent60">🕑 Última hora</button>
         </div>
         <div class="filter-group">
-          <button class="saved-searches-btn" id="savedSearchesBtn">🔖 Búsquedas Guardadas</button>
-					<button class="quick-filter-btn" id="configBtn">⚙️ Configuración</button>
-					<button class="quick-filter-btn" id="adminAlertsBtn" style="display: none;">
-					  👥 Admins Alertas
 					</button>
         </div>
       </div>
@@ -1641,7 +1636,38 @@
         
         console.log(`✅ ${allMovements.length} registros cargados`);
         
-        aplicarFiltros();
+        // Aplicar filtros pero mantener página actual (NO resetear a 1)
+        let result = [...allMovements];
+        
+        // Aplicar categoría
+        if (currentCategory !== 'all') {
+          if (currentCategory === 'deposits') {
+            result = result.filter(m => m.tipo === 'deposito');
+          } else if (currentCategory === 'withdrawals') {
+            result = result.filter(m => m.tipo === 'retiro');
+          } else {
+            result = result.filter(m => getCategoriaItem(m.objeto) === currentCategory);
+          }
+        }
+        
+        // Aplicar quick filter
+        if (currentQuickFilter === 'pending') {
+          result = result.filter(m => !m.validado);
+        } else if (currentQuickFilter === 'recent15') {
+          const cutoff = new Date(Date.now() - 15 * 60 * 1000);
+          result = result.filter(m => new Date(m.timestamp) >= cutoff);
+        } else if (currentQuickFilter === 'recent60') {
+          const cutoff = new Date(Date.now() - 60 * 60 * 1000);
+          result = result.filter(m => new Date(m.timestamp) >= cutoff);
+        }
+        
+        // Aplicar búsqueda inteligente
+        const searchResult = parseSmartSearch(smartSearchTerm);
+        result = applySmartSearch(result, searchResult);
+        
+        filteredData = result;
+        // NO RESETEAR: currentPage se mantiene igual
+        renderTabla();
       } catch (error) {
         console.error("Error al cargar movimientos:", error);
       }
@@ -1667,11 +1693,13 @@
 		  if (!trimmed) return null;
 		
 		  const filters = {
-		    usuario: null,    // usuario, from, de
+		    usuario: null,
 		    tipo: null,       // tipo (deposito/retiro)
-		    objeto: null,     // objeto, arma, item
-		    almacen: null,    // en, almacen, armario
-		    validado: null,   // validado
+		    objeto: null,
+		    almacen: null,
+		    validado: null,   // si/no/libre/operativo/armero/alto rango
+		    discord_id: null, // Discord ID
+		    dia: null,        // Fecha específica
 		    before: null,
 		    after: null,
 		    text: []
@@ -1683,7 +1711,9 @@
 		    { regex: /tipo[:\s]+(deposito|retiro)/i, key: 'tipo' },
 		    { regex: /(?:objeto|arma|item)[:\s]+([^\s]+)/i, key: 'objeto' },
 		    { regex: /(?:en|almacen|armario)[:\s]+([^\s]+)/i, key: 'almacen' },
-		    { regex: /validado[:\s]+(si|no|pendiente|auto)/i, key: 'validado' },
+		    { regex: /validado[:\s]+(si|no|libre|en\s+operativo|armero|alto\s+rango)/i, key: 'validado' },
+		    { regex: /discord(?:\s+id)?[:\s]+(\d+)/i, key: 'discord_id' },
+		    { regex: /(?:dia|date)[:\s]+(\d{4}-\d{2}-\d{2})/i, key: 'dia' },
 		    { regex: /antes[:\s]+(\d{4}-\d{2}-\d{2})/i, key: 'before' },
 		    { regex: /despues[:\s]+(\d{4}-\d{2}-\d{2})/i, key: 'after' }
 		  ];
@@ -1691,14 +1721,18 @@
 		  patterns.forEach(({ regex, key }) => {
 		    const match = trimmed.match(regex);
 		    if (match) {
-		      if (key === 'before' || key === 'after') {
+		      if (key === 'before' || key === 'after' || key === 'dia') {
 		        filters[key] = new Date(match[1]);
 		      } else if (key === 'validado') {
-		        const val = match[1];
-		        if (val === 'si') filters.validado = true;
-		        else if (val === 'no') filters.validado = false;
-		        else if (val === 'pendiente') filters.validado = 'pending';
-		        else if (val === 'auto') filters.validado = 'auto';
+		        const val = match[1].toLowerCase();
+		        if (val === 'si') filters.validado = 'si';
+		        else if (val === 'no') filters.validado = 'no';
+		        else if (val === 'libre') filters.validado = 'libre';
+		        else if (val.includes('operativo')) filters.validado = 'operativo';
+		        else if (val === 'armero') filters.validado = 'armero';
+		        else if (val.includes('alto rango')) filters.validado = 'alto_rango';
+		      } else if (key === 'discord_id') {
+		        filters.discord_id = match[1];
 		      } else {
 		        filters[key] = match[1];
 		      }
@@ -1743,12 +1777,24 @@
 		      }
 		    }
 		    
+		    // Discord ID
+		    if (filters.discord_id && m.discord_id !== filters.discord_id) return false;
+		    
+		    // Día específico
+		    if (filters.dia) {
+		      const movDate = new Date(m.timestamp).toDateString();
+		      const filterDate = new Date(filters.dia).toDateString();
+		      if (movDate !== filterDate) return false;
+		    }
+		    
 		    // Validado
 		    if (filters.validado !== null) {
-		      if (filters.validado === true && !m.validado) return false;
-		      if (filters.validado === false && m.validado) return false;
-		      if (filters.validado === 'pending' && (m.validado || m.no_validado)) return false;
-		      if (filters.validado === 'auto' && !m.validado_auto) return false;
+		      if (filters.validado === 'si' && !m.validado) return false;
+		      if (filters.validado === 'no' && m.validado) return false;
+		      if (filters.validado === 'libre' && !esObjetoPermitido(m.objeto)) return false;
+		      if (filters.validado === 'operativo' && !m.en_operativo) return false;
+		      if (filters.validado === 'armero' && m.validado_por !== 'Armero') return false;
+		      if (filters.validado === 'alto_rango' && m.validado_por !== 'Alto Rango') return false;
 		    }
 		    
 		    // Fechas
@@ -1837,18 +1883,16 @@
         const almacenMostrar = ALMACENES[r.almacen] || r.almacen || "-";
         const categoria = getCategoriaItem(r.objeto || "");
         
-        // Color de fondo según tipo - IMPORTANTE: aplicar después del innerHTML
-				const applyRowColors = () => {
-				  if (r.tipo === "deposito") {
-				    tr.style.background = "rgba(34, 197, 94, 0.1)";
-				    tr.style.borderLeft = "4px solid #22c55e";
-				  } else if (r.tipo === "retiro") {
-				    tr.style.background = "rgba(239, 68, 68, 0.1)";
-				    tr.style.borderLeft = "4px solid #ef4444";
-				  }
-				};
+        // Color de fondo según tipo
+        if (r.tipo === "deposito") {
+          tr.style.background = "rgba(34, 197, 94, 0.1)";
+          tr.style.borderLeft = "4px solid #22c55e";
+        } else if (r.tipo === "retiro") {
+          tr.style.background = "rgba(239, 68, 68, 0.1)";
+          tr.style.borderLeft = "4px solid #ef4444";
+        }
         
-        const isAdmin = currentUser.roleName === "Alto Rango" || currentUser.roleName === "Armero";
+        const isAdmin = currentUser && (currentUser.roleName === "Alto Rango" || currentUser.roleName === "Armero");
         
         tr.innerHTML = `
           <td>${r.id}</td>
@@ -1868,30 +1912,21 @@
           <td>${almacenMostrar}</td>
           <td>
             <span class="status-badge ${
-              // Si es DEPÓSITO → siempre "✅ Depósito" (no pendiente)
               r.tipo === 'deposito' ? 'status-deposito' :
-              // Si es RETIRO:
               esObjetoPermitido(r.objeto) ? 'status-validado' :
+              r.validado_por === 'Armero' || r.validado_por === 'Alto Rango' ? 'status-validado' :
               r.validado ? 'status-validado' : 
               (r.no_validado ? 'status-no-validado' : 
               (r.en_operativo ? 'status-pendiente' : 'status-pendiente'))
             }">
               ${
-                // Si es DEPÓSITO
-                r.tipo === 'deposito' ? '✅ Depósito' :
-                // Si es RETIRO de objeto libre
+                r.tipo === 'deposito' ? '✅ Depositado' :
+                r.validado_por === 'Armero' ? '🔫 Es Armero' :
+                r.validado_por === 'Alto Rango' ? '🔰 Es Alto Rango' :
                 esObjetoPermitido(r.objeto) ? '✅ Uso Libre' :
-                // Si está validado, mostrar quién validó
-                r.validado ? (
-                  r.validado_por === 'Armero' || r.validado_por === 'Alto Rango' 
-                    ? `✓ ${r.validado_por}` 
-                    : '✓ Validado'
-                ) : 
-                // Si NO está validado
+                r.validado ? '✓ Validado' :
                 (r.no_validado ? '⚠️ NO VALIDADO' : 
-                // Si está en operativo
                 (r.en_operativo ? '🎯 En Operativo' : 
-                // Pendiente
                 '⏳ Pendiente'))
               }
             </span>
@@ -1910,9 +1945,7 @@
             </div>
           </td>
         `;
-        // Aplicar colores
-				applyRowColors();
-				
+        
         tbody.appendChild(tr);
       });
       
@@ -2281,7 +2314,7 @@
 
 // ==================== PERFIL DE USUARIO ====================
     async function abrirPerfil(userId, userName) {
-      const isAdmin = currentUser.roleName === "Alto Rango" || currentUser.roleName === "Armero";
+      const isAdmin = currentUser && currentUser.roleName && (currentUser.roleName === "Alto Rango" || currentUser.roleName === "Armero");
       
       if (!isAdmin) {
         alert("⛔ Solo administradores pueden ver perfiles de usuarios");
@@ -2310,12 +2343,12 @@
         
         if (!res.ok) throw new Error("Error al cargar perfil");
         
-        const { movements, notes } = await res.json();
+        const data = await res.json();
+        const movements = data.movements || [];
+        const notes = data.notes || [];
         
         // Calcular estadísticas
         const stats = calcularEstadisticas(movements);
-
-		const alerta = analizarRetiros(movements, movements[0]?.discord_id);
         
         // Renderizar perfil completo
         const content = overlay.querySelector('.drawer-content');
@@ -2329,11 +2362,11 @@
           <div class="profile-stats">
             <div class="stat-card">
               <div class="stat-label">Total Depósitos</div>
-              <div class="stat-value success">${stats.totalDeposits}</div>
+              <div class="stat-value success">${stats.totalDeposits || 0}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Total Retiros</div>
-              <div class="stat-value danger">${stats.totalWithdrawals}</div>
+              <div class="stat-value danger">${stats.totalWithdrawals || 0}</div>
             </div>
             <div class="stat-card">
               <div class="stat-label">Primera Actividad</div>
@@ -2346,62 +2379,59 @@
           </div>
           
           <!-- ALERTA -->
-		${stats.alerta ? `
-		  <div class="indicator ${stats.alerta.nivel === 'fuerte' ? 'danger' : 'warning'}" style="margin-bottom: 20px; border-left-color: ${stats.alerta.nivel === 'fuerte' ? 'var(--color-danger)' : 'var(--color-warning)'}; background: ${stats.alerta.nivel === 'fuerte' ? 'var(--bg-danger)' : 'var(--bg-warning)'}">
-		    <div style="display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: bold;">
-		      ${stats.alerta.mensaje}
-		    </div>
-		  </div>
-		` : ''}
-		
-		<!-- INDICADORES -->
-		${renderIndicadores(stats.indicators)}
-		
-				 <!-- TIMELINE -->
-				          <h3 style="margin-bottom: 15px;">📊 Actividad Reciente</h3>
-				          <div class="timeline">
-				            ${stats.recentMovements && stats.recentMovements.length > 0 ? stats.recentMovements.map(m => {
-				              // ⭐ USAR EL CAMPO CORRECTO: puede ser "type" o "tipo"
-				              const tipoMovimiento = m.type || m.tipo;
-				              
-				              let validacionBadge = '';
-				              if (tipoMovimiento === 'deposito') {
-				                validacionBadge = '<span class="status-badge status-deposito">📥 Depósito</span>';
-				              } else {
-				                if (esObjetoPermitido(m.objeto)) {
-				                  validacionBadge = '<span class="status-badge status-validado">✅ Uso Libre</span>';
-				                } else if (m.validado) {
-				                  validacionBadge = '<span class="status-badge status-validado">✓ Validado</span>';
-				                } else if (m.no_validado) {
-				                  validacionBadge = '<span class="status-badge status-no-validado">⚠️ NO VALIDADO</span>';
-				                } else if (m.en_operativo) {
-				                  validacionBadge = '<span class="status-badge status-pendiente">🎯 En Operativo</span>';
-				                } else {
-				                  validacionBadge = '<span class="status-badge status-pendiente">⏳ Pendiente</span>';
-				                }
-				              }
-				              
-				              return `
-				                <div class="timeline-item">
-				                  <div class="timeline-dot ${tipoMovimiento}"></div>
-				                  <div style="flex: 1;">
-				                    <div style="font-weight: 600;">
-				                      ${tipoMovimiento === 'deposito' ? '📥' : '📤'} ${TRADUCCIONES[m.objeto] || m.objeto}
-				                    </div>
-				                    <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7); margin: 5px 0;">
-				                      Cantidad: ${m.cantidad || 1} | ${new Date(m.timestamp).toLocaleString('es-ES')}
-				                    </div>
-				                    <div style="margin-top: 5px;">
-				                      ${validacionBadge}
-				                      ${m.validado_por ? `<span style="font-size: 0.75rem; color: rgba(255,255,255,0.6); margin-left: 8px;">por ${m.validado_por}</span>` : ''}
-				                    </div>
-				                  </div>
-				                </div>
-				              `;
-				            }).join('') : '<p style="color: rgba(255,255,255,0.5);">Sin actividad reciente</p>'}
-				          </div>
-          
-          <!-- NOTAS -->
+    ${stats.alerta ? `
+      <div class="indicator ${stats.alerta.nivel === 'fuerte' ? 'danger' : 'warning'}" style="margin-bottom: 20px; border-left-color: ${stats.alerta.nivel === 'fuerte' ? 'var(--color-danger)' : 'var(--color-warning)'}; background: ${stats.alerta.nivel === 'fuerte' ? 'var(--bg-danger)' : 'var(--bg-warning)'}">
+        <div style="display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: bold;">
+          ${stats.alerta.mensaje}
+        </div>
+      </div>
+    ` : ''}
+    
+    <!-- INDICADORES -->
+    ${renderIndicadores(stats.indicators)}
+    
+           <!-- TIMELINE -->
+                  <h3 style="margin-bottom: 15px;">📊 Actividad Reciente</h3>
+                  <div class="timeline">
+                    ${stats.recentMovements && stats.recentMovements.length > 0 ? stats.recentMovements.map(m => {
+                      const tipoMovimiento = m.type || m.tipo;
+                      
+                      let validacionBadge = '';
+                      if (tipoMovimiento === 'deposito') {
+                        validacionBadge = '<span class="status-badge status-deposito">📥 Depósito</span>';
+                      } else {
+                        if (esObjetoPermitido(m.objeto)) {
+                          validacionBadge = '<span class="status-badge status-validado">✅ Uso Libre</span>';
+                        } else if (m.validado) {
+                          validacionBadge = '<span class="status-badge status-validado">✓ Validado</span>';
+                        } else if (m.no_validado) {
+                          validacionBadge = '<span class="status-badge status-no-validado">⚠️ NO VALIDADO</span>';
+                        } else if (m.en_operativo) {
+                          validacionBadge = '<span class="status-badge status-pendiente">🎯 En Operativo</span>';
+                        } else {
+                          validacionBadge = '<span class="status-badge status-pendiente">⏳ Pendiente</span>';
+                        }
+                      }
+                      
+                      return `
+                        <div class="timeline-item">
+                          <div class="timeline-dot ${tipoMovimiento}"></div>
+                          <div style="flex: 1;">
+                            <div style="font-weight: 600;">
+                              ${tipoMovimiento === 'deposito' ? '📥' : '📤'} ${TRADUCCIONES[m.objeto] || m.objeto}
+                            </div>
+                            <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7); margin: 5px 0;">
+                              Cantidad: ${m.cantidad || 1} | ${new Date(m.timestamp).toLocaleString('es-ES')}
+                            </div>
+                            <div style="margin-top: 5px;">
+                              ${validacionBadge}
+                              ${m.validado_por ? `<span style="font-size: 0.75rem; color: rgba(255,255,255,0.6); margin-left: 8px;">por ${m.validado_por}</span>` : ''}
+                            </div>
+                          </div>
+                        </div>
+                      `;
+                    }).join('') : '<p style="color: rgba(255,255,255,0.5);">Sin actividad reciente</p>'}
+                  </div>
           <div class="notes-section">
             <h3 style="margin-bottom: 15px;">📝 Notas Internas</h3>
             ${notes && notes.length > 0 ? notes.map(note => `
