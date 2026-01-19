@@ -1827,10 +1827,13 @@
 		    // Discord ID
 		    if (filters.discord_id && m.discord_id !== filters.discord_id) return false;
 		    
-	    // Día específico / Fecha
-	    if (filters.fecha) {
-	      const movDate = new Date(m.timestamp).toDateString();
-	      const filterDate = new Date(filters.fecha).toDateString();
+		    // Día específico / Fecha
+		    if (filters.fecha) {
+		      const movDate = new Date(m.timestamp).toDateString();
+		      const filterDate = new Date(filters.fecha).toDateString();
+		      if (movDate !== filterDate) return false;
+		    }
+		    
 		    // Validado
 		    if (filters.validado !== null) {
 		      if (filters.validado === 'si' && !m.validado) return false;
