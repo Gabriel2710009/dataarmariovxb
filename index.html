@@ -1643,51 +1643,6 @@
   userName.textContent = user.username || "Usuario";
   userRole.textContent = `${roleEmoji} ${displayRole}`;
   
-// ============================================
-// PARCHE 4: ARREGLAR BOTÓN "ALERTAS ADMIN"
-// ============================================
-
-// 1. BUSCAR la función mostrarUsuarioAutenticado() y MODIFICAR:
-function mostrarUsuarioAutenticado(user) {
-  // ... (mantener código existente hasta...)
-  
-  // Si es admin, agregar clase especial
-  if (user.roleName === "Alto Rango" || user.roleName === "Armero") {
-    userRole.classList.add("admin-badge");
-    
-    // Mostrar botón de modo investigación
-    if (investigationToggle) investigationToggle.style.display = "flex";
-    
-    // Mostrar botón "Mi Perfil" 
-    if (myProfileBtn) myProfileBtn.style.display = "block";
-    
-    // ⭐ ARREGLO: Mostrar botón Admin Alertas SOLO para Alto Rango
-    if (adminAlertsBtn && user.roleName === "Alto Rango") {
-      adminAlertsBtn.style.display = "block";
-      console.log("✅ Botón Admin Alertas visible para", user.username);
-    }
-  }
-  
-  // ... (resto del código)
-}
-
-// 2. BUSCAR setupEventListeners() y VERIFICAR que tenga:
-function setupEventListeners() {
-  // ... (mantener todo lo existente)
-  
-  // ⭐ VERIFICAR QUE ESTO ESTÉ PRESENTE:
-  const adminAlertsBtn = document.getElementById("adminAlertsBtn");
-  if (adminAlertsBtn) {
-    adminAlertsBtn.addEventListener("click", () => {
-      console.log("🔘 Click en botón Admin Alertas");
-      abrirPanelAdmins();
-    });
-  } else {
-    console.warn("⚠️ Botón adminAlertsBtn no encontrado en el DOM");
-  }
-  
-
-  
   const avatarUrl = user.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`;
   userAvatar.src = avatarUrl;
 }
