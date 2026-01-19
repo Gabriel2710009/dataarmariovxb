@@ -1610,6 +1610,8 @@
     }
 
 		function mostrarUsuarioAutenticado(user) {
+		  console.log("👤 Mostrando usuario autenticado:", user);
+		  
 		  const loginOverlay = document.getElementById("loginOverlay");
 		  const tableContainer = document.getElementById("tableContainer");
 		  const userInfo = document.getElementById("userInfo");
@@ -1621,14 +1623,16 @@
 		  const adminAlertsBtn = document.getElementById("adminAlertsBtn");
 		  
 		  if (!loginOverlay || !tableContainer || !userInfo || !userName || !userRole || !userAvatar) {
-		    console.error("Faltan elementos del DOM necesarios");
+		    console.error("❌ Faltan elementos del DOM necesarios");
 		    return;
 		  }
 		  
+		  // Desbloquear interfaz
 		  loginOverlay.classList.add("hidden");
 		  tableContainer.classList.add("unlocked");
 		  userInfo.classList.add("active");
 		  
+		  // Configurar rol
 		  let roleEmoji = "👤";
 		  let displayRole = "Usuario";
 		  
@@ -1643,26 +1647,52 @@
 		  userName.textContent = user.username || "Usuario";
 		  userRole.textContent = `${roleEmoji} ${displayRole}`;
 		  
-		  // Si es admin, agregar clase especial
-		  if (user.roleName === "Alto Rango" || user.roleName === "Armero") {
-		    userRole.classList.add("admin-badge");
-		    
-		    // Mostrar botón de modo investigación
-		    if (investigationToggle) investigationToggle.style.display = "flex";
-		    
-		    // Mostrar botón "Mi Perfil" 
-		    if (myProfileBtn) myProfileBtn.style.display = "block";
-		    
-		    // ⭐ CRÍTICO: Mostrar botón Admin Alertas SOLO para Alto Rango
-		    if (adminAlertsBtn && user.roleName === "Alto Rango") {
-		      adminAlertsBtn.style.display = "block";
-		      console.log("✅ Botón Admin Alertas visible para", user.username);
-		    }
-		  }
-		  
+		  // Configurar avatar
 		  const avatarUrl = user.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`;
 		  userAvatar.src = avatarUrl;
+		  
+		  // ⭐ CRÍTICO: Verificar si es admin
+		  const esAdmin = user.roleName === "Alto Rango" || user.roleName === "Armero";
+		  
+		  console.log("🔍 Verificación admin:", {
+		    username: user.username,
+		    roleName: user.roleName,
+		    esAdmin: esAdmin
+		  });
+		  
+		  if (esAdmin) {
+		    // Aplicar badge de admin
+		    userRole.classList.add("admin-badge");
+		    
+		    // Mostrar botón modo investigación
+		    if (investigationToggle) {
+		      investigationToggle.style.display = "flex";
+		      console.log("✅ Botón investigación mostrado");
+		    }
+		    
+		    // Mostrar botón Mi Perfil
+		    if (myProfileBtn) {
+		      myProfileBtn.style.display = "block";
+		      console.log("✅ Botón Mi Perfil mostrado");
+		    }
+		    
+		    // ⭐⭐⭐ MOSTRAR BOTÓN ADMIN ALERTAS SOLO PARA ALTO RANGO
+		    if (adminAlertsBtn) {
+		      if (user.roleName === "Alto Rango") {
+		        adminAlertsBtn.style.display = "block";
+		        console.log("✅ Botón Admin Alertas mostrado para", user.username);
+		      } else {
+		        adminAlertsBtn.style.display = "none";
+		        console.log("ℹ️ Botón Admin Alertas oculto (no es Alto Rango)");
+		      }
+		    } else {
+		      console.error("❌ Elemento adminAlertsBtn NO encontrado en el DOM");
+		    }
+		  } else {
+		    console.log("ℹ️ Usuario no es admin, botones ocultos");
+		  }
 		}
+
 		
 
     // ==================== CARGAR DATOS ====================
