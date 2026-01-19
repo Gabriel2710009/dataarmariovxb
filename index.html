@@ -1609,43 +1609,60 @@
       document.getElementById("tableContainer").classList.remove("unlocked");
     }
 
-    function mostrarUsuarioAutenticado(user) {
-  const loginOverlay = document.getElementById("loginOverlay");
-  const tableContainer = document.getElementById("tableContainer");
-  const userInfo = document.getElementById("userInfo");
-  const userName = document.getElementById("userName");
-  const userRole = document.getElementById("userRole");
-  const userAvatar = document.getElementById("userAvatar");
-  const investigationToggle = document.getElementById("investigationToggle");
-  const myProfileBtn = document.getElementById("myProfileBtn");
-  const adminAlertsBtn = document.getElementById("adminAlertsBtn");
-  
-  if (!loginOverlay || !tableContainer || !userInfo || !userName || !userRole || !userAvatar) {
-    console.error("Faltan elementos del DOM necesarios");
-    return;
-  }
-  
-  loginOverlay.classList.add("hidden");
-  tableContainer.classList.add("unlocked");
-  userInfo.classList.add("active");
-  
-  let roleEmoji = "👤";
-  let displayRole = "Usuario";
-  
-  if (user.roleName === "Alto Rango") {
-    roleEmoji = "🔰";
-    displayRole = "Alto Rango";
-  } else if (user.roleName === "Armero") {
-    roleEmoji = "🔫";
-    displayRole = "Armero";
-  }
-  
-  userName.textContent = user.username || "Usuario";
-  userRole.textContent = `${roleEmoji} ${displayRole}`;
-  
-  const avatarUrl = user.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`;
-  userAvatar.src = avatarUrl;
-}
+		function mostrarUsuarioAutenticado(user) {
+		  const loginOverlay = document.getElementById("loginOverlay");
+		  const tableContainer = document.getElementById("tableContainer");
+		  const userInfo = document.getElementById("userInfo");
+		  const userName = document.getElementById("userName");
+		  const userRole = document.getElementById("userRole");
+		  const userAvatar = document.getElementById("userAvatar");
+		  const investigationToggle = document.getElementById("investigationToggle");
+		  const myProfileBtn = document.getElementById("myProfileBtn");
+		  const adminAlertsBtn = document.getElementById("adminAlertsBtn");
+		  
+		  if (!loginOverlay || !tableContainer || !userInfo || !userName || !userRole || !userAvatar) {
+		    console.error("Faltan elementos del DOM necesarios");
+		    return;
+		  }
+		  
+		  loginOverlay.classList.add("hidden");
+		  tableContainer.classList.add("unlocked");
+		  userInfo.classList.add("active");
+		  
+		  let roleEmoji = "👤";
+		  let displayRole = "Usuario";
+		  
+		  if (user.roleName === "Alto Rango") {
+		    roleEmoji = "🔰";
+		    displayRole = "Alto Rango";
+		  } else if (user.roleName === "Armero") {
+		    roleEmoji = "🔫";
+		    displayRole = "Armero";
+		  }
+		  
+		  userName.textContent = user.username || "Usuario";
+		  userRole.textContent = `${roleEmoji} ${displayRole}`;
+		  
+		  // Si es admin, agregar clase especial
+		  if (user.roleName === "Alto Rango" || user.roleName === "Armero") {
+		    userRole.classList.add("admin-badge");
+		    
+		    // Mostrar botón de modo investigación
+		    if (investigationToggle) investigationToggle.style.display = "flex";
+		    
+		    // Mostrar botón "Mi Perfil" 
+		    if (myProfileBtn) myProfileBtn.style.display = "block";
+		    
+		    // ⭐ CRÍTICO: Mostrar botón Admin Alertas SOLO para Alto Rango
+		    if (adminAlertsBtn && user.roleName === "Alto Rango") {
+		      adminAlertsBtn.style.display = "block";
+		      console.log("✅ Botón Admin Alertas visible para", user.username);
+		    }
+		  }
+		  
+		  const avatarUrl = user.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`;
+		  userAvatar.src = avatarUrl;
+		}
 		
 
     // ==================== CARGAR DATOS ====================
