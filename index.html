@@ -2969,10 +2969,14 @@ function setupEventListeners() {
 	  configBtn.addEventListener("click", abrirConfiguracion);
 	}
 	
-	const adminAlertsBtn = document.getElementById("adminAlertsBtn");
-	if (adminAlertsBtn) {
-	  adminAlertsBtn.addEventListener("click", abrirPanelAdmins);
-	}
+// Admin Alertas button
+  const adminAlertsBtn = document.getElementById("adminAlertsBtn");
+  if (adminAlertsBtn) {
+    adminAlertsBtn.addEventListener("click", () => {
+      console.log("🔘 Click en botón Admin Alertas");
+      abrirPanelAdmins();
+    });
+  }
 
 		// Ayuda de búsqueda
 		const searchHelpBtn = document.getElementById("searchHelpBtn");
