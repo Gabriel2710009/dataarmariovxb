@@ -2122,6 +2122,8 @@
 		    alert(`❌ Error al enviar: ${error.message}`);
 		  }
 		}
+		
+		async function cargarListaAdminsAlertas() {
 		  try {
 		    const res = await fetch(`${API}/admin/alert-admins`, {
 		      credentials: 'include'
