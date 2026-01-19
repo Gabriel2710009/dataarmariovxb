@@ -267,13 +267,15 @@
     }
 
 		  .version-badge {
-		  font-size: 0.7rem;
+		  font-size: 0.85rem;
 		  background: linear-gradient(135deg, #f5c542, #d4af37, #b8962e);
-		  color: #ffffff;
-		  padding: 4px 10px;
+		  color: #1a1a1a;
+		  padding: 8px 16px;
 		  border-radius: 10px;
-		  font-weight: 600;
-		  letter-spacing: 0.5px;
+		  font-weight: 700;
+		  letter-spacing: 1px;
+		  box-shadow: 0 4px 15px rgba(245, 197, 66, 0.3);
+		  text-shadow: 0 1px 3px rgba(0,0,0,0.2);
 		}
 
 
@@ -1108,10 +1110,11 @@
   <div class="container">
     <header>
       <div class="header-title">
-        <h1>
-          🔫 Armario VxB
-          <span class="version-badge">v2.0</span>
-        </h1>
+        <img class="header-logo" src="https://qxwxfnbfxocrogxdwppw.supabase.co/storage/v1/object/sign/ICO%20BALLAS/Gemini_Generated_Image_uch613uch613uch6%20(1).png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wMTUzY2Q1NS0xNWY3LTRkNGUtODEyMC1kMWE0ZDkyMDU3ODAiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJJQ08gQkFMTEFTL0dlbWluaV9HZW5lcmF0ZWRfSW1hZ2VfdWNoNjEzdWNoNjEzdWNoNiAoMSkucG5nIiwiaWF0IjoxNzY4NDU5NzQ0LCJleHAiOjQ2MDY2OTk3NDR9.SZJ1yvvlPDJnG98Qauw1t_U_TJ7AeQGzn6hQoy0KVpQ" alt="VxB">
+        <div>
+          <h1>🔫 Armario VxB</h1>
+          <div class="version-badge">v2.0</div>
+        </div>
       </div>
 	      <div class="header-actions">
 					<div class="user-info" id="userInfo">
@@ -1140,7 +1143,7 @@
 		      type="text" 
 		      class="smart-search" 
 		      id="smartSearch" 
-		      placeholder="🔍 Buscar: Toni Lopez tipo:retiro objeto:glock en:armeria"
+		      placeholder="🔍 Buscar: Toni Lopez tipo:retiro objeto:glock en:armeria discord_id:123456789 fecha:2026-01-19"
 		    >
 		    <button class="search-help-btn" id="searchHelpBtn" 
 		      style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; transition: all 0.3s ease;">
@@ -1154,18 +1157,17 @@
 			    <strong>Ejemplos:</strong><br>
 			    <code>Toni Lopez tipo:retiro objeto:glock en:armeria</code><br>
 			    <code>usuario:juan validado:no</code><br>
-			    <code>objeto:pistola despues:2024-01-01</code><br><br>
+			    <code>objeto:pistola fecha:2026-01-19</code><br>
+			    <code>discord_id:123456789 tipo:deposito</code><br><br>
 			    <strong>Filtros disponibles:</strong><br>
 			    <code>usuario:</code> <code>tipo:</code> <code>objeto:</code> <code>en:</code> 
-			    <code>validado:si/no/pendiente/auto</code>
+			    <code>validado:si/no/libre/en operativo</code> <code>discord_id:</code> <code>fecha:</code>
 			  </div>
 			</div>
 			
       <!-- CATEGORÍAS SUPERIORES -->
      	 <div class="category-tabs" id="categoryTabs">
 	        <button class="category-tab active" data-category="all">📋 Todos</button>
-	        <button class="category-tab" data-category="deposits">📥 Depósitos</button>
-	        <button class="category-tab" data-category="withdrawals">📤 Retiros</button>
 	        <button class="category-tab" data-category="pistolas">🔫 Pistolas</button>
 	        <button class="category-tab" data-category="arma_blanca">🔪 Arma Blanca</button>
 	        <button class="category-tab" data-category="balas">🎯 Balas</button>
@@ -1497,24 +1499,49 @@
 				}
 // REEMPLAZAR FUNCIÓN COMPLETA:
 		async function enviarAlertaAdmin(userId, userName, alerta) {
-		  if (!alerta || alerta.tipo === 'operativo_normal') return;
+		  if (!alerta || alerta.tipo === 'operativo_normal') {
+		    console.log(`⏭️ Alerta tipo '${alerta?.tipo}' ignorada (operativo normal)`);
+		    return;
+		  }
+		  
+		  console.log(`🚀 [ALERTA] Preparando envío para ${userName} (${userId})`);
+		  console.log(`   Tipo: ${alerta.tipo} | Nivel: ${alerta.nivel}`);
+		  console.log(`   Mensaje: ${alerta.mensaje}`);
+		  console.log(`   Datos: ${JSON.stringify(alerta.datos)}`);
 		  
 		  try {
-		    await fetch(`${API}/admin/send-alert`, {
+		    const payload = {
+		      user_id: userId,
+		      user_name: userName,
+		      alert_type: alerta.tipo,
+		      alert_message: alerta.mensaje,
+		      movement_data: alerta.datos
+		    };
+		    
+		    console.log(`📤 [PAYLOAD] Enviando:`, payload);
+		    
+		    const response = await fetch(`${API}/admin/send-alert`, {
 		      method: 'POST',
 		      credentials: 'include',
 		      headers: { 'Content-Type': 'application/json' },
-		      body: JSON.stringify({
-		        user_id: userId,
-		        user_name: userName,
-		        alert_type: alerta.tipo,
-		        alert_message: alerta.mensaje,
-		        movement_data: alerta.datos
-		      })
+		      body: JSON.stringify(payload)
 		    });
-		    console.log(`📨 Alerta enviada: ${alerta.mensaje}`);
+		    
+		    console.log(`📥 [RESPUESTA] Status: ${response.status} ${response.statusText}`);
+		    
+		    if (!response.ok) {
+		      const errorText = await response.text();
+		      console.error(`❌ [ERROR] Respuesta no OK: ${errorText}`);
+		      return;
+		    }
+		    
+		    const result = await response.json();
+		    console.log(`✅ [ENVIADO] Alerta registrada en Discord:`, result);
+		    console.log(`   Message ID: ${result.messageId || 'N/A'}`);
+		    console.log(`   Channel: ${result.channelId || 'N/A'}`);
 		  } catch (error) {
-		    console.error("Error enviando alerta:", error);
+		    console.error(`❌ [EXCEPTION] Error enviando alerta:`, error);
+		    console.error(`   Stack:`, error.stack);
 		  }
 		}
 		
@@ -1635,11 +1662,13 @@
       }
       
       try {
+        console.log("📥 Iniciando carga de movimientos...");
         const res = await fetch(`${API}/api/registros_armas`, {
           credentials: "include"
         });
 
         if (!res.ok) {
+          console.error("❌ Error al cargar: respuesta no OK", res.status);
           mostrarLogin();
           detenerAutoRefresh();
           return;
@@ -1649,6 +1678,8 @@
         allMovements = response.data || response;
         
         console.log(`✅ ${allMovements.length} registros cargados`);
+        console.log(`   Primer registro:`, allMovements[0]);
+        console.log(`   Último registro:`, allMovements[allMovements.length - 1]);
         
         // Aplicar filtros pero mantener página actual (NO resetear a 1)
         let result = [...allMovements];
@@ -1656,9 +1687,9 @@
         // Aplicar categoría
         if (currentCategory !== 'all') {
           if (currentCategory === 'deposits') {
-            result = result.filter(m => m.tipo === 'deposito');
+            result = result.filter(m => m.tipo === 'deposito' || m.tipo === 'DEPOSITO');
           } else if (currentCategory === 'withdrawals') {
-            result = result.filter(m => m.tipo === 'retiro');
+            result = result.filter(m => m.tipo === 'retiro' || m.tipo === 'RETIRO');
           } else {
             result = result.filter(m => getCategoriaItem(m.objeto) === currentCategory);
           }
@@ -1680,10 +1711,11 @@
         result = applySmartSearch(result, searchResult);
         
         filteredData = result;
+        console.log(`🔍 Después de filtros: ${filteredData.length} registros`);
         // NO RESETEAR: currentPage se mantiene igual
         renderTabla();
       } catch (error) {
-        console.error("Error al cargar movimientos:", error);
+        console.error("❌ Error al cargar movimientos:", error);
       }
     }
 
@@ -1713,7 +1745,7 @@
 		    almacen: null,
 		    validado: null,   // si/no/libre/operativo/armero/alto rango
 		    discord_id: null, // Discord ID
-		    dia: null,        // Fecha específica
+		    fecha: null,      // Fecha específica (NUEVO)
 		    before: null,
 		    after: null,
 		    text: []
@@ -1727,7 +1759,8 @@
 		    { regex: /(?:en|almacen|armario)[:\s]+([^\s]+)/i, key: 'almacen' },
 		    { regex: /validado[:\s]+(si|no|libre|en\s+operativo|armero|alto\s+rango)/i, key: 'validado' },
 		    { regex: /discord(?:\s+id)?[:\s]+(\d+)/i, key: 'discord_id' },
-		    { regex: /(?:dia|date)[:\s]+(\d{4}-\d{2}-\d{2})/i, key: 'dia' },
+		    { regex: /fecha[:\s]+(\d{4}-\d{2}-\d{2})/i, key: 'fecha' },
+		    { regex: /(?:dia|date)[:\s]+(\d{4}-\d{2}-\d{2})/i, key: 'fecha' },
 		    { regex: /antes[:\s]+(\d{4}-\d{2}-\d{2})/i, key: 'before' },
 		    { regex: /despues[:\s]+(\d{4}-\d{2}-\d{2})/i, key: 'after' }
 		  ];
@@ -1735,7 +1768,7 @@
 		  patterns.forEach(({ regex, key }) => {
 		    const match = trimmed.match(regex);
 		    if (match) {
-		      if (key === 'before' || key === 'after' || key === 'dia') {
+		      if (key === 'before' || key === 'after' || key === 'fecha') {
 		        filters[key] = new Date(match[1]);
 		      } else if (key === 'validado') {
 		        const val = match[1].toLowerCase();
@@ -1794,13 +1827,10 @@
 		    // Discord ID
 		    if (filters.discord_id && m.discord_id !== filters.discord_id) return false;
 		    
-		    // Día específico
-		    if (filters.dia) {
-		      const movDate = new Date(m.timestamp).toDateString();
-		      const filterDate = new Date(filters.dia).toDateString();
-		      if (movDate !== filterDate) return false;
-		    }
-		    
+	    // Día específico / Fecha
+	    if (filters.fecha) {
+	      const movDate = new Date(m.timestamp).toDateString();
+	      const filterDate = new Date(filters.fecha).toDateString();
 		    // Validado
 		    if (filters.validado !== null) {
 		      if (filters.validado === 'si' && !m.validado) return false;
@@ -1898,10 +1928,10 @@
         const categoria = getCategoriaItem(r.objeto || "");
         
         // Color de fondo según tipo
-        if (r.tipo === "deposito") {
+        if (r.tipo === "deposito" || r.tipo === "DEPOSITO") {
           tr.style.background = "rgba(34, 197, 94, 0.1)";
           tr.style.borderLeft = "4px solid #22c55e";
-        } else if (r.tipo === "retiro") {
+        } else if (r.tipo === "retiro" || r.tipo === "RETIRO") {
           tr.style.background = "rgba(239, 68, 68, 0.1)";
           tr.style.borderLeft = "4px solid #ef4444";
         }
@@ -1911,7 +1941,7 @@
         tr.innerHTML = `
           <td>${r.id}</td>
           <td>
-            <span class="status-badge ${r.tipo === "deposito" ? "status-deposito" : "status-retiro"}">
+            <span class="status-badge ${r.tipo === "deposito" || r.tipo === "DEPOSITO" ? "status-deposito" : "status-retiro"}">
               ${r.tipo || "-"}
             </span>
           </td>
@@ -1926,7 +1956,7 @@
           <td>${almacenMostrar}</td>
           <td>
             <span class="status-badge ${
-              r.tipo === 'deposito' ? 'status-deposito' :
+              r.tipo === 'deposito' || r.tipo === 'DEPOSITO' ? 'status-deposito' :
               esObjetoPermitido(r.objeto) ? 'status-validado' :
               r.validado_por === 'Armero' || r.validado_por === 'Alto Rango' ? 'status-validado' :
               r.validado ? 'status-validado' : 
@@ -1934,7 +1964,7 @@
               (r.en_operativo ? 'status-pendiente' : 'status-pendiente'))
             }">
               ${
-                r.tipo === 'deposito' ? '✅ Depositado' :
+                r.tipo === 'deposito' || r.tipo === 'DEPOSITO' ? '✅ Depósito' :
                 r.validado_por === 'Armero' ? '🔫 Es Armero' :
                 r.validado_por === 'Alto Rango' ? '🔰 Es Alto Rango' :
                 esObjetoPermitido(r.objeto) ? '✅ Uso Libre' :
@@ -2010,6 +2040,16 @@
 		        Estos usuarios recibirán alertas por MD de Discord
 		      </p>
 		      
+		      <!-- BOTÓN DE PRUEBA -->
+		      <div style="background: rgba(34, 197, 94, 0.15); border-left: 4px solid #22c55e; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+		        <button class="btn-primary" onclick="enviarAlertaPrueba()" style="width: 100%; padding: 15px; font-size: 1rem;">
+		          🧪 Enviar Alerta de Prueba
+		        </button>
+		        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-top: 10px;">
+		          Enviará una alerta de test a todos los administradores configurados
+		        </p>
+		      </div>
+		      
 		      <div style="display: flex; gap: 10px; margin-bottom: 20px;">
 		        <input type="text" id="newAdminDiscordId" placeholder="Discord ID" 
 		          style="flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 12px; border-radius: 10px;">
@@ -2036,7 +2076,49 @@
 		  if (modal) modal.remove();
 		}
 		
-		async function cargarListaAdminsAlertas() {
+		async function enviarAlertaPrueba() {
+		  console.log("🧪 Iniciando envío de alerta de prueba...");
+		  
+		  try {
+		    const testAlert = {
+		      user_id: "TEST_USER_123",
+		      user_name: "Usuario de Prueba",
+		      alert_type: "test",
+		      alert_message: "🧪 Esta es una alerta de PRUEBA del sistema de alertas",
+		      movement_data: {
+		        balance: 0,
+		        total: 0,
+		        pipas: 0,
+		        timestamp: new Date().toISOString()
+		      }
+		    };
+		    
+		    console.log("📨 Enviando payload:", testAlert);
+		    
+		    const res = await fetch(`${API}/admin/send-alert`, {
+		      method: 'POST',
+		      credentials: 'include',
+		      headers: { 'Content-Type': 'application/json' },
+		      body: JSON.stringify(testAlert)
+		    });
+		    
+		    console.log("📤 Respuesta del servidor:", res.status, res.statusText);
+		    
+		    if (!res.ok) {
+		      const errorData = await res.json();
+		      console.error("❌ Error en respuesta:", errorData);
+		      alert(`❌ Error: ${errorData.error || res.statusText}`);
+		      return;
+		    }
+		    
+		    const result = await res.json();
+		    console.log("✅ Alerta de prueba enviada exitosamente:", result);
+		    alert("✅ Alerta de prueba enviada a todos los administradores\n\nRevisa los logs en la consola para más detalles");
+		  } catch (error) {
+		    console.error("❌ Error al enviar alerta de prueba:", error);
+		    alert(`❌ Error al enviar: ${error.message}`);
+		  }
+		}
 		  try {
 		    const res = await fetch(`${API}/admin/alert-admins`, {
 		      credentials: 'include'
@@ -2479,9 +2561,10 @@
 
 		async function calcularEstadisticas(movements) {
 		  console.log("📊 Calculando estadísticas para", movements?.length || 0, "movimientos");
-		  console.log("🔍 Primer movimiento:", movements[0]); // DEBUG
+		  console.log("🔍 Primer movimiento:", movements?.[0]); // DEBUG
 		  
 		  if (!movements || movements.length === 0) {
+		    console.log("⚠️ Sin movimientos para calcular");
 		    return {
 		      totalDeposits: 0,
 		      totalWithdrawals: 0,
@@ -2497,11 +2580,12 @@
 		    };
 		  }
 		  
-		  // ⭐ IMPORTANTE: El campo es "type" NO "tipo"
-		  const deposits = movements.filter(m => m.type === 'deposito' || m.tipo === 'deposito');
-		  const withdrawals = movements.filter(m => m.type === 'retiro' || m.tipo === 'retiro');
+		  // ⭐ IMPORTANTE: El campo es "type" o "tipo"
+		  const deposits = movements.filter(m => m.type === 'deposito' || m.tipo === 'deposito' || m.type === 'DEPOSITO' || m.tipo === 'DEPOSITO');
+		  const withdrawals = movements.filter(m => m.type === 'retiro' || m.tipo === 'retiro' || m.type === 'RETIRO' || m.tipo === 'RETIRO');
 		  
 		  console.log(`💰 Depósitos: ${deposits.length} | Retiros: ${withdrawals.length}`);
+		  console.log(`📋 Total movimientos: ${movements.length}`);
 		  
 		  const totalDepositsCount = deposits.reduce((sum, m) => {
 		    const cantidad = parseInt(m.cantidad) || 1;
@@ -2532,6 +2616,7 @@
 		  
 		  if (alerta && (alerta.tipo === 'critico' || alerta.tipo === 'sospechoso')) {
 		    console.log(`🚨 Alerta detectada para ${movements[0]?.nombre}:`, alerta.mensaje);
+		    console.log(`   Enviando a admins...`);
 		    await enviarAlertaAdmin(movements[0]?.discord_id, movements[0]?.nombre, alerta);
 		  }
 		  
@@ -2539,7 +2624,8 @@
 		    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
 		    .slice(0, 10);
 		  
-		  console.log(`📋 Movimientos recientes: ${recentMovements.length}`);
+		  console.log(`📋 Movimientos recientes mostrados: ${recentMovements.length}`);
+		  console.log(`✅ Estadísticas calculadas exitosamente`);
 		  
 		  return {
 		    totalDeposits: totalDepositsCount,
@@ -2698,6 +2784,7 @@
         if (!res.ok) throw new Error("Error al exportar");
         
         const { movements } = await res.json();
+        const totalCount = movements ? movements.length : 0;
         
         // Convertir a CSV
         const csv = convertToCSV(movements);
@@ -2711,11 +2798,12 @@
           body: JSON.stringify({
             action_type: 'export',
             target_user_id: userId,
-            details: { recordCount: movements.length }
+            details: { recordCount: totalCount }
           })
         });
         
-        alert(`✅ ${count} movimientos exportados`);
+        console.log(`✅ Exportados ${totalCount} movimientos de ${userName}`);
+        alert(`✅ ${totalCount} movimientos exportados`);
       } catch (error) {
         console.error("Error:", error);
         alert("❌ Error al exportar");
