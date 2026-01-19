@@ -2475,71 +2475,67 @@
       </div>
     ` : ''}
     
-// ============================================
-// PARCHE 5: ARREGLAR RENDERIZADO DEL PERFIL
-// ============================================
-
-// BUSCAR la función abrirPerfil() y REEMPLAZAR la sección del timeline con:
-
+	<!-- INDICADORES -->
+	 ${renderIndicadores(stats.indicators)}
 					<!-- TIMELINE -->
-					<h3 style="margin-bottom: 15px;">📊 Actividad Reciente</h3>
-					<div class="timeline">
-					  ${stats.recentMovements && stats.recentMovements.length > 0 ? 
-					    stats.recentMovements.map(m => {
-					      // ⭐ ARREGLO: Normalizar tipo correctamente
-					      const tipoMovimiento = (m.type || m.tipo || '').toLowerCase();
-					      
-					      console.log("🔍 Procesando movimiento:", {
-					        objeto: m.objeto,
-					        tipo: tipoMovimiento,
-					        validado: m.validado,
-					        validado_por: m.validado_por,
-					        en_operativo: m.en_operativo
-					      });
-					      
-					      let validacionBadge = '';
-					      if (tipoMovimiento === 'deposito') {
-					        validacionBadge = '<span class="status-badge status-deposito">📥 Depósito</span>';
-					      } else {
-					        // Para retiros
-					        if (m.validado_por === 'Armero') {
-					          validacionBadge = '<span class="status-badge status-validado">🔫 Es Armero</span>';
-					        } else if (m.validado_por === 'Alto Rango') {
-					          validacionBadge = '<span class="status-badge status-validado">🔰 Es Alto Rango</span>';
-					        } else if (esObjetoPermitido(m.objeto)) {
-					          validacionBadge = '<span class="status-badge status-validado">✅ Uso Libre</span>';
-					        } else if (m.validado) {
-					          validacionBadge = '<span class="status-badge status-validado">✓ Validado</span>';
-					        } else if (m.no_validado) {
-					          validacionBadge = '<span class="status-badge status-no-validado">⚠️ NO VALIDADO</span>';
-					        } else if (m.en_operativo) {
-					          validacionBadge = '<span class="status-badge status-pendiente">🎯 En Operativo</span>';
-					        } else {
-					          validacionBadge = '<span class="status-badge status-pendiente">⏳ Pendiente</span>';
-					        }
-					      }
-					      
-					      return `
-					        <div class="timeline-item">
-					          <div class="timeline-dot ${tipoMovimiento}"></div>
-					          <div style="flex: 1;">
-					            <div style="font-weight: 600;">
-					              ${tipoMovimiento === 'deposito' ? '📥' : '📤'} ${TRADUCCIONES[m.objeto] || m.objeto}
-					            </div>
-					            <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7); margin: 5px 0;">
-					              Cantidad: ${m.cantidad || 1} | ${new Date(m.timestamp).toLocaleString('es-ES')}
-					            </div>
-					            <div style="margin-top: 5px;">
-					              ${validacionBadge}
-					              ${m.validado_por ? `<span style="font-size: 0.75rem; color: rgba(255,255,255,0.6); margin-left: 8px;">por ${m.validado_por}</span>` : ''}
-					            </div>
-					          </div>
-					        </div>
-					      `;
-					    }).join('') 
-					    : '<p style="color: rgba(255,255,255,0.5);">Sin actividad reciente</p>'
-					  }
-					</div>
+										<h3 style="margin-bottom: 15px;">📊 Actividad Reciente</h3>
+										<div class="timeline">
+										  ${stats.recentMovements && stats.recentMovements.length > 0 ? 
+										    stats.recentMovements.map(m => {
+										      // ⭐ ARREGLO: Normalizar tipo correctamente
+										      const tipoMovimiento = (m.type || m.tipo || '').toLowerCase();
+										      
+										      console.log("🔍 Procesando movimiento:", {
+										        objeto: m.objeto,
+										        tipo: tipoMovimiento,
+										        validado: m.validado,
+										        validado_por: m.validado_por,
+										        en_operativo: m.en_operativo
+										      });
+										      
+										      let validacionBadge = '';
+										      if (tipoMovimiento === 'deposito') {
+										        validacionBadge = '<span class="status-badge status-deposito">📥 Depósito</span>';
+										      } else {
+										        // Para retiros
+										        if (m.validado_por === 'Armero') {
+										          validacionBadge = '<span class="status-badge status-validado">🔫 Es Armero</span>';
+										        } else if (m.validado_por === 'Alto Rango') {
+										          validacionBadge = '<span class="status-badge status-validado">🔰 Es Alto Rango</span>';
+										        } else if (esObjetoPermitido(m.objeto)) {
+										          validacionBadge = '<span class="status-badge status-validado">✅ Uso Libre</span>';
+										        } else if (m.validado) {
+										          validacionBadge = '<span class="status-badge status-validado">✓ Validado</span>';
+										        } else if (m.no_validado) {
+										          validacionBadge = '<span class="status-badge status-no-validado">⚠️ NO VALIDADO</span>';
+										        } else if (m.en_operativo) {
+										          validacionBadge = '<span class="status-badge status-pendiente">🎯 En Operativo</span>';
+										        } else {
+										          validacionBadge = '<span class="status-badge status-pendiente">⏳ Pendiente</span>';
+										        }
+										      }
+										      
+										      return `
+										        <div class="timeline-item">
+										          <div class="timeline-dot ${tipoMovimiento}"></div>
+										          <div style="flex: 1;">
+										            <div style="font-weight: 600;">
+										              ${tipoMovimiento === 'deposito' ? '📥' : '📤'} ${TRADUCCIONES[m.objeto] || m.objeto}
+										            </div>
+										            <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7); margin: 5px 0;">
+										              Cantidad: ${m.cantidad || 1} | ${new Date(m.timestamp).toLocaleString('es-ES')}
+										            </div>
+										            <div style="margin-top: 5px;">
+										              ${validacionBadge}
+										              ${m.validado_por ? `<span style="font-size: 0.75rem; color: rgba(255,255,255,0.6); margin-left: 8px;">por ${m.validado_por}</span>` : ''}
+										            </div>
+										          </div>
+										        </div>
+										      `;
+										    }).join('') 
+										    : '<p style="color: rgba(255,255,255,0.5);">Sin actividad reciente</p>'
+										  }
+										</div>
           <div class="notes-section">
             <h3 style="margin-bottom: 15px;">📝 Notas Internas</h3>
             ${notes && notes.length > 0 ? notes.map(note => `
