@@ -1580,9 +1580,24 @@
     }
 
     function mostrarUsuarioAutenticado(user) {
-  document.getElementById("loginOverlay").classList.add("hidden");
-  document.getElementById("tableContainer").classList.add("unlocked");
-  document.getElementById("userInfo").classList.add("active");
+  const loginOverlay = document.getElementById("loginOverlay");
+  const tableContainer = document.getElementById("tableContainer");
+  const userInfo = document.getElementById("userInfo");
+  const userName = document.getElementById("userName");
+  const userRole = document.getElementById("userRole");
+  const userAvatar = document.getElementById("userAvatar");
+  const investigationToggle = document.getElementById("investigationToggle");
+  const myProfileBtn = document.getElementById("myProfileBtn");
+  const adminAlertsBtn = document.getElementById("adminAlertsBtn");
+  
+  if (!loginOverlay || !tableContainer || !userInfo || !userName || !userRole || !userAvatar) {
+    console.error("Faltan elementos del DOM necesarios");
+    return;
+  }
+  
+  loginOverlay.classList.add("hidden");
+  tableContainer.classList.add("unlocked");
+  userInfo.classList.add("active");
   
   let roleEmoji = "👤";
   let displayRole = "Usuario";
@@ -1595,22 +1610,21 @@
     displayRole = "Armero";
   }
   
-  document.getElementById("userName").textContent = user.username || "Usuario";
-  const roleEl = document.getElementById("userRole");
-  roleEl.textContent = `${roleEmoji} ${displayRole}`;
+  userName.textContent = user.username || "Usuario";
+  userRole.textContent = `${roleEmoji} ${displayRole}`;
   
   // Si es admin, agregar clase especial
   if (user.roleName === "Alto Rango" || user.roleName === "Armero") {
-    roleEl.classList.add("admin-badge");
+    userRole.classList.add("admin-badge");
     // Mostrar botón de modo investigación solo para admins
-    document.getElementById("investigationToggle").style.display = "flex";
+    if (investigationToggle) investigationToggle.style.display = "flex";
     // Mostrar botón "Mi Perfil" para admins
-    document.getElementById("myProfileBtn").style.display = "block";
-	  document.getElementById("adminAlertsBtn").style.display = "block"; 
+    if (myProfileBtn) myProfileBtn.style.display = "block";
+    if (adminAlertsBtn) adminAlertsBtn.style.display = "block"; 
   }
   
   const avatarUrl = user.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`;
-  document.getElementById("userAvatar").src = avatarUrl;
+  userAvatar.src = avatarUrl;
 }
 		
 
@@ -2734,28 +2748,40 @@
 // ==================== EVENT LISTENERS ====================
 function setupEventListeners() {
   // Botón login
-  document.getElementById("loginBtn").addEventListener("click", () => {
-    console.log("🔗 Click en botón de login");
-    window.location.href = `${API}/auth/discord`;
-  });
+  const loginBtn = document.getElementById("loginBtn");
+  if (loginBtn) {
+    loginBtn.addEventListener("click", () => {
+      console.log("🔗 Click en botón de login");
+      window.location.href = `${API}/auth/discord`;
+    });
+  }
   
   // Botón logout
-  document.getElementById("logoutBtn").addEventListener("click", async () => {
-    await fetch(`${API}/auth/logout`, { method: 'POST', credentials: 'include' });
-    location.reload();
-  });
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async () => {
+      await fetch(`${API}/auth/logout`, { method: 'POST', credentials: 'include' });
+      location.reload();
+    });
+  }
 
 	// Theme toggle
-	document.getElementById("themeToggle").addEventListener("click", () => {
-	  const theme = document.body.dataset.theme === "light" ? "dark" : "light";
-	  document.body.dataset.theme = theme;
-	});
+	const themeToggle = document.getElementById("themeToggle");
+	if (themeToggle) {
+	  themeToggle.addEventListener("click", () => {
+	    const theme = document.body.dataset.theme === "light" ? "dark" : "light";
+	    document.body.dataset.theme = theme;
+	  });
+	}
   
   // Búsqueda
-  document.getElementById("smartSearch").addEventListener("input", (e) => {
-    smartSearchTerm = e.target.value;
-    aplicarFiltros();
-  });
+  const smartSearch = document.getElementById("smartSearch");
+  if (smartSearch) {
+    smartSearch.addEventListener("input", (e) => {
+      smartSearchTerm = e.target.value;
+      aplicarFiltros();
+    });
+  }
   
   // Tabs categorías
   document.querySelectorAll('.category-tab').forEach(tab => {
@@ -2784,55 +2810,81 @@ function setupEventListeners() {
   });
 
 	// Mi perfil (solo para admins)
-	document.getElementById("myProfileBtn").addEventListener("click", () => {
-	  if (currentUser && currentUser.id) {
-	    abrirPerfil(currentUser.id, currentUser.username);
-	  }
-	});
+	const myProfileBtn = document.getElementById("myProfileBtn");
+	if (myProfileBtn) {
+	  myProfileBtn.addEventListener("click", () => {
+	    if (currentUser && currentUser.id) {
+	      abrirPerfil(currentUser.id, currentUser.username);
+	    }
+	  });
+	}
   
   // Paginación
-  document.getElementById("prevPage").addEventListener("click", () => {
-    if (currentPage > 1) { currentPage--; renderTabla(); }
-  });
-  document.getElementById("nextPage").addEventListener("click", () => {
-    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-    if (currentPage < totalPages) { currentPage++; renderTabla(); }
-  });
-  document.getElementById("perPageSelect").addEventListener("change", (e) => {
-    itemsPerPage = e.target.value === 'all' ? 'all' : parseInt(e.target.value);
-    currentPage = 1;
-    renderTabla();
-  });
+  const prevPage = document.getElementById("prevPage");
+  if (prevPage) {
+    prevPage.addEventListener("click", () => {
+      if (currentPage > 1) { currentPage--; renderTabla(); }
+    });
+  }
+  
+  const nextPage = document.getElementById("nextPage");
+  if (nextPage) {
+    nextPage.addEventListener("click", () => {
+      const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+      if (currentPage < totalPages) { currentPage++; renderTabla(); }
+    });
+  }
+  
+  const perPageSelect = document.getElementById("perPageSelect");
+  if (perPageSelect) {
+    perPageSelect.addEventListener("change", (e) => {
+      itemsPerPage = e.target.value === 'all' ? 'all' : parseInt(e.target.value);
+      currentPage = 1;
+      renderTabla();
+    });
+  }
 
 	// Configuración
-	document.getElementById("configBtn").addEventListener("click", abrirConfiguracion);
-	document.getElementById("adminAlertsBtn").addEventListener("click", abrirPanelAdmins);
+	const configBtn = document.getElementById("configBtn");
+	if (configBtn) {
+	  configBtn.addEventListener("click", abrirConfiguracion);
+	}
+	
+	const adminAlertsBtn = document.getElementById("adminAlertsBtn");
+	if (adminAlertsBtn) {
+	  adminAlertsBtn.addEventListener("click", abrirPanelAdmins);
+	}
 
 		// Ayuda de búsqueda
-		document.getElementById("searchHelpBtn").addEventListener("click", (e) => {
-		  e.stopPropagation();
-		  const modal = document.getElementById("searchHelpModal");
-		  modal.classList.toggle("active");
-		});
-		
-		// Cerrar al hacer click fuera
-		document.addEventListener("click", (e) => {
-		  const modal = document.getElementById("searchHelpModal");
-		  const btn = document.getElementById("searchHelpBtn");
-		  if (modal.classList.contains("active") && !modal.contains(e.target) && e.target !== btn) {
-		    modal.classList.remove("active");
-		  }
-		});
+		const searchHelpBtn = document.getElementById("searchHelpBtn");
+		if (searchHelpBtn) {
+		  searchHelpBtn.addEventListener("click", (e) => {
+		    e.stopPropagation();
+		    const modal = document.getElementById("searchHelpModal");
+		    if (modal) modal.classList.toggle("active");
+		  });
+		  
+		  // Cerrar al hacer click fuera
+		  document.addEventListener("click", (e) => {
+		    const modal = document.getElementById("searchHelpModal");
+		    if (modal && modal.classList.contains("active") && !modal.contains(e.target) && e.target !== searchHelpBtn) {
+		      modal.classList.remove("active");
+		    }
+		  });
+		}
 	
   // Modo investigación
-  document.getElementById("investigationToggle").addEventListener("click", () => {
-    investigationMode = !investigationMode;
-    document.getElementById("investigationToggle").classList.toggle('active');
-    document.body.classList.toggle('investigation-mode');
-    document.querySelectorAll('.investigation-only').forEach(el => {
-      el.style.display = investigationMode ? 'table-cell' : 'none';
+  const investigationToggle = document.getElementById("investigationToggle");
+  if (investigationToggle) {
+    investigationToggle.addEventListener("click", () => {
+      investigationMode = !investigationMode;
+      investigationToggle.classList.toggle('active');
+      document.body.classList.toggle('investigation-mode');
+      document.querySelectorAll('.investigation-only').forEach(el => {
+        el.style.display = investigationMode ? 'table-cell' : 'none';
+      });
     });
-  });
+  }
 }
 
 
