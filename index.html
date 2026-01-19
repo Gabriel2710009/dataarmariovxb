@@ -1260,7 +1260,8 @@
       'chocolate': 'Chocolate', 'roscon': 'Roscón', 'polvoron': 'Polvorón', 'turron': 'Turrón',
       'coquito': 'Coquito', 'supervodka': 'Vodka', 'weed_amnesia': 'Hoja Amnesia',
       'bag_amnesia': 'Amnesia Procesada', 'peyote': 'Peyote', 'coca_leaf': 'Hoja de Coca',
-      'cocaine': 'Cocaína', 'poppy_plant': 'Amapola', 'WEAPON_SNOWBALL': 'Nieve'
+      'cocaine': 'Cocaína', 'poppy_plant': 'Amapola', 'WEAPON_SNOWBALL': 'Nieve','WEAPON_PISTOL50': 'Calibre .50','WEAPON_HEAVYSNIPER': 'Sniper Pesado',
+			'WEAPON_MACHINEPISTOL': 'Tec Policial','WEAPON_PETROLCAN': 'Gasolina','WEAPON_MINISMG': 'Mini SMG'
     };
 
     const ALMACENES = {
@@ -1279,7 +1280,7 @@
       drogas: ['weed_amnesia', 'bag_amnesia', 'peyote', 'coca_leaf', 'cocaine', 'poppy_plant', 'black_money'],
       otros: ['money', 'radio', 'chaleco', 'oxygenmask', 'repairkit', 'medikit', 'lockpick', 'bandage',
         'defibrillator', 'phone', 'police_cad', 'boombox', 'bike', 'sandwich', 'water', 'chocolate',
-        'roscon', 'polvoron', 'turron', 'coquito', 'supervodka', 'WEAPON_SNOWBALL']
+        'roscon', 'polvoron', 'turron', 'coquito', 'supervodka', 'WEAPON_SNOWBALL','WEAPON_PETROLCAN']
     };
 
 		let CONFIG_ALERTAS = {
@@ -1642,15 +1643,50 @@
   userName.textContent = user.username || "Usuario";
   userRole.textContent = `${roleEmoji} ${displayRole}`;
   
+// ============================================
+// PARCHE 4: ARREGLAR BOTÓN "ALERTAS ADMIN"
+// ============================================
+
+// 1. BUSCAR la función mostrarUsuarioAutenticado() y MODIFICAR:
+function mostrarUsuarioAutenticado(user) {
+  // ... (mantener código existente hasta...)
+  
   // Si es admin, agregar clase especial
   if (user.roleName === "Alto Rango" || user.roleName === "Armero") {
     userRole.classList.add("admin-badge");
-    // Mostrar botón de modo investigación solo para admins
+    
+    // Mostrar botón de modo investigación
     if (investigationToggle) investigationToggle.style.display = "flex";
-    // Mostrar botón "Mi Perfil" para admins
+    
+    // Mostrar botón "Mi Perfil" 
     if (myProfileBtn) myProfileBtn.style.display = "block";
-    if (adminAlertsBtn) adminAlertsBtn.style.display = "block"; 
+    
+    // ⭐ ARREGLO: Mostrar botón Admin Alertas SOLO para Alto Rango
+    if (adminAlertsBtn && user.roleName === "Alto Rango") {
+      adminAlertsBtn.style.display = "block";
+      console.log("✅ Botón Admin Alertas visible para", user.username);
+    }
   }
+  
+  // ... (resto del código)
+}
+
+// 2. BUSCAR setupEventListeners() y VERIFICAR que tenga:
+function setupEventListeners() {
+  // ... (mantener todo lo existente)
+  
+  // ⭐ VERIFICAR QUE ESTO ESTÉ PRESENTE:
+  const adminAlertsBtn = document.getElementById("adminAlertsBtn");
+  if (adminAlertsBtn) {
+    adminAlertsBtn.addEventListener("click", () => {
+      console.log("🔘 Click en botón Admin Alertas");
+      abrirPanelAdmins();
+    });
+  } else {
+    console.warn("⚠️ Botón adminAlertsBtn no encontrado en el DOM");
+  }
+  
+
   
   const avatarUrl = user.avatar || `https://cdn.discordapp.com/embed/avatars/0.png`;
   userAvatar.src = avatarUrl;
@@ -1814,15 +1850,30 @@
 		      if (movDate !== filterDate) return false;
 		    }
 		    
-		    // Validado
-		    if (filters.validado !== null) {
-		      if (filters.validado === 'si' && !m.validado) return false;
-		      if (filters.validado === 'no' && m.validado) return false;
-		      if (filters.validado === 'libre' && !esObjetoPermitido(m.objeto)) return false;
-		      if (filters.validado === 'operativo' && !m.en_operativo) return false;
-		      if (filters.validado === 'armero' && m.validado_por !== 'Armero') return false;
-		      if (filters.validado === 'alto_rango' && m.validado_por !== 'Alto Rango') return false;
-		    }
+						    // ============================================
+				// PARCHE 3: ARREGLAR FILTRO "validado:" EN BÚSQUEDA
+				// ============================================
+				// BUSCAR la función applySmartSearch() y REEMPLAZAR la sección de "Validado" con:
+				
+				// Validado (dentro de applySmartSearch, en el filter)
+				if (filters.validado !== null) {
+				  // Si es depósito, siempre pasa
+				  const tipoMovimiento = (m.tipo || '').toLowerCase();
+				  if (tipoMovimiento === 'deposito') {
+				    // Los depósitos siempre pasan, excepto si buscas explícitamente algo que NO sean depósitos
+				    if (filters.validado === 'no' || filters.validado === 'operativo') {
+				      return false;
+				    }
+				  } else {
+				    // Para retiros, aplicar lógica normal
+				    if (filters.validado === 'si' && !m.validado && m.validado_por !== 'Armero' && m.validado_por !== 'Alto Rango') return false;
+				    if (filters.validado === 'no' && (m.validado || m.validado_por === 'Armero' || m.validado_por === 'Alto Rango')) return false;
+				    if (filters.validado === 'libre' && !esObjetoPermitido(m.objeto)) return false;
+				    if (filters.validado === 'operativo' && !m.en_operativo) return false;
+				    if (filters.validado === 'armero' && m.validado_por !== 'Armero') return false;
+				    if (filters.validado === 'alto_rango' && m.validado_por !== 'Alto Rango') return false;
+				  }
+				}
 		    
 		    // Fechas
 		    if (filters.before && new Date(m.timestamp) > filters.before) return false;
@@ -1938,26 +1989,27 @@
           <td>${r.cantidad || 0}</td>
           <td>${almacenMostrar}</td>
           <td>
-            <span class="status-badge ${
-              r.tipo === 'deposito' || r.tipo === 'DEPOSITO' ? 'status-deposito' :
-              esObjetoPermitido(r.objeto) ? 'status-validado' :
-              r.validado_por === 'Armero' || r.validado_por === 'Alto Rango' ? 'status-validado' :
-              r.validado ? 'status-validado' : 
-              (r.no_validado ? 'status-no-validado' : 
-              (r.en_operativo ? 'status-pendiente' : 'status-pendiente'))
-            }">
-              ${
-                r.tipo === 'deposito' || r.tipo === 'DEPOSITO' ? '✅ Depósito' :
-                r.validado_por === 'Armero' ? '🔫 Es Armero' :
-                r.validado_por === 'Alto Rango' ? '🔰 Es Alto Rango' :
-                esObjetoPermitido(r.objeto) ? '✅ Uso Libre' :
-                r.validado ? '✓ Validado' :
-                (r.no_validado ? '⚠️ NO VALIDADO' : 
-                (r.en_operativo ? '🎯 En Operativo' : 
-                '⏳ Pendiente'))
-              }
-            </span>
-          </td>
+					  <span class="status-badge ${
+					    r.tipo === 'deposito' || r.tipo === 'DEPOSITO' ? 'status-deposito' :
+					    r.validado_por === 'Armero' ? 'status-validado' :
+					    r.validado_por === 'Alto Rango' ? 'status-validado' :
+					    esObjetoPermitido(r.objeto) ? 'status-validado' :
+					    r.validado ? 'status-validado' : 
+					    (r.no_validado ? 'status-no-validado' : 
+					    (r.en_operativo ? 'status-pendiente' : 'status-pendiente'))
+					  }">
+					    ${
+					      r.tipo === 'deposito' || r.tipo === 'DEPOSITO' ? '✅ Depósito' :
+					      r.validado_por === 'Armero' ? '🔫 Es Armero' :
+					      r.validado_por === 'Alto Rango' ? '🔰 Es Alto Rango' :
+					      esObjetoPermitido(r.objeto) ? '✅ Uso Libre' :
+					      r.validado ? '✓ Validado' :
+					      (r.no_validado ? '⚠️ NO VALIDADO' : 
+					      (r.en_operativo ? '🎯 En Operativo' : 
+					      '⏳ Pendiente'))
+					    }
+					  </span>
+					</td>
           <td class="investigation-only" style="display: ${investigationMode ? 'table-cell' : 'none'};">
             ${r.discord_id || "-"}
           </td>
@@ -2468,51 +2520,71 @@
       </div>
     ` : ''}
     
-    <!-- INDICADORES -->
-    ${renderIndicadores(stats.indicators)}
-    
-           <!-- TIMELINE -->
-                  <h3 style="margin-bottom: 15px;">📊 Actividad Reciente</h3>
-                  <div class="timeline">
-                    ${stats.recentMovements && stats.recentMovements.length > 0 ? stats.recentMovements.map(m => {
-                      const tipoMovimiento = m.type || m.tipo;
-                      
-                      let validacionBadge = '';
-                      if (tipoMovimiento === 'deposito') {
-                        validacionBadge = '<span class="status-badge status-deposito">📥 Depósito</span>';
-                      } else {
-                        if (esObjetoPermitido(m.objeto)) {
-                          validacionBadge = '<span class="status-badge status-validado">✅ Uso Libre</span>';
-                        } else if (m.validado) {
-                          validacionBadge = '<span class="status-badge status-validado">✓ Validado</span>';
-                        } else if (m.no_validado) {
-                          validacionBadge = '<span class="status-badge status-no-validado">⚠️ NO VALIDADO</span>';
-                        } else if (m.en_operativo) {
-                          validacionBadge = '<span class="status-badge status-pendiente">🎯 En Operativo</span>';
-                        } else {
-                          validacionBadge = '<span class="status-badge status-pendiente">⏳ Pendiente</span>';
-                        }
-                      }
-                      
-                      return `
-                        <div class="timeline-item">
-                          <div class="timeline-dot ${tipoMovimiento}"></div>
-                          <div style="flex: 1;">
-                            <div style="font-weight: 600;">
-                              ${tipoMovimiento === 'deposito' ? '📥' : '📤'} ${TRADUCCIONES[m.objeto] || m.objeto}
-                            </div>
-                            <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7); margin: 5px 0;">
-                              Cantidad: ${m.cantidad || 1} | ${new Date(m.timestamp).toLocaleString('es-ES')}
-                            </div>
-                            <div style="margin-top: 5px;">
-                              ${validacionBadge}
-                              ${m.validado_por ? `<span style="font-size: 0.75rem; color: rgba(255,255,255,0.6); margin-left: 8px;">por ${m.validado_por}</span>` : ''}
-                            </div>
-                          </div>
-                        </div>
-                      `;
-                    }).join('') : '<p style="color: rgba(255,255,255,0.5);">Sin actividad reciente</p>'}
-                  </div>
+// ============================================
+// PARCHE 5: ARREGLAR RENDERIZADO DEL PERFIL
+// ============================================
+
+// BUSCAR la función abrirPerfil() y REEMPLAZAR la sección del timeline con:
+
+					<!-- TIMELINE -->
+					<h3 style="margin-bottom: 15px;">📊 Actividad Reciente</h3>
+					<div class="timeline">
+					  ${stats.recentMovements && stats.recentMovements.length > 0 ? 
+					    stats.recentMovements.map(m => {
+					      // ⭐ ARREGLO: Normalizar tipo correctamente
+					      const tipoMovimiento = (m.type || m.tipo || '').toLowerCase();
+					      
+					      console.log("🔍 Procesando movimiento:", {
+					        objeto: m.objeto,
+					        tipo: tipoMovimiento,
+					        validado: m.validado,
+					        validado_por: m.validado_por,
+					        en_operativo: m.en_operativo
+					      });
+					      
+					      let validacionBadge = '';
+					      if (tipoMovimiento === 'deposito') {
+					        validacionBadge = '<span class="status-badge status-deposito">📥 Depósito</span>';
+					      } else {
+					        // Para retiros
+					        if (m.validado_por === 'Armero') {
+					          validacionBadge = '<span class="status-badge status-validado">🔫 Es Armero</span>';
+					        } else if (m.validado_por === 'Alto Rango') {
+					          validacionBadge = '<span class="status-badge status-validado">🔰 Es Alto Rango</span>';
+					        } else if (esObjetoPermitido(m.objeto)) {
+					          validacionBadge = '<span class="status-badge status-validado">✅ Uso Libre</span>';
+					        } else if (m.validado) {
+					          validacionBadge = '<span class="status-badge status-validado">✓ Validado</span>';
+					        } else if (m.no_validado) {
+					          validacionBadge = '<span class="status-badge status-no-validado">⚠️ NO VALIDADO</span>';
+					        } else if (m.en_operativo) {
+					          validacionBadge = '<span class="status-badge status-pendiente">🎯 En Operativo</span>';
+					        } else {
+					          validacionBadge = '<span class="status-badge status-pendiente">⏳ Pendiente</span>';
+					        }
+					      }
+					      
+					      return `
+					        <div class="timeline-item">
+					          <div class="timeline-dot ${tipoMovimiento}"></div>
+					          <div style="flex: 1;">
+					            <div style="font-weight: 600;">
+					              ${tipoMovimiento === 'deposito' ? '📥' : '📤'} ${TRADUCCIONES[m.objeto] || m.objeto}
+					            </div>
+					            <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7); margin: 5px 0;">
+					              Cantidad: ${m.cantidad || 1} | ${new Date(m.timestamp).toLocaleString('es-ES')}
+					            </div>
+					            <div style="margin-top: 5px;">
+					              ${validacionBadge}
+					              ${m.validado_por ? `<span style="font-size: 0.75rem; color: rgba(255,255,255,0.6); margin-left: 8px;">por ${m.validado_por}</span>` : ''}
+					            </div>
+					          </div>
+					        </div>
+					      `;
+					    }).join('') 
+					    : '<p style="color: rgba(255,255,255,0.5);">Sin actividad reciente</p>'
+					  }
+					</div>
           <div class="notes-section">
             <h3 style="margin-bottom: 15px;">📝 Notas Internas</h3>
             ${notes && notes.length > 0 ? notes.map(note => `
