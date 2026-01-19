@@ -1178,11 +1178,13 @@
       <!-- QUICK FILTERS -->
       <div class="quick-filters">
         <div class="filter-group">
-          <button class="quick-filter-btn" data-filter="pending">⏳ Pendientes</button>\n          <button class="quick-filter-btn" data-filter="recent15">🕐 Últimos 15 min</button>
+          <button class="quick-filter-btn" data-filter="pending">⏳ Pendientes</button>
+          <button class="quick-filter-btn" data-filter="recent15">🕐 Últimos 15 min</button>
           <button class="quick-filter-btn" data-filter="recent60">🕑 Última hora</button>
         </div>
         <div class="filter-group">
-					</button>
+          <button class="btn-secondary" id="configBtn" style="padding: 10px 20px; border-radius: 20px;">⚙️ Configuración</button>
+          <button class="btn-secondary" id="adminAlertsBtn" style="padding: 10px 20px; border-radius: 20px; display: none;">👥 Alertas Admin</button>
         </div>
       </div>
 
@@ -1681,39 +1683,13 @@
         console.log(`   Primer registro:`, allMovements[0]);
         console.log(`   Último registro:`, allMovements[allMovements.length - 1]);
         
-        // Aplicar filtros pero mantener página actual (NO resetear a 1)
-        let result = [...allMovements];
-        
-        // Aplicar categoría
-        if (currentCategory !== 'all') {
-          if (currentCategory === 'deposits') {
-            result = result.filter(m => m.tipo === 'deposito' || m.tipo === 'DEPOSITO');
-          } else if (currentCategory === 'withdrawals') {
-            result = result.filter(m => m.tipo === 'retiro' || m.tipo === 'RETIRO');
-          } else {
-            result = result.filter(m => getCategoriaItem(m.objeto) === currentCategory);
-          }
+        // Aplicar filtros manualmente (sin tocar datos en silencioso)
+        if (!silencioso) {
+          aplicarFiltros();
+        } else {
+          // En modo silencioso solo actualizar allMovements, mantener filteredData igual
+          renderTabla();
         }
-        
-        // Aplicar quick filter
-        if (currentQuickFilter === 'pending') {
-          result = result.filter(m => !m.validado);
-        } else if (currentQuickFilter === 'recent15') {
-          const cutoff = new Date(Date.now() - 15 * 60 * 1000);
-          result = result.filter(m => new Date(m.timestamp) >= cutoff);
-        } else if (currentQuickFilter === 'recent60') {
-          const cutoff = new Date(Date.now() - 60 * 60 * 1000);
-          result = result.filter(m => new Date(m.timestamp) >= cutoff);
-        }
-        
-        // Aplicar búsqueda inteligente
-        const searchResult = parseSmartSearch(smartSearchTerm);
-        result = applySmartSearch(result, searchResult);
-        
-        filteredData = result;
-        console.log(`🔍 Después de filtros: ${filteredData.length} registros`);
-        // NO RESETEAR: currentPage se mantiene igual
-        renderTabla();
       } catch (error) {
         console.error("❌ Error al cargar movimientos:", error);
       }
@@ -1759,8 +1735,7 @@
 		    { regex: /(?:en|almacen|armario)[:\s]+([^\s]+)/i, key: 'almacen' },
 		    { regex: /validado[:\s]+(si|no|libre|en\s+operativo|armero|alto\s+rango)/i, key: 'validado' },
 		    { regex: /discord(?:\s+id)?[:\s]+(\d+)/i, key: 'discord_id' },
-		    { regex: /fecha[:\s]+(\d{4}-\d{2}-\d{2})/i, key: 'fecha' },
-		    { regex: /(?:dia|date)[:\s]+(\d{4}-\d{2}-\d{2})/i, key: 'fecha' },
+		    { regex: /(?:fecha|dia|date)[:\s]+(\d{4}-\d{2}-\d{2})/i, key: 'fecha' },
 		    { regex: /antes[:\s]+(\d{4}-\d{2}-\d{2})/i, key: 'before' },
 		    { regex: /despues[:\s]+(\d{4}-\d{2}-\d{2})/i, key: 'after' }
 		  ];
@@ -1778,6 +1753,8 @@
 		        else if (val.includes('operativo')) filters.validado = 'operativo';
 		        else if (val === 'armero') filters.validado = 'armero';
 		        else if (val.includes('alto rango')) filters.validado = 'alto_rango';
+		      } else if (key === 'tipo') {
+		        filters.tipo = match[1].toLowerCase();
 		      } else if (key === 'discord_id') {
 		        filters.discord_id = match[1];
 		      } else {
@@ -1807,8 +1784,11 @@
 		      if (!matchUser) return false;
 		    }
 		    
-		    // Tipo
-		    if (filters.tipo && m.tipo !== filters.tipo) return false;
+		    // Tipo (comparar en minúsculas para soportar ambos formatos)
+		    if (filters.tipo) {
+		      const tipoMovimiento = (m.tipo || '').toLowerCase();
+		      if (tipoMovimiento !== filters.tipo) return false;
+		    }
 		    
 		    // Objeto
 		    if (filters.objeto) {
@@ -1824,13 +1804,13 @@
 		      }
 		    }
 		    
-		    // Discord ID
-		    if (filters.discord_id && m.discord_id !== filters.discord_id) return false;
+		    // Discord ID (comparar como string)
+		    if (filters.discord_id && String(m.discord_id) !== String(filters.discord_id)) return false;
 		    
-		    // Día específico / Fecha
+		    // Día específico / Fecha (usar formato UTC para evitar desplazamiento de zona horaria)
 		    if (filters.fecha) {
-		      const movDate = new Date(m.timestamp).toDateString();
-		      const filterDate = new Date(filters.fecha).toDateString();
+		      const movDate = new Date(m.timestamp).toISOString().split('T')[0];
+		      const filterDate = new Date(filters.fecha).toISOString().split('T')[0];
 		      if (movDate !== filterDate) return false;
 		    }
 		    
@@ -2585,9 +2565,15 @@
 		    };
 		  }
 		  
-		  // ⭐ IMPORTANTE: El campo es "type" o "tipo"
-		  const deposits = movements.filter(m => m.type === 'deposito' || m.tipo === 'deposito' || m.type === 'DEPOSITO' || m.tipo === 'DEPOSITO');
-		  const withdrawals = movements.filter(m => m.type === 'retiro' || m.tipo === 'retiro' || m.type === 'RETIRO' || m.tipo === 'RETIRO');
+		  // ⭐ IMPORTANTE: Normalizar a minúsculas para comparación confiable
+		  const deposits = movements.filter(m => {
+		    const tipo = (m.type || m.tipo || '').toLowerCase();
+		    return tipo === 'deposito';
+		  });
+		  const withdrawals = movements.filter(m => {
+		    const tipo = (m.type || m.tipo || '').toLowerCase();
+		    return tipo === 'retiro';
+		  });
 		  
 		  console.log(`💰 Depósitos: ${deposits.length} | Retiros: ${withdrawals.length}`);
 		  console.log(`📋 Total movimientos: ${movements.length}`);
