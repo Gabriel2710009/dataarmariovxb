@@ -1561,15 +1561,22 @@
     let autoRefreshInterval = null;
 
     // ==================== INICIALIZACIÓN ====================
-			async function init() {
+// ============================================
+// PARCHE 3: MEJORAR MENSAJES DE ERROR EN FRONTEND
+// ============================================
+// ARCHIVO: index.html
+// UBICACIÓN: Función init() línea ~1550-1620
+
+// ⭐ BUSCAR la función async function init() y REEMPLAZAR la sección de manejo de errores
+
+		async function init() {
 		  console.log("🚀 Iniciando aplicación v2.0...");
 		  
 		  const params = new URLSearchParams(window.location.search);
 		  
-		  // ⭐ MANEJAR ERRORES Y LOGIN CON TIEMPO DINÁMICO
+		  // ==================== MANEJO DE ERRORES MEJORADO ====================
 		  if (params.has("login") || params.has("error")) {
 		    
-		    // ==================== MANEJO DE ERRORES ====================
 		    if (params.has("error")) {
 		      const errorType = params.get("error");
 		      
@@ -1578,8 +1585,8 @@
 		          alert("⛔ Acceso denegado\n\nNo tienes los roles necesarios para acceder.");
 		          break;
 		        
+		        // ⭐ NUEVO: Rate Limit Corto
 		        case "ratelimit":
-		          // ⭐ OBTENER TIEMPO REAL DE DISCORD
 		          const retryAfter = params.get("retry_after") || "5.0";
 		          const retrySeconds = parseFloat(retryAfter);
 		          const retryMinutes = (retrySeconds / 60).toFixed(1);
@@ -1587,22 +1594,41 @@
 		          console.error(`⏸️ Rate Limit de Discord: ${retrySeconds}s`);
 		          
 		          alert(
-		            `⏸️ Demasiados intentos de login\n\n` +
-		            `Discord solicita esperar:\n` +
-		            `⏰ ${retrySeconds} segundos (${retryMinutes} minutos)\n\n` +
-		            `Esto es por seguridad de Discord.\n` +
+		            `⏸️ Discord está limitando los intentos de login\n\n` +
+		            `⏰ Debes esperar: ${retrySeconds} segundos (${retryMinutes} min)\n\n` +
+		            `Esto es temporal por seguridad de Discord.\n` +
 		            `💡 Espera el tiempo indicado y vuelve a intentar.`
+		          );
+		          break;
+		        
+		        // ⭐ NUEVO: Rate Limit Crítico (> 30s)
+		        case "ratelimit_critical":
+		          const retryMin = params.get("retry_minutes") || "50";
+		          
+		          console.error(`🚫 Rate Limit Crítico: ${retryMin} minutos`);
+		          
+		          alert(
+		            `🚫 Discord ha bloqueado los intentos de login temporalmente\n\n` +
+		            `⏰ Debes esperar aproximadamente: ${retryMin} minutos\n\n` +
+		            `Esto sucede por:\n` +
+		            `• Demasiados intentos de login en poco tiempo\n` +
+		            `• Medidas de seguridad de Discord\n\n` +
+		            `💡 Soluciones:\n` +
+		            `1. Espera ${retryMin} minutos y vuelve a intentar\n` +
+		            `2. Si es urgente, usa otro navegador o dispositivo\n` +
+		            `3. Contacta a un administrador si el problema persiste`
 		          );
 		          break;
 		        
 		        case "timeout":
 		          alert(
 		            "⏱️ Tiempo de espera agotado\n\n" +
-		            "Discord está tardando demasiado en responder.\n" +
+		            "Discord está tardando demasiado en responder.\n\n" +
 		            "Esto puede ser por:\n" +
 		            "• Discord tiene problemas temporales\n" +
-		            "• Conexión lenta\n\n" +
-		            "💡 Espera 1 minuto y vuelve a intentar"
+		            "• Conexión lenta\n" +
+		            "• Rate limit activo\n\n" +
+		            "💡 Espera 2-3 minutos y vuelve a intentar"
 		          );
 		          break;
 		        
@@ -1619,16 +1645,15 @@
 		      }
 		    }
 		    
-		    // ==================== LOGIN EXITOSO ====================
 		    if (params.get("login") === "ok") {
 		      console.log("✅ Login exitoso detectado");
 		    }
 		    
-		    // ⭐ LIMPIAR URL (mantiene funcionalidad original)
+		    // Limpiar URL
 		    window.history.replaceState({}, document.title, window.location.pathname);
 		  }
 		  
-		  // ⭐ MANTENER TODAS LAS LLAMADAS ORIGINALES
+		  // Continuar con inicialización normal...
 		  await verificarSesion();
 		  setupEventListeners();
 		  await cargarConfigAlertas();
