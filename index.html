@@ -1561,20 +1561,12 @@
     let autoRefreshInterval = null;
 
     // ==================== INICIALIZACIÓN ====================
-// ============================================
-// PARCHE 3: MEJORAR MENSAJES DE ERROR EN FRONTEND
-// ============================================
-// ARCHIVO: index.html
-// UBICACIÓN: Función init() línea ~1550-1620
-
-// ⭐ BUSCAR la función async function init() y REEMPLAZAR la sección de manejo de errores
 
 		async function init() {
 		  console.log("🚀 Iniciando aplicación v2.0...");
 		  
 		  const params = new URLSearchParams(window.location.search);
 		  
-		  // ==================== MANEJO DE ERRORES MEJORADO ====================
 		  if (params.has("login") || params.has("error")) {
 		    
 		    if (params.has("error")) {
@@ -1585,38 +1577,46 @@
 		          alert("⛔ Acceso denegado\n\nNo tienes los roles necesarios para acceder.");
 		          break;
 		        
-		        // ⭐ NUEVO: Rate Limit Corto
-		        case "ratelimit":
-		          const retryAfter = params.get("retry_after") || "5.0";
-		          const retrySeconds = parseFloat(retryAfter);
-		          const retryMinutes = (retrySeconds / 60).toFixed(1);
+		        // ⭐ NUEVO: Rate Limit Crítico (mensaje mejorado)
+		        case "ratelimit_critical":
+		          const retryMin = params.get("retry_minutes") || "20";
+		          const retrySeconds = params.get("retry_seconds") || "1200";
 		          
-		          console.error(`⏸️ Rate Limit de Discord: ${retrySeconds}s`);
+		          console.error(`🚫 Rate Limit Crítico: ${retryMin} minutos (${retrySeconds}s)`);
 		          
 		          alert(
-		            `⏸️ Discord está limitando los intentos de login\n\n` +
-		            `⏰ Debes esperar: ${retrySeconds} segundos (${retryMinutes} min)\n\n` +
-		            `Esto es temporal por seguridad de Discord.\n` +
-		            `💡 Espera el tiempo indicado y vuelve a intentar.`
+		            `🚫 Discord bloqueó temporalmente los intentos de login\n\n` +
+		            `⏰ Tiempo de espera: ${retryMin} minutos\n\n` +
+		            `━━━━━━━━━━━━━━━━━━━━\n` +
+		            `💡 SOLUCIONES INMEDIATAS:\n` +
+		            `━━━━━━━━━━━━━━━━━━━━\n\n` +
+		            `1️⃣ USA OTRO NAVEGADOR\n` +
+		            `   → Chrome, Firefox, Edge, Safari\n` +
+		            `   → Modo incógnito también funciona\n\n` +
+		            `2️⃣ USA OTRO DISPOSITIVO\n` +
+		            `   → Desde tu celular (usa 4G, no WiFi)\n` +
+		            `   → Desde otra computadora\n\n` +
+		            `3️⃣ ESPERA ${retryMin} MINUTOS\n` +
+		            `   → Discord levantará el bloqueo automáticamente\n\n` +
+		            `━━━━━━━━━━━━━━━━━━━━\n` +
+		            `¿Por qué pasa esto?\n` +
+		            `Discord detectó múltiples intentos de login.\n` +
+		            `Es una medida de seguridad temporal.`
 		          );
 		          break;
 		        
-		        // ⭐ NUEVO: Rate Limit Crítico (> 30s)
-		        case "ratelimit_critical":
-		          const retryMin = params.get("retry_minutes") || "50";
+		        // ⭐ Rate Limit Corto
+		        case "ratelimit":
+		          const retryAfter = params.get("retry_after") || "5.0";
+		          const retrySecondsShort = parseFloat(retryAfter);
+		          const retryMinutesShort = (retrySecondsShort / 60).toFixed(1);
 		          
-		          console.error(`🚫 Rate Limit Crítico: ${retryMin} minutos`);
+		          console.error(`⏸️ Rate Limit: ${retrySecondsShort}s`);
 		          
 		          alert(
-		            `🚫 Discord ha bloqueado los intentos de login temporalmente\n\n` +
-		            `⏰ Debes esperar aproximadamente: ${retryMin} minutos\n\n` +
-		            `Esto sucede por:\n` +
-		            `• Demasiados intentos de login en poco tiempo\n` +
-		            `• Medidas de seguridad de Discord\n\n` +
-		            `💡 Soluciones:\n` +
-		            `1. Espera ${retryMin} minutos y vuelve a intentar\n` +
-		            `2. Si es urgente, usa otro navegador o dispositivo\n` +
-		            `3. Contacta a un administrador si el problema persiste`
+		            `⏸️ Espera un momento antes de reintentar\n\n` +
+		            `⏰ Tiempo: ${retrySecondsShort} segundos (${retryMinutesShort} min)\n\n` +
+		            `💡 Espera el tiempo indicado y vuelve a intentar.`
 		          );
 		          break;
 		        
@@ -1624,11 +1624,10 @@
 		          alert(
 		            "⏱️ Tiempo de espera agotado\n\n" +
 		            "Discord está tardando demasiado en responder.\n\n" +
-		            "Esto puede ser por:\n" +
-		            "• Discord tiene problemas temporales\n" +
-		            "• Conexión lenta\n" +
-		            "• Rate limit activo\n\n" +
-		            "💡 Espera 2-3 minutos y vuelve a intentar"
+		            "💡 SOLUCIONES:\n" +
+		            "1. Espera 2-3 minutos\n" +
+		            "2. Usa otro navegador\n" +
+		            "3. Verifica tu conexión a internet"
 		          );
 		          break;
 		        
@@ -1653,7 +1652,7 @@
 		    window.history.replaceState({}, document.title, window.location.pathname);
 		  }
 		  
-		  // Continuar con inicialización normal...
+		  // Continuar inicialización normal...
 		  await verificarSesion();
 		  setupEventListeners();
 		  await cargarConfigAlertas();
